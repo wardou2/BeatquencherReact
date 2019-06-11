@@ -1,75 +1,74 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import { GoogleLogin } from 'react-google-login';
+import { BrowserRouter as Router, Route, withRouter } from 'react-router-dom';
+
 import config from './config.json'
 import './App.css';
+import Cookies from 'js-cookie'
+import Auth from './components/Auth'
+import Dashboard from './containers/Dashboard'
+
+const BASE_URL = 'http://localhost:3000/api/v1/'
+const USERS_URL = BASE_URL + 'users/'
+const PROJECTS_URL = BASE_URL + 'projects/'
 
 class App extends Component {
-
   constructor() {
-    super();
-    this.state = { isAuthenticated: false, user: null, token: ''};
+    super()
+    this.state = {
+      currentUser: {}
+    }
+
+    this.getUser = this.getUser.bind(this)
+    this.setCurrentUser = this.setCurrentUser.bind(this)
   }
 
-  logout = () => {
-      this.setState({isAuthenticated: false, token: '', user: null})
-  };
+  componentDidMount() {
+    if (Cookies.get('id_token').length > 0) {
+      this.getUser()
+    }
+  }
 
-  googleResponse = (response) => {
-      const tokenBlob = new Blob([JSON.stringify({access_token: response.accessToken}, null, 2)], {type : 'application/json'});
-      const options = {
-          method: 'POST',
-          body: tokenBlob,
-          mode: 'cors',
-          cache: 'default'
-      };
-      fetch('http://localhost:3000/api/v1/auth/google', options).then(r => {
-          const token = r.headers.get('x-auth-token');
-          r.json().then(user => {
-              if (token) {
-                  this.setState({isAuthenticated: true, user, token})
-              }
-          });
-      })
-  };
+  isEmpty(obj) {
+    for(var key in obj) {
+      if(obj.hasOwnProperty(key))
+        return false;
+    }
+    return true;
+  }
 
-  onFailure = (error) => {
-    alert(error);
+  setCurrentUser(user) {
+    this.setState({currentUser: user})
+  }
+
+  getUser() {
+
+    console.log('getUser');
+    let email = Cookies.get('email').toLowerCase()
+    fetch(USERS_URL+'find', {
+      method: 'PUT',
+      headers: {
+        'id_token': Cookies.get('id_token'),
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({email})
+    })
+    .then(res => res.json())
+    .then(json => this.setCurrentUser(json))
   }
 
   render() {
-    let content = !!this.state.isAuthenticated ?
-      (
-        <div>
-            <p>Authenticated</p>
-            <div>
-                {this.state.user.email}
-            </div>
-            <div>
-                <button onClick={this.logout} className="button">
-                    Log out
-                </button>
-            </div>
-        </div>
-    ) :
-    (
-        <div>
-            <GoogleLogin
-                clientId={config.GOOGLE_CLIENT_ID}
-                buttonText="Login"
-                onSuccess={this.googleResponse}
-                onFailure={this.onFailure}
-            />
-        </div>
-      );
-
-  return (
-      <div className="App">
-          {content}
-      </div>
-    );
+    return(
+      <Router>
+        <React.Fragment>
+          <Route path='/login' render={(props) => <Auth setCurrentUser={this.setCurrentUser}/>} />
+          <Route
+            path='/'
+            render={(props) => <Dashboard currentUser={this.state.currentUser}/>}
+          />
+        </React.Fragment>
+      </Router>
+    )
   }
 }
-
 
 export default App;
