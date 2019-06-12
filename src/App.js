@@ -23,7 +23,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    if (Cookies.get('id_token').length > 0) {
+    if (Cookies.get('id_token')) {
       this.getUser()
     }
   }

@@ -18,7 +18,7 @@ export default class ProjectView extends Component {
     this.loadInstrument = this.loadInstrument.bind(this)
     this.handleChangeInstrument = this.handleChangeInstrument.bind(this)
     this.playInstruments = this.playInstruments.bind(this)
-    this.attachSequence = this.attachSequence.bind(this)
+    // this.attachSequence = this.attachSequence.bind(this)
     this.updateTrack = this.updateTrack.bind(this)
     // this.renderInstruments = this.renderInstruments.bind(this)
   }
@@ -30,24 +30,37 @@ export default class ProjectView extends Component {
       tracks: this.props.currentProj.tracks
     }, () => {
       this.state.instruments.map((ins) => {
-        this['ins'+ins.id] = this.loadInstrument(ins)
-        this['ins'+ins.id].toMaster()
-        // this.attachSequence(ins, [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null])
+        this.loadInstrument(ins)
       })
-      // this.attachSequence(['C3',null,'D3', null,'E4','C3','C3','C3','C3','C3','C3','C3','C3','C3','C3','C3'])
-      // this.attachSequence(["C3", [null, "Eb3"], ["F4", "Bb4", "C5"], "B3"])
+      this.counter=0
+      Tone.Transport.scheduleRepeat(this.song, '16n', 0)
     })
   }
 
-  attachSequence(ins) {
-    // this['ins'+ins.id].disconnect()
-    let track = this.state.tracks.find(t => {
-      return (t.instrument_id === ins.id && t.scene_id === this.props.currentScene.id)
-    })
+  song = (time) => {
+    let step = this.counter % 16
+    for (let i=0; i < this.state.instruments.length; i++) {
 
-    let seq = new Tone.Sequence((time, note ) => {
-      this['ins'+ins.id].triggerAttackRelease(note, '8n');
-    }, track.notes, "4n").start(0)
+      let track = this.state.tracks.find(t => {
+          return (t.instrument_id === this.state.instruments[i].id && t.scene_id === this.props.currentScene.id)
+        })
+
+      // console.log('i', i)
+      // console.log('step', step)
+      // console.log('ins', this.state.instruments[i]);
+      // console.log('note', track.notes[step]);
+
+      if (track.notes[step]) {
+        if (this.state.instruments[i].ins_type === 'metalsynth') {
+          this['ins'+(i+1)].triggerAttackRelease('32n', time)
+        } else if (this.state.instruments[i].ins_type === 'noisesynth') {
+          this['ins'+(i+1)].triggerAttackRelease('16n', time)
+        } else {
+          this['ins'+(i+1)].triggerAttackRelease(track.notes[step], '16n', time)
+        }
+      }
+    }
+    this.counter++
   }
 
   setCurrentIns(ins) {
@@ -60,23 +73,30 @@ export default class ProjectView extends Component {
     switch (ins.ins_type) {
       case 'monosynth':
         console.log('mono');
-        return new Tone.MonoSynth(ins.options)
+        this['ins'+ins.id] = new Tone.MonoSynth(ins.options)
+        this['ins'+ins.id].toMaster()
         break
       case 'polysynth':
         console.log('poly');
-        return new Tone.PolySynth(ins.options)
+        this['ins'+ins.id] = new Tone.PolySynth(ins.options)
+        this['ins'+ins.id].toMaster()
         break
       case 'membranesynth':
         console.log('membrane');
-        return new Tone.MembraneSynth(ins.options)
+        this['ins'+ins.id] = new Tone.MembraneSynth(ins.options)
+        this['ins'+ins.id].toMaster()
         break
       case 'metalsynth':
         console.log('metal');
-        return new Tone.MetalSynth(ins.options)
+        this['ins'+ins.id] = new Tone.MetalSynth(ins.options)
+        this['ins'+ins.id].volume.value = -22
+        this['ins'+ins.id].toMaster()
         break
       case 'noisesynth':
         console.log('noise');
-        return new Tone.NoiseSynth(ins.options)
+        this['ins'+ins.id] = new Tone.NoiseSynth(ins.options)
+        this['ins'+ins.id].volume.value = 0
+        this['ins'+ins.id].toMaster()
         break
     }
   }
@@ -100,6 +120,7 @@ export default class ProjectView extends Component {
 
   updateTrack(track) {
     let tracksCopy = [...this.state.tracks]
+    console.log(track);
     let index = tracksCopy.indexOf(t => t.id === track.id)
     if (index >= 0) {tracksCopy[index] = track}
     this.setState({
@@ -108,10 +129,9 @@ export default class ProjectView extends Component {
   }
 
   playInstruments() {
-    this.state.instruments.map(ins => {
-      this.attachSequence(ins)
-    })
+
     Tone.Transport.toggle()
+
   }
 
   render() {

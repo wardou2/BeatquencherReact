@@ -12,6 +12,17 @@ export default class Channel extends Component {
       }
     }
     this.toggleCell = this.toggleCell.bind(this)
+    this.getRightNote = this.getRightNote.bind(this)
+  }
+
+  getRightNote() {
+    switch (this.props.instrument.ins_type) {
+      case "metalsynth":
+        return "C4"
+        break
+      default :
+        return "F1"
+    }
   }
 
   componentDidMount() {
@@ -29,7 +40,7 @@ export default class Channel extends Component {
     if (notesCopy[i]) {
       notesCopy[i] = null
     } else {
-      notesCopy[i] = 'C2'
+      notesCopy[i] = this.getRightNote()
     }
     track.notes = notesCopy
     // this.setState({

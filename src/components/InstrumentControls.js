@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import MonosynthForm from './MonosynthForm'
+import MembranesynthForm from './MembranesynthForm'
 
 export default class InstrumentControls extends Component {
 
@@ -16,7 +17,10 @@ export default class InstrumentControls extends Component {
                   currentIns={this.props.currentIns} handleChangeInstrument={this.props.handleChangeInstrument}
                 />
         break
-      case "polysynth":
+      case "membranesynth":
+        return <MembranesynthForm
+                  currentIns={this.props.currentIns} handleChangeInstrument={this.props.handleChangeInstrument}
+                />
       return(<div>
 
       </div>)
