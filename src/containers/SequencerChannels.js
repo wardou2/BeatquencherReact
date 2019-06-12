@@ -15,6 +15,7 @@ export default class SequencerChannels extends Component {
          return <Channel
           key={ins.id} instrument={ins} currentScene={this.props.currentScene}
           tracks={this.props.tracks} setCurrentIns={this.props.setCurrentIns}
+          updateTrack={this.props.updateTrack}
         />
       })
     }

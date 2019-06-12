@@ -25,7 +25,7 @@ export default class Sequencer extends Component {
 
       return this.props.track.notes.map((t, i) => {
         let color = 'olive'
-        if (t==='1') {
+        if (t) {
           color='red'
         }
         return <Grid.Column key={i} color={color} onClick={() => this.props.toggleCell(i)}>

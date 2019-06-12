@@ -22,18 +22,24 @@ export default class Channel extends Component {
   }
 
   toggleCell(i) {
-    let notesCopy = this.state.track.notes
-    if (notesCopy[i] === '1') {
-      notesCopy[i] = '0'
-    } else {
-      notesCopy[i] = '1'
-    }
-    this.setState({
-      track: {
-        ...this.state.track,
-        notes: notesCopy
-      }
+    let track = this.props.tracks.find(t => {
+      return (t.scene_id === this.props.currentScene.id && t.instrument_id === this.props.instrument.id)
     })
+    let notesCopy = track.notes
+    if (notesCopy[i]) {
+      notesCopy[i] = null
+    } else {
+      notesCopy[i] = 'C2'
+    }
+    track.notes = notesCopy
+    // this.setState({
+    //   track: {
+    //     ...this.state.track,
+    //     notes: notesCopy
+    //   }
+    // })
+    console.log(track);
+    this.props.updateTrack(track)
   }
 
   render(){

@@ -13,6 +13,14 @@ export default class ProjectsList extends Component {
     this.handleClick = this.handleClick.bind(this)
   }
 
+  isEmpty(obj) {
+    for(var key in obj) {
+      if(obj.hasOwnProperty(key))
+        return false;
+    }
+    return true;
+  }
+
   handleClick(proj) {
     fetch(PROJECTS_URL+proj.id)
     .then(res => res.json())
@@ -21,7 +29,8 @@ export default class ProjectsList extends Component {
 
   renderProjects() {
     console.log('renderProjs', this.props.currentUser);
-    if (Object.entries(this.props.currentUser).length !== 0) {
+    if (!this.isEmpty(this.props.currentUser)) {
+      console.log(this.props.currentUser);
       return <ul>
         {this.props.currentUser.projects.map(proj => {
           return <li key={proj.id} onClick={() => this.handleClick(proj)}>

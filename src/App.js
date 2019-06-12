@@ -60,7 +60,7 @@ class App extends Component {
     return(
       <Router>
         <React.Fragment>
-          <Route path='/login' render={(props) => <Auth setCurrentUser={this.setCurrentUser}/>} />
+          <Route exact path='/login' render={(props) => <Auth setCurrentUser={this.setCurrentUser}/>} />
           <Route
             path='/'
             render={(props) => <Dashboard currentUser={this.state.currentUser}/>}
