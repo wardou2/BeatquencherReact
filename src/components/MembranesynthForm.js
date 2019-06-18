@@ -86,6 +86,36 @@ export default class MembranesynthForm extends Component {
              type='range'
              value={this.props.currentIns.options.oscillator.phase}
            />
+           <Form.Input
+              label={`Filter Cutoff: ${this.props.getEffect(['filter', 'frequency'])} Hz`}
+              min={1}
+              max={18000}
+              name='reverb'
+              onChange={(e, {value}) => this.props.handleChangeEffect(this.props.currentIns.id, ['filter', 'frequency'], {value})}
+              step={1}
+              type='range'
+              value={this.props.getEffect(['filter', 'frequency'])}
+            />
+           <Form.Input
+              label={`Filter Q: ${this.props.getEffect(['filter', 'Q'])}`}
+              min={0.01}
+              max={12}
+              name='reverb'
+              onChange={(e, {value}) => this.props.handleChangeEffect(this.props.currentIns.id, ['filter', 'Q'], {value})}
+              step={0.01}
+              type='range'
+              value={this.props.getEffect(['filter', 'Q'])}
+            />
+           <Form.Input
+              label={`Distortion: ${this.props.getEffect(['distortion', 'distortion'])}`}
+              min={0.01}
+              max={1}
+              name='distortion'
+              onChange={(e, {value}) => this.props.handleChangeEffect(this.props.currentIns.id, ['distortion', 'distortion'], {value})}
+              step={0.01}
+              type='range'
+              value={this.props.getEffect(['distortion', 'distortion'])}
+            />
         </Form.Group>
         <label>Envelope</label>
         <Form.Group widths='equal'>

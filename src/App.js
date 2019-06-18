@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, withRouter } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Redirect, withRouter } from 'react-router-dom';
 
 import config from './config.json'
 import './App.css';
@@ -15,7 +15,9 @@ class App extends Component {
   constructor() {
     super()
     this.state = {
-      currentUser: {}
+      currentUser: {},
+      displayError: '',
+      loggedIn: false
     }
 
     this.getUser = this.getUser.bind(this)
@@ -23,9 +25,11 @@ class App extends Component {
   }
 
   componentDidMount() {
-    if (Cookies.get('id_token')) {
-      this.getUser()
-    }
+
+  }
+
+  renderLoginRedirect = () => {
+    return (Cookies.get('id_token')) ? this.getUser() : <Redirect to='/login' />
   }
 
   isEmpty(obj) {
@@ -37,12 +41,20 @@ class App extends Component {
   }
 
   setCurrentUser(user) {
-    this.setState({currentUser: user})
+    this.setState({currentUser: user, loggedIn: true})
+  }
+
+  handleErrors = (response) => {
+    if (!response.ok) {
+        this.setState({displayError: true, loggedIn: false})
+        Cookies.remove('id_token')
+        throw response
+    }
+    return response.json();
   }
 
   getUser() {
-
-    console.log('getUser');
+    console.log('getUser', this.state.currentUser);
     let email = Cookies.get('email').toLowerCase()
     fetch(USERS_URL+'find', {
       method: 'PUT',
@@ -52,17 +64,23 @@ class App extends Component {
       },
       body: JSON.stringify({email})
     })
-    .then(res => res.json())
+    .then(res => this.handleErrors(res))
     .then(json => this.setCurrentUser(json))
+    .catch(error => {
+      error.text().then( errorMessage => {
+         this.setState({displayError: errorMessage})
+       })
+    })
   }
 
   render() {
     return(
       <Router>
+        {(!this.state.loggedIn) ? this.renderLoginRedirect() : <Redirect to='/'/>}
         <React.Fragment>
-          <Route exact path='/login' render={(props) => <Auth setCurrentUser={this.setCurrentUser}/>} />
+          <Route exact path='/login' render={(props) => <Auth setCurrentUser={this.setCurrentUser} dispalayError={this.state.displayError}/>} />
           <Route
-            path='/'
+            exact path='/'
             render={(props) => <Dashboard currentUser={this.state.currentUser}/>}
           />
         </React.Fragment>

@@ -2,6 +2,8 @@ import _ from 'lodash'
 import React, { Component } from 'react'
 import { Grid } from 'semantic-ui-react'
 
+const blurVals = 'inset 0px 0px 10px 5px #0ff, 0px 0px 10px 5px #f0f'
+
 export default class Sequencer extends Component {
 
   constructor(props){
@@ -20,27 +22,38 @@ export default class Sequencer extends Component {
     return true;
   }
 
+  divStyle = (t, i) => {
+
+    if (this.props.isPlaying && this.props.currentCount%16 === i) {
+      if (t) {
+        return {'backgrounColor': 'darkViolet',
+                'boxShadow': blurVals
+                }
+      } else {
+        return {'backgrounColor': 'lightGrey',
+                'boxShadow': blurVals
+                }
+      }
+    } else {
+      if (t) {
+        return {'backgroundColor': 'darkViolet'}
+      } else {
+        return {'backgroundColor': 'lightGrey'}
+      }
+    }
+  }
+
   columns() {
     if (!this.isEmpty(this.props.track)) {
 
       return this.props.track.notes.map((t, i) => {
-        let color = 'olive'
-        if (t) {
-          color='red'
-        }
-        return <Grid.Column key={i} color={color} onClick={() => this.props.toggleCell(i)}>
+        return <Grid.Column key={i} style={this.divStyle(t, i)} onClick={() => this.props.toggleCell(i)}>
               <span></span>
             </Grid.Column>
       })
     } else {
       return ''
     }
-    // return _.times(16, i => (
-    //     <Grid.Column key={i} color='olive' onClick={() => this.handleClick(i)}>
-    //       <span>x</span>
-    //     </Grid.Column>
-    //   )
-    // )
   }
 
   render(){

@@ -11,3 +11,8 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+.selectedChannel {
+  /*setting alpha = 0.1*/
+  background: rgba(135, 206, 250, 0.2);
+}

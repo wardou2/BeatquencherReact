@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import Cookies from 'js-cookie'
 
+const errorStyle = {'background-color': 'red'}
+
 export default class Auth extends Component {
   constructor(props) {
     super(props)
@@ -49,9 +51,18 @@ export default class Auth extends Component {
     .then(json => this.props.setCurrentUser(json.user))
   }
 
+  showError = () => {
+    return <div style={errorStyle}>
+              Sign in failed, please try again.
+            </div>
+  }
+
   render() {
-    return <a href="" onClick={(e) => this.handleClick(e)} className="btn btn-social btn-github">
-             <span className="fa fa-github"></span> Sign in with Google
-           </a>;
+    return <div>
+            {(this.props.displayError) ? this.showError : null}
+            <a href="" onClick={(e) => this.handleClick(e)} className="btn btn-social btn-github">
+              <span className="fa fa-github"></span> Sign in with Google
+            </a>
+           </div>
   }
 }
