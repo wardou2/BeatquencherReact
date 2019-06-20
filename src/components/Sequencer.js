@@ -2,7 +2,9 @@ import _ from 'lodash'
 import React, { Component } from 'react'
 import { Grid } from 'semantic-ui-react'
 
-const blurVals = 'inset 0px 0px 10px 5px #0ff, 0px 0px 10px 5px #f0f'
+const selectedShadow = 'inset 0px 0px 10px 5px rgba(253, 155, 255, .4)'
+const unselectedShadow = 'inset 0px 0px 10px 5px rgba(0, 0, 0, .1)'
+const nowPlayingShadow = 'inset 0px 0px 10px 5px #0ff, 0px 0px 10px 5px #f0f'
 
 export default class Sequencer extends Component {
 
@@ -25,20 +27,24 @@ export default class Sequencer extends Component {
   divStyle = (t, i) => {
 
     if (this.props.isPlaying && this.props.currentCount%16 === i) {
-      if (t) {
-        return {'backgrounColor': 'darkViolet',
-                'boxShadow': blurVals
+      if (t !== [] && t) {
+        return {'backgrounColor': 'indigo',
+                'boxShadow': nowPlayingShadow,
+                'zIndex': '-1'
                 }
       } else {
-        return {'backgrounColor': 'lightGrey',
-                'boxShadow': blurVals
+        return {'backgrounColor': 'whiteSmoke',
+                'boxShadow': nowPlayingShadow,
+                'zIndex': '5'
                 }
       }
     } else {
-      if (t) {
-        return {'backgroundColor': 'darkViolet'}
+      if (t !== [] && t) {
+        return {'backgroundColor': 'indigo',
+                'boxShadow': selectedShadow
+                }
       } else {
-        return {'backgroundColor': 'lightGrey'}
+        return {'backgroundColor': 'whiteSmoke'}
       }
     }
   }
@@ -47,9 +53,9 @@ export default class Sequencer extends Component {
     if (!this.isEmpty(this.props.track)) {
 
       return this.props.track.notes.map((t, i) => {
-        return <Grid.Column key={i} style={this.divStyle(t, i)} onClick={() => this.props.toggleCell(i)}>
-              <span></span>
-            </Grid.Column>
+        return <Grid.Column key={i} style={this.divStyle(t, i)} onClick={() => this.props.toggleCell(i, this.props.instrument)}>
+                <span></span>
+              </Grid.Column>
       })
     } else {
       return ''
@@ -59,7 +65,7 @@ export default class Sequencer extends Component {
   render(){
     return (
       <div>
-        <Grid divided padded='vertically'>{this.columns()}</Grid>
+        <Grid celled divided padded='vertically'>{this.columns()}</Grid>
       </div>
     )
   }

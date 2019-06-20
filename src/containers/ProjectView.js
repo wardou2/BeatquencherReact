@@ -34,18 +34,29 @@ export default class ProjectView extends Component {
   }
 
   componentDidMount() {
+    console.log('here');
     Tone.Transport.bpm.value = this.props.currentProj.tempo
     let currentTracks = this.props.currentProj.tracks.filter(track => {
       return track.scene_id === this.props.currentScene.id
+    })
+
+    currentTracks.map(t => {
+      let notesCopy = []
+      t.notes.map(n => {
+        if (n.includes('-')) {
+          notesCopy.push(n.split('-'))
+        } else {
+          notesCopy.push(n)
+        }
+      })
+      t.notes = notesCopy
+
     })
 
     this.setState({
       instruments: this.props.currentProj.instruments,
       tracks: currentTracks
     }, () => {
-      this.state.instruments.map((ins) => {
-        this.loadInstrument(ins)
-      })
 
       this.counter=0
       const masterCompressor = new Tone.Compressor({
@@ -57,6 +68,9 @@ export default class ProjectView extends Component {
 
       Tone.Master.chain(masterCompressor)
       Tone.Transport.scheduleRepeat(this.song, '16n', 0)
+      this.state.instruments.map((ins) => {
+        this.loadInstrument(ins)
+      })
     })
   }
 
@@ -109,12 +123,23 @@ export default class ProjectView extends Component {
       case 'monosynth':
         console.log('mono');
         this['ins'+ins.id] = new Tone.MonoSynth(ins.options)
-        this['ins'+ins.id].toMaster()
+        this.attachEffects(ins)
         break
       case 'polysynth':
+
         console.log('poly');
-        this['ins'+ins.id] = new Tone.PolySynth(ins.options)
-        this['ins'+ins.id].toMaster()
+        this['ins'+ins.id] = new Tone.PolySynth(ins.options.polyphony, Tone.MonoSynth)
+
+        if (ins.options.oscillator.type.slice(0,2) === 'fm') {
+          let insCopy = JSON.parse(JSON.stringify(ins))
+          delete insCopy.options.oscillator
+          this['ins'+ins.id].set(insCopy.options)
+          this['ins'+ins.id].set({'oscillator': {'type': ins.options.oscillator.type}})
+          console.log('after', this['ins'+ins.id]);
+        } else {
+          this['ins'+ins.id].set(ins.options)
+        }
+        this.attachEffects(ins)
         break
       case 'bass_drum':
         console.log('membrane');
@@ -144,8 +169,8 @@ export default class ProjectView extends Component {
   }
 
   attachEffects(ins) {
-    console.log(ins);
     this['ins'+ins.id+'vol'] = new Tone.Volume()
+    this['ins'+ins.id+'vol'].mute = ins.options.mute || false
     if (!this.isEmpty(ins.effects)) {
       ins.effects.forEach((effect, i) => {
         switch (effect.eff_type) {
@@ -187,24 +212,25 @@ export default class ProjectView extends Component {
     }
   }
 
-  handleChangeInstrument(ins_id, field, value) {
+  handleChangeInstrument(ins_id, field, val) {
+    let value = ((field[1] && field[1] === 'type')) ? val : parseFloat(val)
     let instrumentsCopy = [...this.state.instruments]
     let instrument = this.state.instruments.filter(ins => ins.id === ins_id)[0]
 
+    console.log('before', this['ins'+ins_id]);
+
     if (field[1]) {
       instrument["options"][field[0]][field[1]] = value
-      this['ins'+ins_id][field[0]][field[1]] = value
-    } else if (field[0] === 'volume') {
-      instrument["options"][field[0]] = value
-      this['ins'+ins_id][field[0]].value = value
+      this['ins'+ins_id].set({[field[0]]: {[field[1]]: value}})
     } else {
       instrument["options"][field[0]] = value
-      this['ins'+ins_id][field[0]] = value
+      this['ins'+ins_id].set({[field[0]]: value})
     }
+
+    console.log('after', this['ins'+ins_id]);
 
     let foundIndex = instrumentsCopy.findIndex(ins => ins.id === ins_id)
     instrumentsCopy[foundIndex] = instrument
-    // console.log(instrumentsCopy[rfoundIndex]);
 
     this.setState({
       instruments: instrumentsCopy
@@ -238,7 +264,7 @@ export default class ProjectView extends Component {
     if (index >= 0) {tracksCopy[index] = track}
     this.setState({
       tracks: tracksCopy
-    })
+    }, console.log('update tracks', this.state.tracks))
   }
 
   handleMute(ins_id) {
@@ -274,7 +300,6 @@ export default class ProjectView extends Component {
 
   saveInstruments = () => {
     this.state.instruments.forEach(ins => {
-      console.log(ins.effects);
       fetch(BASE_URL+'instruments/'+ins.id, {
         method: 'PATCH',
         headers: {
@@ -293,16 +318,31 @@ export default class ProjectView extends Component {
   }
 
   saveTracks = () => {
+
     this.state.tracks.forEach(track => {
-      fetch(BASE_URL+'tracks/'+track.id, {
-        method: 'PATCH',
-        headers: {
-          'id_token': Cookies.get('id_token'),
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({track: track})
+      let trackCopy = Object.assign({}, track);
+      let notesCopy = []
+
+      trackCopy.notes.forEach(n => {
+        if (Array.isArray(n)) {
+          notesCopy.push(n.join('-'))
+        } else {
+          notesCopy.push(n)
+        }
       })
-      .then(res => res.json())
+
+      trackCopy.notes = notesCopy
+
+      fetch(BASE_URL+'tracks/'+trackCopy.id, {
+          method: 'PATCH',
+          headers: {
+              'id_token': Cookies.get('id_token'),
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({track: trackCopy})
+          })
+          .then(res => res.json())
+          .then(json => console.log(json))
     })
   }
 
@@ -316,8 +356,8 @@ export default class ProjectView extends Component {
     let EditableSceneName = edit.contentEditable('h3')
 
     return (
-      <Container>
-        <div>
+      <div className='project-view-div'>
+        <div className='project-info-div'>
           <EditableProjectName value={this.props.currentProj.title} onSave={(val) => this.handleChangeProject(['title'], val)}/>
           <EditableSceneName value={this.props.currentScene.name} onSave={(val) => this.props.handleChangeScene(['name'], val)}/>
           <Form size="small">
@@ -349,7 +389,7 @@ export default class ProjectView extends Component {
           currentIns={this.state.currentIns} handleChangeInstrument={this.handleChangeInstrument}
           handleChangeEffect={this.handleChangeEffect}
         />
-      </Container>
+      </div>
     )
   }
 }

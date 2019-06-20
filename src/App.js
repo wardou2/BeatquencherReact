@@ -6,6 +6,7 @@ import './App.css';
 import Cookies from 'js-cookie'
 import Auth from './components/Auth'
 import Dashboard from './containers/Dashboard'
+import Navbar from './components/Navbar'
 
 const BASE_URL = 'http://localhost:3000/api/v1/'
 const USERS_URL = BASE_URL + 'users/'
@@ -77,13 +78,14 @@ class App extends Component {
     return(
       <Router>
         {(!this.state.loggedIn) ? this.renderLoginRedirect() : <Redirect to='/'/>}
-        <React.Fragment>
+        <div>
+          <Route path='/' render={(props) => <Navbar />} />
           <Route exact path='/login' render={(props) => <Auth setCurrentUser={this.setCurrentUser} dispalayError={this.state.displayError}/>} />
           <Route
             exact path='/'
             render={(props) => <Dashboard currentUser={this.state.currentUser}/>}
           />
-        </React.Fragment>
+        </div>
       </Router>
     )
   }

@@ -3,6 +3,7 @@ import ProjectsList from './ProjectsList'
 import SceneSelector from './SceneSelector'
 import ProjectView from './ProjectView'
 import NewProjectForm from '../components/NewProjectForm'
+import { Container } from 'semantic-ui-react'
 import Cookies from 'js-cookie'
 
 const BASE_URL = 'http://localhost:3000/api/v1/'
@@ -102,7 +103,12 @@ export default class Dashboard extends Component {
         'id_token': Cookies.get('id_token'),
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({project: this.state.currentProj})
+      body: JSON.stringify({
+        project: {
+          title: this.state.currentProj.title,
+          tempo: this.state.currentProj.tempo
+        }
+      })
     })
     .then(res => res.json())
     .then(json => console.log(json))
@@ -189,6 +195,8 @@ export default class Dashboard extends Component {
       }
   }
   render(){
-    return this.conditionalRender()
+    return  <Container textAlign="center" className='main-container'>
+              {this.conditionalRender()}
+            </Container>
   }
 }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Dropdown} from 'semantic-ui-react'
+import { Form, Dropdown, Header, Segment, Divider } from 'semantic-ui-react'
 
 const noiseTypeOptions = [
   {
@@ -34,7 +34,8 @@ export default class NoisesynthForm extends Component {
   render(){
     return (
       <Form>
-        <label>Oscillator </label>
+        <Divider />
+        <Header as='h3'>Oscillator</Header>
         <Form.Group widths='equal'>
           <Dropdown
             value={this.props.currentIns.options.noise.type}
@@ -74,7 +75,9 @@ export default class NoisesynthForm extends Component {
               value={this.props.getEffect(['filter', 'Q'])}
             />
         </Form.Group>
-        <label>Envelope</label>
+        <Divider />
+
+        <Header as='h3'>Envelope</Header>
         <Form.Group widths='equal'>
           <Form.Input
              label={`Attack: ${this.props.currentIns.options.envelope.attack}s `}

@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 import MonosynthForm from './MonosynthForm'
+import PolysynthForm from './PolysynthForm'
 import MembranesynthForm from './MembranesynthForm'
 import MetalsynthForm from './MetalsynthForm'
 import NoisesynthForm from './NoisesynthForm'
+import { Header } from 'semantic-ui-react'
 
 export default class InstrumentControls extends Component {
 
@@ -22,6 +24,11 @@ export default class InstrumentControls extends Component {
     switch(this.props.currentIns.ins_type) {
       case "monosynth":
         return <MonosynthForm
+                  currentIns={this.props.currentIns} handleChangeInstrument={this.props.handleChangeInstrument}
+                />
+        break
+      case "polysynth":
+        return <PolysynthForm
                   currentIns={this.props.currentIns} handleChangeInstrument={this.props.handleChangeInstrument}
                 />
         break
@@ -54,8 +61,8 @@ export default class InstrumentControls extends Component {
 
   render(){
     return (
-      <div>
-        <h3>{this.props.currentIns.name}</h3>
+      <div className='ins-control-div'>
+        <Header as='h2'>{this.props.currentIns.name}</Header>
         {this.renderControls()}
       </div>
     )

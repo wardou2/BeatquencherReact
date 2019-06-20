@@ -1,5 +1,6 @@
 import React, { Component} from 'react'
 import { Link } from 'react-router-dom';
+import { List, Icon, Header, Button, Segment } from 'semantic-ui-react'
 import Cookies from 'js-cookie'
 
 const BASE_URL = 'http://localhost:3000/api/v1/'
@@ -36,24 +37,29 @@ export default class ProjectsList extends Component {
 
   renderProjects() {
     if (!this.isEmpty(this.props.currentUser)) {
-      return <ul>
+      return <List divided relaxed>
         {this.props.currentUser.projects.map(proj => {
-          return <li key={proj.id} onClick={() => this.handleClick(proj)}>
-                  {proj.title}
-                </li>
+          return  <List.Item key={proj.id} onClick={() => this.handleClick(proj)}>
+                    <List.Content>
+                      <List.Header as='a'>{proj.title}</List.Header>
+                    </List.Content>
+                  </List.Item>
         })}
-      </ul>
+      </List>
     }
   }
 
   render() {
 
     return(
-      <React.Fragment>
-        <h1 onClick={this.props.startNewProject}>New Project</h1>
-        <h1>Select Project</h1>
-        {this.renderProjects()}
-      </React.Fragment>
+      <div className='projects-list'>
+        <br></br>
+        <Segment>
+          <Header as='h2'>Select Project</Header>
+          <Button onClick={this.props.startNewProject}>New Project</Button>
+          {this.renderProjects()}
+        </Segment>
+      </div>
     )
   }
 }

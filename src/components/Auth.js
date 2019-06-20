@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import Cookies from 'js-cookie'
+import { Button, Icon, Container } from 'semantic-ui-react'
+
 
 const errorStyle = {'background-color': 'red'}
 
@@ -58,11 +60,14 @@ export default class Auth extends Component {
   }
 
   render() {
-    return <div>
-            {(this.props.displayError) ? this.showError : null}
-            <a href="" onClick={(e) => this.handleClick(e)} className="btn btn-social btn-github">
-              <span className="fa fa-github"></span> Sign in with Google
-            </a>
-           </div>
+    return <Container textAlign='center'>
+              <br></br>
+              <br></br>
+              <br></br>
+              {(this.props.displayError) ? this.showError : null}
+              <Button color='google plus' onClick={(e) => this.handleClick(e)}>
+                <Icon name='google' /> Log in with Google
+              </Button>
+           </Container>
   }
 }

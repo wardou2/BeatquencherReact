@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Dropdown} from 'semantic-ui-react'
+import { Form, Dropdown, Header, Segment, Divider } from 'semantic-ui-react'
 
 const oscTypeOptions = [
   {
@@ -18,6 +18,7 @@ const oscTypeOptions = [
     key: 'triangle',
     text: 'Triangle Wave',
     value: 'triangle',
+    image: { avatar: true, src: '/images/triangle.jpg' },
   },
   {
     key: 'sawtooth',
@@ -41,15 +42,14 @@ const oscTypeOptions = [
     key: 'fmtriangle',
     text: 'FM Triangle Wave',
     value: 'fmtriangle',
+      image: { avatar: true, src: '/images/triangle.jpg' },
   },
   {
     key: 'fmsawtooth',
     text: 'FM Sawtooth Wave',
     value: 'fmsawtooth',
     image: { avatar: true, src: '/images/sawtooth.jpg' },
-  },
-
-
+  }
 ]
 
 export default class MembranesynthForm extends Component {
@@ -67,17 +67,20 @@ export default class MembranesynthForm extends Component {
   render(){
     return (
       <Form>
-        <label>Oscillator </label>
+        <Divider />
+        <Header as='h3'>Oscillator </Header>
         <Form.Group widths='equal'>
           <Dropdown
-            value={this.props.currentIns.options.oscillator.type}
+            placeholder='Oscillator Type'
             fluid
+            value={this.props.currentIns.options.oscillator.type}
             selection
             options={oscTypeOptions}
             onChange={(e, {value}) => this.handleChange(e, ['oscillator','type'],{value})}
           />
           <Form.Input
              label={`Phase: ${this.props.currentIns.options.oscillator.phase} `}
+             fluid
              min={0}
              max={360}
              name='phase'
@@ -86,8 +89,14 @@ export default class MembranesynthForm extends Component {
              type='range'
              value={this.props.currentIns.options.oscillator.phase}
            />
+         </Form.Group>
+         <Divider />
+
+         <Header as='h3'>Oscillator </Header>
+         <Form.Group widths='equal'>
            <Form.Input
               label={`Filter Cutoff: ${this.props.getEffect(['filter', 'frequency'])} Hz`}
+              fluid
               min={1}
               max={18000}
               name='reverb'
@@ -98,6 +107,7 @@ export default class MembranesynthForm extends Component {
             />
            <Form.Input
               label={`Filter Q: ${this.props.getEffect(['filter', 'Q'])}`}
+              fluid
               min={0.01}
               max={12}
               name='reverb'
@@ -108,6 +118,7 @@ export default class MembranesynthForm extends Component {
             />
            <Form.Input
               label={`Distortion: ${this.props.getEffect(['distortion', 'distortion'])}`}
+              fluid
               min={0.01}
               max={1}
               name='distortion'
@@ -116,8 +127,10 @@ export default class MembranesynthForm extends Component {
               type='range'
               value={this.props.getEffect(['distortion', 'distortion'])}
             />
-        </Form.Group>
-        <label>Envelope</label>
+          </Form.Group>
+        <Divider />
+
+        <Header as='h3'>Envelope</Header >
         <Form.Group widths='equal'>
           <Form.Input
              label={`Attack: ${this.props.currentIns.options.envelope.attack}s `}

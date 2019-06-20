@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Dropdown} from 'semantic-ui-react'
+import { Form, Dropdown, Header, Segment, Divider } from 'semantic-ui-react'
 
 export default class MetalsynthForm extends Component {
 
@@ -16,12 +16,13 @@ export default class MetalsynthForm extends Component {
   render(){
     return (
       <Form>
-        <label>Oscillator </label>
+        <Divider />
+        <Header as='h3'>Oscillator</Header>
         <Form.Group widths='equal'>
           <Form.Input
              label={`Resonance: ${this.props.currentIns.options.resonance} Hz`}
              min={1}
-             max={16000}
+             max={6000}
              name='resonance'
              onChange={(e, {value}) => this.handleChange(e, ['resonance'],{value})}
              step={1}
@@ -49,7 +50,9 @@ export default class MetalsynthForm extends Component {
              value={this.props.currentIns.options.octaves}
            />
         </Form.Group>
-        <label>Envelope</label>
+        <Divider />
+
+        <Header as='h3'>Envelope</Header>
         <Form.Group widths='equal'>
           <Form.Input
              label={`Attack: ${this.props.currentIns.options.envelope.attack}s `}

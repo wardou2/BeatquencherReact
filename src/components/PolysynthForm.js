@@ -52,16 +52,37 @@ const oscTypeOptions = [
   }
 ]
 
-export default class MonosynthForm extends Component {
+export default class PolysynthForm extends Component {
 
   constructor(props){
     super(props)
-    this.state = {}
+    this.state = {
+      currentIns: {}
+    }
     this.handleChange = this.handleChange.bind(this)
   }
 
+  componentWillMount() {
+    console.log(this.props.currentIns);
+    this.setState({
+      currentIns: this.props.currentIns
+    })
+  }
+
   handleChange(e, field, {value}) {
-    this.props.handleChangeInstrument(this.props.currentIns.id, field, value)
+    console.log('in the form', this.state.currentIns);
+    let val = ((field[1] && field[1] === 'type')) ? value : parseFloat(value)
+    let insCopy = Object.assign({}, this.state.currentIns);
+
+    if (field[1]) {
+      insCopy["options"][field[0]][field[1]] = value
+    } else {
+      insCopy["options"][field[0]] = value
+    }
+
+    this.setState({
+      currentIns: insCopy
+    }, () => this.props.handleChangeInstrument(this.state.currentIns.id, field, value))
   }
 
   render(){
@@ -69,7 +90,7 @@ export default class MonosynthForm extends Component {
       <Form>
         <div className='dropdown-div'>
           <Dropdown
-            value={this.props.currentIns.options.oscillator.type}
+            value={this.state.currentIns.options.oscillator.type}
             fluid
             selection
             options={oscTypeOptions}
@@ -80,88 +101,89 @@ export default class MonosynthForm extends Component {
         <Header as='h3'>Envelope</Header>
         <Form.Group widths='equal'>
           <Form.Input
-             label={`Attack: ${this.props.currentIns.options.envelope.attack}s `}
+             label={`Attack: ${this.state.currentIns.options.envelope.attack}s `}
              min={0.001}
              max={3}
              name='attack'
              onChange={(e, {value}) => this.handleChange(e, ['envelope','attack'],{value})}
              step={0.001}
              type='range'
-             value={this.props.currentIns.options.envelope.attack}
+             value={this.state.currentIns.options.envelope.attack}
            />
           <Form.Input
-             label={`Decay: ${this.props.currentIns.options.envelope.decay}s `}
+             label={`Decay: ${this.state.currentIns.options.envelope.decay}s `}
              min={0.001}
              max={3}
              name='decay'
              onChange={(e, {value}) => this.handleChange(e, ['envelope','decay'],{value})}
              step={0.001}
              type='range'
-             value={this.props.currentIns.options.envelope.decay}
+             value={this.state.currentIns.options.envelope.decay}
            />
           <Form.Input
-             label={`Sustain: ${this.props.currentIns.options.envelope.sustain} `}
+             label={`Sustain: ${this.state.currentIns.options.envelope.sustain} `}
              min={0.001}
              max={.99}
              name='sustain'
              onChange={(e, {value}) => this.handleChange(e, ['envelope','sustain'],{value})}
              step={0.001}
              type='range'
-             value={this.props.currentIns.options.envelope.sustain}
+             value={this.state.currentIns.options.envelope.sustain}
            />
           <Form.Input
-             label={`Release: ${this.props.currentIns.options.envelope.release}s `}
+             label={`Release: ${this.state.currentIns.options.envelope.release}s `}
              min={0.001}
              max={3}
              name='release'
              onChange={(e, {value}) => this.handleChange(e, ['envelope','release'],{value})}
              step={0.001}
              type='range'
-             value={this.props.currentIns.options.envelope.release}
+             value={this.state.currentIns.options.envelope.release}
            />
          </Form.Group>
          <Divider />
+
         <Header as='h3'>Filter Envelope</Header >
         <Form.Group widths='equal'>
           <Form.Input
-             label={`Attack: ${this.props.currentIns.options.filterEnvelope.attack}s `}
+             label={`Attack: ${this.state.currentIns.options.filterEnvelope.attack}s `}
              min={0.001}
              max={3}
              name='attack'
              onChange={(e, {value}) => this.handleChange(e, ['filterEnvelope','attack'],{value})}
              step={0.001}
              type='range'
-             value={this.props.currentIns.options.filterEnvelope.attack}
+             value={this.state.currentIns.options.filterEnvelope.attack}
            />
           <Form.Input
-             label={`Decay: ${this.props.currentIns.options.filterEnvelope.decay}s `}
+             label={`Decay: ${this.state.currentIns.options.filterEnvelope.decay}s `}
              min={0.001}
              max={3}
              name='decay'
              onChange={(e, {value}) => this.handleChange(e, ['filterEnvelope','decay'],{value})}
              step={0.001}
              type='range'
-             value={this.props.currentIns.options.filterEnvelope.decay}
+             value={this.state.currentIns.options.filterEnvelope.decay}
            />
           <Form.Input
-             label={`Sustain: ${this.props.currentIns.options.filterEnvelope.sustain} `}
+             label={`Sustain: ${this.state.currentIns.options.filterEnvelope.sustain} `}
              min={0.001}
              max={.99}
              name='sustain'
              onChange={(e, {value}) => this.handleChange(e, ['filterEnvelope','sustain'],{value})}
              step={0.001}
              type='range'
-             value={this.props.currentIns.options.filterEnvelope.sustain}
+             value={this.state.currentIns.options.filterEnvelope.sustain}
            />
           <Form.Input
-             label={`Release: ${this.props.currentIns.options.filterEnvelope.release}s `}
+             label={`Release: ${this.state.currentIns.options.filterEnvelope.release}s `}
              min={0.001}
              max={3}
              name='release'
              onChange={(e, {value}) => this.handleChange(e, ['filterEnvelope','release'],{value})}
              step={0.001}
              type='range'
-             value={this.props.currentIns.options.filterEnvelope.release}
+             value={this.state.currentIns.options.filterEnvelope.release}
            />
          </Form.Group>
       </Form>

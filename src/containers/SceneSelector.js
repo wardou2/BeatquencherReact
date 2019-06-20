@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {Form, Button, Icon } from 'semantic-ui-react'
+import {Form, Button, Icon, Header, List, Segment } from 'semantic-ui-react'
 import * as edit from '../components/ContentEditable'
 import Cookies from 'js-cookie'
 
@@ -14,9 +14,10 @@ export default class SceneSelector extends Component {
       formHidden: true,
       name: ''
     }
-    // this.renderScenes =this.renderScenes.bind(this)
+    this.renderScenes = this.renderScenes.bind(this)
     this.handleClick = this.handleClick.bind(this)
     this.showForm = this.showForm.bind(this)
+    this.hideForm = this.hideForm.bind(this)
     this.form = this.form.bind(this)
   }
 
@@ -32,26 +33,18 @@ export default class SceneSelector extends Component {
     .then(json => this.props.setCurrentScene(json))
   }
 
-  // renderScenes() {
-  //   // if (Object.entries(this.props.currentProj).length !== 0) {
-  //     return <div>
-  //       <ul>
-  //         {this.props.currentProj.scenes.map(scene => {
-  //           return <li key={scene.id} onClick={() => this.handleClick(scene)}>
-  //                   {scene.name}
-  //                 </li>
-  //         })}
-  //       </ul>
-  //       <h3 onClick={this.props.newScene}>Add New Scene</h3>
-  //     </div>
-  //   // }
-  // }
-
   showForm() {
     console.log('show form');
     this.setState({
       formHidden: false,
       name: 'Scene ' + (this.props.currentProj.scenes.length+1)
+    })
+  }
+
+  hideForm() {
+    console.log('hide form');
+    this.setState({
+      formHidden: true
     })
   }
 
@@ -62,40 +55,50 @@ export default class SceneSelector extends Component {
   }
 
   form() {
-    console.log('check form');
     if (!this.state.formHidden) {
       return(
-        <Form onSubmit={this.handleSubmit}>
-          <h2>New Scene</h2>
-          <Form.Input
-            label='Name'
-            placeholder='Name'
-            name='name'
-            value={this.state.name}
-            onChange={this.handleChange}
-          />
-          <Button type='submit'>Submit</Button>
-        </Form>
+          <Form onSubmit={this.handleSubmit}>
+            <div className='close-btn' ><Icon name="close" onClick={this.hideForm}/></div>
+            <Header as='h2'>New Scene</Header>
+            <Form.Input
+              label='Name'
+              placeholder='Name'
+              name='name'
+              value={this.state.name}
+              onChange={this.handleChange}
+            />
+            <Button type='submit'>Submit</Button>
+          </Form>
       )
+    } else {
+      return <Button onClick={this.showForm}>Add New Scene</Button>
     }
+  }
+
+  renderScenes() {
+    return <List divided relaxed>
+      {this.props.currentProj.scenes.map(scene => {
+        return  <List.Item key={scene.id} onClick={() => this.handleClick(scene)}>
+                  <List.Content>
+                    <List.Header as='a'>{scene.name}</List.Header>
+                  </List.Content>
+                </List.Item>
+        })}
+    </List>
   }
 
   render() {
     let EditableProjectName = edit.contentEditable('h1')
-    return <div>
-      <EditableProjectName value={this.props.currentProj.title} onSave={(val) => this.props.handleChangeProject(['title'], val)}/>
-      <h2>Select Scene</h2>
-      <div>
-        <ul>
-          {this.props.currentProj.scenes.map(scene => {
-            return <li key={scene.id} onClick={() => this.handleClick(scene)}>
-                    {scene.name}
-                  </li>
-          })}
-        </ul>
-        <h3 onClick={this.showForm}>Add New Scene</h3>
-      </div>
-      {this.form()}
-    </div>
+
+    return <div className='projects-list'>
+            <EditableProjectName className='glow' value={this.props.currentProj.title} onSave={(val) => this.props.handleChangeProject(['title'], val)}/>
+            <Segment>
+              <Header as='h2'>Select Scene</Header>
+              {this.renderScenes()}
+            </Segment>
+            <Segment>
+              {this.form()}
+            </Segment>
+          </div>
   }
 }

@@ -24,11 +24,13 @@ export default class SequencerChannels extends Component {
     }
   }
 
-  render(){
-    return(
-      <Grid centered={true} columns={16} divided='vertically' celled={true}>
-        {this.renderChannels()}
-      </Grid>
+  render() {
+    return (
+      <div className='sequencer-div'>
+        <Grid columns={16} stretched divided='vertically' celled={true}>
+          {this.renderChannels()}
+        </Grid>
+      </div>
     )
   }
 }

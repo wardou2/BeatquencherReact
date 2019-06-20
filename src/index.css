@@ -5,6 +5,11 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  background: rgb(0,191,255);
+  background: linear-gradient(0deg, rgba(0,191,255,0.76234243697479) 0%, rgba(38,94,191,0.865983893557423) 49%, rgba(75,0,130,1) 100%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 code {
@@ -12,7 +17,111 @@ code {
     monospace;
 }
 
+/* .main-container {
+  background-color: linen;
+} */
+
+.project-view-div {
+  background: rgba(171, 205, 239, 0.3);
+  margin: 20px;
+  text-shadow: 0px 0px 10px rgba(255,255,255,.2);
+  box-shadow: 0px 0px 10px rgba(255,255,255,.2);
+}
+
+.project-view-div h1{
+  text-shadow: 0px 0px 10px rgba(255,255,255,.4);
+}
+
+.project-info-div {
+  display: inline-block;
+  margin: 10px;
+}
+
+.sequencer-div {
+  display: inline-block;
+  margin: 15px;
+}
+
+.ins-control-div {
+  display: inline-block;
+}
+
+.glow {
+  text-shadow: 0px 0px 20px rgba(255,255,255,.4);
+}
+
+.close-btn {
+  display: inline-block;
+  float: right;
+}
+
+.close-btn:hover {
+  cursor: pointer;
+}
+
 .selectedChannel {
   /*setting alpha = 0.1*/
-  background: rgba(135, 206, 250, 0.2);
+  background: rgba(255, 255, 255, .3);
+}
+
+.projects-list {
+  width: 30%;
+  text-align: center;
+  display: inline-block;
+}
+
+.float-left {
+  display: inline-block;
+  float: left;
+}
+
+.dropdown-div {
+  width: 40%;
+  text-align: center;
+  display: inline-block;
+}
+
+/* ---------navbar stuff----------- */
+
+.navbar {
+    text-align: center;
+    background-image: linear-gradient(260deg, #2376ae 0%, #c16ecf   100%);
+    border: 1px solid rgba(255, 255, 255, .2);
+    /* padding-bottom: 10px; */
+    padding: 10px;
+}
+
+.main-nav {
+    list-style-type: none;
+}
+
+.blank-div {
+
+  width: 5%;
+  float: left;
+}
+
+.nav-title {
+  display: inline-block;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.7);
+  text-align: center;
+
+}
+
+.logo {
+    display: inline-block;
+    font-size: 22px;
+    margin-top: 10px;
+    margin-left: 20px;
+}
+
+.navbar-toggle {
+
+    cursor: pointer;
+    color: rgba(255,255,255,0.8);
+    font-size: 24px;
+
+    width: 5%;
+    float: right;
 }

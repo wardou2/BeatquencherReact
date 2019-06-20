@@ -2,19 +2,30 @@ import React, { Component } from 'react'
 import Sequencer from './Sequencer'
 import { Container, Form, Grid, Button } from 'semantic-ui-react'
 import '../index.css';
+import EditNoteModal from './EditNoteModal'
 
 export default class Channel extends Component {
 
   constructor(props){
     super(props)
     this.state = {
-      track: {
-
-      }
+      track: {},
+      currentI: 0,
+      currentNote: '',
+      showModal: false
     }
     this.toggleCell = this.toggleCell.bind(this)
     this.getRightNote = this.getRightNote.bind(this)
     this.isSelected = this.isSelected.bind(this)
+    this.turnShowOff = this.turnShowOff.bind(this)
+    this.chooseNotes = this.chooseNotes.bind(this)
+  }
+
+  componentDidMount() {
+    let track = this.props.tracks.find(t => {
+      return (t.scene_id === this.props.currentScene.id && t.instrument_id === this.props.instrument.id)
+    })
+    this.setState({track})
   }
 
   getRightNote() {
@@ -27,25 +38,52 @@ export default class Channel extends Component {
     }
   }
 
-  componentDidMount() {
+  chooseNotes(note, active) {
+    console.log('note', note);
+    console.log('active', active);
     let track = this.props.tracks.find(t => {
       return (t.scene_id === this.props.currentScene.id && t.instrument_id === this.props.instrument.id)
     })
-    this.setState({track})
+    let notesCopy = this.state.track.notes
+    notesCopy[this.state.currentI] = (active) ? note : ''
+
+    track.notes = notesCopy
+    this.props.updateTrack(this.state.track)
+    this.turnShowOff()
   }
 
-  toggleCell(i) {
+  toggleCell(i, instrument) {
     let track = this.props.tracks.find(t => {
       return (t.scene_id === this.props.currentScene.id && t.instrument_id === this.props.instrument.id)
     })
-    let notesCopy = track.notes
-    if (notesCopy[i]) {
-      notesCopy[i] = ''
+
+    if (!instrument.melodic) {
+      let notesCopy = track.notes
+      if (notesCopy[i]) {
+        notesCopy[i] = ''
+      } else {
+        notesCopy[i] = this.getRightNote()
+      }
+
+      track.notes = notesCopy
+      this.props.updateTrack(track)
+
     } else {
-      notesCopy[i] = this.getRightNote()
+      console.log(track);
+      console.log(track.notes[i]);
+      this.setState({
+        showModal: true,
+        currentNote: track.notes[i],
+        currentI: i,
+
+      })
     }
-    track.notes = notesCopy
-    this.props.updateTrack(track)
+  }
+
+  turnShowOff() {
+    this.setState({
+      showModal: false
+    })
   }
 
   handleChange(e, field, {value}) {
@@ -89,6 +127,10 @@ export default class Channel extends Component {
           <Sequencer toggleCell={this.toggleCell} instrument={this.props.instrument}
             currentScene={this.props.currentScene} track={this.state.track}
             currentCount={this.props.currentCount} isPlaying={this.props.isPlaying}
+          />
+          <EditNoteModal
+            show={this.state.showModal} turnShowOff={this.turnShowOff} ins_type={this.props.instrument.ins_type}
+            chooseNotes={this.chooseNotes} currentNote={this.state.currentNote}
           />
         </Grid.Column>
       </Grid.Row>
