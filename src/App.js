@@ -6,7 +6,7 @@ import './App.css';
 import Cookies from 'js-cookie'
 import Auth from './components/Auth'
 import Dashboard from './containers/Dashboard'
-import Navbar from './components/Navbar'
+
 
 const BASE_URL = 'http://localhost:3000/api/v1/'
 const USERS_URL = BASE_URL + 'users/'
@@ -54,6 +54,12 @@ class App extends Component {
     return response.json();
   }
 
+  logOut = () => {
+    console.log('here');
+    this.setState({loggedIn: false})
+    Cookies.remove('id_token')
+  }
+
   getUser() {
     console.log('getUser', this.state.currentUser);
     let email = Cookies.get('email').toLowerCase()
@@ -79,11 +85,13 @@ class App extends Component {
       <Router>
         {(!this.state.loggedIn) ? this.renderLoginRedirect() : <Redirect to='/'/>}
         <div>
-          <Route path='/' render={(props) => <Navbar />} />
           <Route exact path='/login' render={(props) => <Auth setCurrentUser={this.setCurrentUser} dispalayError={this.state.displayError}/>} />
           <Route
             exact path='/'
-            render={(props) => <Dashboard currentUser={this.state.currentUser}/>}
+            render={(props) => <Dashboard
+                                  currentUser={this.state.currentUser} loggedIn={this.state.loggedIn}
+                                  logOut={this.logOut}
+                                />}
           />
         </div>
       </Router>

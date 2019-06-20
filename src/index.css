@@ -55,7 +55,16 @@ code {
   float: right;
 }
 
+.fake-close-btn {
+  display: inline-block;
+  float: left;
+  color: rgba(0,0,0,0%)
+}
+
 .close-btn:hover {
+  cursor: pointer;
+}
+.clickable:hover {
   cursor: pointer;
 }
 
@@ -84,21 +93,24 @@ code {
 /* ---------navbar stuff----------- */
 
 .navbar {
-    text-align: center;
-    background-image: linear-gradient(260deg, #2376ae 0%, #c16ecf   100%);
-    border: 1px solid rgba(255, 255, 255, .2);
-    /* padding-bottom: 10px; */
-    padding: 10px;
+  text-align: center;
+  background-image: linear-gradient(260deg, #2376ae 0%, #c16ecf  100%);
+  border: 1px solid rgba(255, 255, 255, .2);
+  padding-bottom: 10px;
+  padding: 10px;
+  position: relative;
 }
 
 .main-nav {
     list-style-type: none;
 }
 
-.blank-div {
-
-  width: 5%;
-  float: left;
+.nav-links,
+.logo {
+  display: inline-block;
+  cursor: pointer;
+  color: rgba(255,255,255,0.8);
+  font-size: 20px;
 }
 
 .nav-title {
@@ -106,22 +118,43 @@ code {
   text-decoration: none;
   color: rgba(255, 255, 255, 0.7);
   text-align: center;
-
 }
 
 .logo {
-    display: inline-block;
-    font-size: 22px;
-    margin-top: 10px;
-    margin-left: 20px;
+  display: inline-block;
+  font-size: 22px;
+  margin-top: 10px;
+  margin-left: 20px;
 }
 
-.navbar-toggle {
+.blank-div {
+  display: inline-block;
+  color: rgba(255,255,255,0.8);
+  font-size: 20px;
+  text-align: left;
 
-    cursor: pointer;
-    color: rgba(255,255,255,0.8);
-    font-size: 24px;
+  width: 10%;
+  float: left;
 
-    width: 5%;
-    float: right;
+  /* top: 50%; left: 50%; */
+  transform: translate(20%,20%);
+}
+
+.navbar-links {
+  display: inline-block;
+  cursor: pointer;
+  color: rgba(255,255,255,0.8);
+  font-size: 20px;
+  text-align: right;
+
+  width: 10%;
+  float: right;
+
+  /* top: 50%; left: 50%; */
+  transform: translate(-20%,20%);
+
+}
+
+.in-line {
+  display: inline;
 }

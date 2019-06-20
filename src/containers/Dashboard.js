@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
+import Navbar from '../components/Navbar'
 import ProjectsList from './ProjectsList'
 import SceneSelector from './SceneSelector'
 import ProjectView from './ProjectView'
 import NewProjectForm from '../components/NewProjectForm'
+import Tone from 'tone';
 import { Container } from 'semantic-ui-react'
 import Cookies from 'js-cookie'
 
@@ -15,7 +17,8 @@ export default class Dashboard extends Component {
     this.state = {
       currentProj: {},
       currentScene: {},
-      toDisplay: 'projectSelector'
+      toDisplay: 'projectSelector',
+      pToDisplay: ''
     }
     this.setCurrentProj = this.setCurrentProj.bind(this)
     this.setCurrentScene = this.setCurrentScene.bind(this)
@@ -25,11 +28,14 @@ export default class Dashboard extends Component {
     this.newProject = this.newProject.bind(this)
     this.newScene = this.newScene.bind(this)
     this.handleChangeScene = this.handleChangeScene.bind(this)
+    this.handleToDisplay = this.handleToDisplay.bind(this)
+    this.setToDisplay = this.setToDisplay.bind(this)
   }
 
   startNewProject() {
     this.setState({
-      toDisplay: 'startNewProject'
+      toDisplay: 'startNewProject',
+      pToDisplay: 'projectSelector'
     })
   }
 
@@ -54,14 +60,31 @@ export default class Dashboard extends Component {
     .then(json => this.setCurrentProj(json))
   }
 
+  handleToDisplay(other) {
+    // let tdCopy = this.state.toDisplay
+    this.setState({
+      toDisplay: this.state.pToDisplay,
+      pToDisplay: other
+    })
+  }
+
+  setToDisplay(path) {
+    this.setState({
+      toDisplay: path,
+    })
+  }
+
   setCurrentProj(proj) {
     console.log('setCurrentProj', proj);
-    this.setState({currentProj: proj, toDisplay: 'sceneSelector'})
+    let tdCopy = this.state.toDisplay
+    this.setState({currentProj: proj, toDisplay: 'sceneSelector', pToDisplay: tdCopy})
   }
 
   setCurrentScene(scene) {
     console.log('setCurrentScene', scene);
-    this.setState({currentScene: scene, toDisplay: 'projectView'})
+    Tone.Transport.cancel()
+    let tdCopy = this.state.toDisplay
+    this.setState({currentScene: scene, toDisplay: 'projectView', pToDisplay: tdCopy})
   }
 
   handleChangeProject(field, value) {
@@ -175,6 +198,7 @@ export default class Dashboard extends Component {
                   currentUser={this.props.currentUser} currentProj={this.state.currentProj}
                   setCurrentScene={this.setCurrentScene} newScene={this.newScene}
                   handleChangeProject={this.handleChangeProject} saveProject={this.saveProject}
+                  setToDisplay={this.setToDisplay}
                 />
         break
       case 'projectView':
@@ -195,8 +219,14 @@ export default class Dashboard extends Component {
       }
   }
   render(){
-    return  <Container textAlign="center" className='main-container'>
+    return <div>
+            <Navbar
+              currentProj={this.state.currentProj} loggedIn={this.props.loggedIn} logOut={this.props.logOut}
+              handleToDisplay={this.handleToDisplay} pToDisplay={this.state.pToDisplay}
+            />
+            <Container textAlign="center" className='main-container'>
               {this.conditionalRender()}
             </Container>
+          </div>
   }
 }

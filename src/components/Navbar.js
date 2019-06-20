@@ -4,31 +4,44 @@ import { Icon, Header} from 'semantic-ui-react'
 
 export default class Navbar extends Component {
 
-  constructor(props){
-    super(props)
-    this.state = {
-      menuVisible: false
+  isEmpty = (obj) => {
+    for(var key in obj) {
+      if(obj.hasOwnProperty(key))
+        return false;
+    }
+    return true;
+  }
+
+  showLogout = () => {
+    return (this.props.loggedIn) ? <a onClick={this.props.logOut} className="nav-links">Logout</a> : ' '
+  }
+
+  getRoute = () => {
+    switch (this.props.pToDisplay) {
+      case 'projectSelector':
+        return  <a onClick={() => this.props.handleToDisplay('')} class="nav-links"><Icon name='arrow alternate circle left outline'/>Projects</a>
+      case 'startNewProject':
+        return  <a onClick={() => this.props.handleToDisplay('')} class="nav-links"><Icon name='arrow alternate circle left outline'/>Projects</a>
+      case 'sceneSelector':
+        return <a onClick={() => this.props.handleToDisplay('projectSelector')} class="nav-links"><Icon name='arrow alternate circle left outline'/>Scenes</a>
+      default:
+        return <div><Icon name='headphones' /></div>
     }
   }
 
-  toggleMenuVisible = () => {
-    this.setState({menuVisible: !this.state.menuVisible}, () => {
-
-    })
-  }
-
   render(){
+    console.log(this.props.pToDisplay);
     return (
       <div className="navbar">
         <div className='blank-div'>
-          <br></br>
+          {this.getRoute()}
         </div>
         <div className="nav-title">
-          <Header as='h2'>PROJECT NAME</Header>
+          <Header as='h1' className='glow'>{(!this.isEmpty(this.props.currentProj)) ? this.props.currentProj.title : 'Beatquencher'}</Header>
         </div>
-       <div className="navbar-toggle" id="js-navbar-toggle" onClick={this.toggleMenuVisible}>
-          <Icon name="bars"/>
-       </div>
+        <div className="navbar-links" id="js-navbar-toggle" onClick={this.toggleMenuVisible}>
+          {this.showLogout()}
+        </div>
       </div>
     )
   }

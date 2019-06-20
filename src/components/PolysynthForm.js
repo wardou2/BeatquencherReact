@@ -143,6 +143,30 @@ export default class PolysynthForm extends Component {
          </Form.Group>
          <Divider />
 
+         <Header as='h3'>Filter Envelope</Header >
+         <Form.Group widths='equal'>
+           <Form.Input
+              label={`Base Frequency: ${this.state.currentIns.options.filterEnvelope.baseFrequency}Hz `}
+              min={0}
+              max={18000}
+              name='baseFrequency'
+              onChange={(e, {value}) => this.handleChange(e, ['filterEnvelope','baseFrequency'],{value})}
+              step={1}
+              type='range'
+              value={this.state.currentIns.options.filterEnvelope.baseFrequency}
+            />
+           <Form.Input
+              label={`Filter Q: ${this.state.currentIns.options.filter.Q} `}
+              min={0}
+              max={18}
+              name='Q'
+              onChange={(e, {value}) => this.handleChange(e, ['filter','Q'],{value})}
+              step={0.1}
+              type='range'
+              value={this.state.currentIns.options.filter.Q}
+            />
+          </Form.Group>
+
         <Header as='h3'>Filter Envelope</Header >
         <Form.Group widths='equal'>
           <Form.Input

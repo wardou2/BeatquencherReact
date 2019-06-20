@@ -3,6 +3,7 @@ import { Header, Image, Modal, Form, Dropdown, Button, Radio, Segment, Message, 
 
 const notesList1 = ['B2', 'A#2', 'A2', 'G#2', 'G2', 'F#2', 'F2', 'E2', 'D#2', 'D2', 'C#2', 'C2']
 const notesList2 = ['B3', 'A#3', 'A3', 'G#3', 'G3', 'F#3', 'F3', 'E3', 'D#3', 'D3', 'C#3', 'C3']
+const notesList3 = ['B4', 'A#4', 'A4', 'G#4', 'G4', 'F#4', 'F4', 'E4', 'D#4', 'D4', 'C#4', 'C4']
 
 export default class PolyEditNote extends Component {
 
@@ -98,6 +99,9 @@ export default class PolyEditNote extends Component {
           </Grid.Column>
           <Grid.Column width={4}>
             {this.renderButtons(notesList2)}
+          </Grid.Column>
+          <Grid.Column width={4}>
+            {this.renderButtons(notesList3)}
           </Grid.Column>
         </Grid>
         <Divider/>

@@ -101,6 +101,8 @@ export default class ProjectView extends Component {
           this['ins'+ins.id].triggerAttackRelease('8n', time)
         } else if (ins.ins_type === 'snare') {
           this['ins'+ins.id].triggerAttackRelease('16n', time)
+        } else if (ins.ins_type === 'polysynth') {
+          this['ins'+ins.id].triggerAttackRelease(track.notes[step], '8n', time)
         } else {
           this['ins'+ins.id].triggerAttackRelease(track.notes[step], '16n', time)
         }
@@ -122,20 +124,20 @@ export default class ProjectView extends Component {
     switch (ins.ins_type) {
       case 'monosynth':
         console.log('mono');
-        this['ins'+ins.id] = new Tone.MonoSynth(ins.options)
+        this['ins'+ins.id] = new Tone.MonoSynth()
+        this['ins'+ins.id].set(ins.options)
         this.attachEffects(ins)
         break
       case 'polysynth':
 
         console.log('poly');
         this['ins'+ins.id] = new Tone.PolySynth(ins.options.polyphony, Tone.MonoSynth)
-
+        ins.options.filter = {"Q": 6}
         if (ins.options.oscillator.type.slice(0,2) === 'fm') {
           let insCopy = JSON.parse(JSON.stringify(ins))
           delete insCopy.options.oscillator
           this['ins'+ins.id].set(insCopy.options)
           this['ins'+ins.id].set({'oscillator': {'type': ins.options.oscillator.type}})
-          console.log('after', this['ins'+ins.id]);
         } else {
           this['ins'+ins.id].set(ins.options)
         }
@@ -352,14 +354,13 @@ export default class ProjectView extends Component {
   }
 
   render() {
-    let EditableProjectName = edit.contentEditable('h1')
-    let EditableSceneName = edit.contentEditable('h3')
+
+    let EditableSceneName = edit.contentEditable('h2')
 
     return (
       <div className='project-view-div'>
         <div className='project-info-div'>
-          <EditableProjectName value={this.props.currentProj.title} onSave={(val) => this.handleChangeProject(['title'], val)}/>
-          <EditableSceneName value={this.props.currentScene.name} onSave={(val) => this.props.handleChangeScene(['name'], val)}/>
+          <EditableSceneName className='clickable' value={this.props.currentScene.name} onSave={(val) => this.props.handleChangeScene(['name'], val)}/>
           <Form size="small">
             <Form.Group>
               <Button icon onClick={() => this.playInstruments()}>
@@ -371,6 +372,7 @@ export default class ProjectView extends Component {
                <Form.Input
                 label="Tempo (bpm)"
                  name='tempo'
+                 fluid
                  onChange={(e, {value}) => this.handleChangeTempo(['tempo'], {value})}
                  type='number'
                  value={this.props.currentProj.tempo}

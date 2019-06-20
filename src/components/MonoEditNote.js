@@ -111,7 +111,15 @@ export default class MonoEditNote extends Component {
   }
 
   static getDerivedStateFromProps(props, state) {
+    console.log('gdsfp', props);
     if (props.currentNote !== state.currentNote) {
+      if (props.currentNote[1] === '#') {
+        return {
+          note: props.currentNote.slice(0,2),
+          octave: props.currentNote[2],
+          currentNote: props.currentNote
+        }
+      }
       return {
         note: props.currentNote[0],
         octave: props.currentNote[1],
