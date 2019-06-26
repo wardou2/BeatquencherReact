@@ -41,7 +41,7 @@ export default class Auth extends Component {
   }
 
   sendAuth = (name) => {
-    fetch('http://localhost:3000/login', {
+    fetch('https://evening-brook-20328.herokuapp.com/login', {
       method: 'POST',
       headers: {
         'id_token': Cookies.get('id_token'),

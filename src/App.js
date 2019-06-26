@@ -8,7 +8,7 @@ import Auth from './components/Auth'
 import Dashboard from './containers/Dashboard'
 
 
-const BASE_URL = 'http://localhost:3000/api/v1/'
+const BASE_URL = 'https://evening-brook-20328.herokuapp.com/api/v1/'
 const USERS_URL = BASE_URL + 'users/'
 const PROJECTS_URL = BASE_URL + 'projects/'
 

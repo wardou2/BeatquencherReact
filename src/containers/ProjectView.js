@@ -7,7 +7,7 @@ import * as edit from '../components/ContentEditable'
 import { Container, Form, Button, Icon } from 'semantic-ui-react'
 import Cookies from 'js-cookie'
 
-const BASE_URL = 'http://localhost:3000/api/v1/'
+const BASE_URL = 'https://evening-brook-20328.herokuapp.com/api/v1/'
 
 export default class ProjectView extends Component {
 

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { List, Icon, Header, Button, Segment } from 'semantic-ui-react'
 import Cookies from 'js-cookie'
 
-const BASE_URL = 'http://localhost:3000/api/v1/'
+const BASE_URL = 'https://evening-brook-20328.herokuapp.com/api/v1/'
 const PROJECTS_URL = BASE_URL + 'projects/'
 
 export default class ProjectsList extends Component {
