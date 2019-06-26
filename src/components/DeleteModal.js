@@ -35,7 +35,7 @@ class EditNoteModal extends Component {
  }
 
  handleDelete = () => {
-   fetch('http://localhost:3000/api/v1/projects/'+this.props.currentProj.id, {
+   fetch('https://evening-brook-20328.herokuapp.com/api/v1/projects/'+this.props.currentProj.id, {
      method: 'DELETE',
      headers: {
        'id_token': Cookies.get('id_token'),

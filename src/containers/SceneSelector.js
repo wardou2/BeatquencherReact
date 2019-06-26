@@ -4,7 +4,7 @@ import * as edit from '../components/ContentEditable'
 import DeleteModal from '../components/DeleteModal'
 import Cookies from 'js-cookie'
 
-const BASE_URL = 'http://localhost:3000/api/v1/'
+const BASE_URL = 'https://evening-brook-20328.herokuapp.com/api/v1/'
 const SCENES_URL = BASE_URL + 'scenes/'
 let EditableProjectName = edit.contentEditable('h1')
 
