@@ -111,7 +111,6 @@ export default class MonoEditNote extends Component {
   }
 
   static getDerivedStateFromProps(props, state) {
-    console.log('gdsfp', props);
     if (props.currentNote !== state.currentNote) {
       if (props.currentNote[1] === '#') {
         return {

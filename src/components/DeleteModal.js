@@ -35,7 +35,6 @@ class EditNoteModal extends Component {
  }
 
  handleDelete = () => {
-   console.log('here');
    fetch('http://localhost:3000/api/v1/projects/'+this.props.currentProj.id, {
      method: 'DELETE',
      headers: {
@@ -44,12 +43,8 @@ class EditNoteModal extends Component {
      }
    })
 
-   this.props.setToDisplay('projectSelector')
+   this.props.projectWasDeleted('projectSelector')
    // this.close()
- }
-
- handleRedirect = () => {
-   return <Redirect to='/' />
  }
 
  render() {

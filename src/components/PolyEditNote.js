@@ -18,7 +18,7 @@ export default class PolyEditNote extends Component {
   }
 
   static getDerivedStateFromProps(props, state) {
-    console.log('gdsfp', props.currentNote);
+    // console.log('gdsfp', props.currentNote);
     if (props.currentNote !== state.currentNote) {
       if (props.currentNote === '') {
         return {
@@ -85,7 +85,7 @@ export default class PolyEditNote extends Component {
   }
 
   handleSubmit = () => {
-    console.log(this.state.notes);
+
     this.props.chooseNotes(this.state.notes, this.state.active)
   }
 

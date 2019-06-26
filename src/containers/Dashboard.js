@@ -29,7 +29,7 @@ export default class Dashboard extends Component {
     this.newScene = this.newScene.bind(this)
     this.handleChangeScene = this.handleChangeScene.bind(this)
     this.handleToDisplay = this.handleToDisplay.bind(this)
-    this.setToDisplay = this.setToDisplay.bind(this)
+    this.projectWasDeleted = this.projectWasDeleted.bind(this)
   }
 
   startNewProject() {
@@ -60,17 +60,24 @@ export default class Dashboard extends Component {
     .then(json => this.setCurrentProj(json))
   }
 
-  handleToDisplay(other) {
+  handleToDisplay(other, resetProj = false) {
     // let tdCopy = this.state.toDisplay
+    if (resetProj) {
+      this.setState({
+        currentProj: {}
+      })
+    }
+    Tone.Transport.stop()
     this.setState({
       toDisplay: this.state.pToDisplay,
       pToDisplay: other
     })
   }
 
-  setToDisplay(path) {
+  projectWasDeleted(path) {
     this.setState({
       toDisplay: path,
+      currentProj: {}
     })
   }
 
@@ -133,8 +140,6 @@ export default class Dashboard extends Component {
         }
       })
     })
-    .then(res => res.json())
-    .then(json => console.log(json))
   }
 
   saveScene = () => {
@@ -198,7 +203,7 @@ export default class Dashboard extends Component {
                   currentUser={this.props.currentUser} currentProj={this.state.currentProj}
                   setCurrentScene={this.setCurrentScene} newScene={this.newScene}
                   handleChangeProject={this.handleChangeProject} saveProject={this.saveProject}
-                  setToDisplay={this.setToDisplay}
+                  projectWasDeleted={this.projectWasDeleted}
                 />
         break
       case 'projectView':

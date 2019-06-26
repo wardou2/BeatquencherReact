@@ -68,6 +68,7 @@ export default class MonosynthForm extends Component {
     return (
       <Form>
         <div className='dropdown-div'>
+          <Header as='h4'>Oscillator Source</Header>
           <Dropdown
             value={this.props.currentIns.options.oscillator.type}
             fluid

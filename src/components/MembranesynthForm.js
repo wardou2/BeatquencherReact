@@ -69,66 +69,29 @@ export default class MembranesynthForm extends Component {
       <Form>
         <Divider />
         <Header as='h3'>Oscillator </Header>
-        <Form.Group widths='equal'>
-          <Dropdown
-            placeholder='Oscillator Type'
-            fluid
-            value={this.props.currentIns.options.oscillator.type}
-            selection
-            options={oscTypeOptions}
-            onChange={(e, {value}) => this.handleChange(e, ['oscillator','type'],{value})}
-          />
-          <Form.Input
-             label={`Phase: ${this.props.currentIns.options.oscillator.phase} `}
-             fluid
-             min={0}
-             max={360}
-             name='phase'
-             onChange={(e, {value}) => this.handleChange(e, ['oscillator','phase'],{value})}
-             step={1}
-             type='range'
-             value={this.props.currentIns.options.oscillator.phase}
-           />
-         </Form.Group>
+        <div className='form-width' >
+            <Dropdown
+              placeholder='Oscillator Type'
+              fluid
+              value={this.props.currentIns.options.oscillator.type}
+              selection
+              options={oscTypeOptions}
+              onChange={(e, {value}) => this.handleChange(e, ['oscillator','type'],{value})}
+            />
+            <br></br>
+            {(this.props.currentIns.options.oscillator.type.slice(0,2) === 'fm') ? <Form.Input
+               label={`Phase: ${this.props.currentIns.options.oscillator.phase} `}
+               fluid
+               min={0}
+               max={360}
+               name='phase'
+               onChange={(e, {value}) => this.handleChange(e, ['oscillator','phase'],{value})}
+               step={1}
+               type='range'
+               value={this.props.currentIns.options.oscillator.phase}
+             /> : null}
+         </div>
          <Divider />
-
-         <Header as='h3'>Oscillator </Header>
-         <Form.Group widths='equal'>
-           <Form.Input
-              label={`Filter Cutoff: ${this.props.getEffect(['filter', 'frequency'])} Hz`}
-              fluid
-              min={1}
-              max={18000}
-              name='reverb'
-              onChange={(e, {value}) => this.props.handleChangeEffect(this.props.currentIns.id, ['filter', 'frequency'], {value})}
-              step={1}
-              type='range'
-              value={this.props.getEffect(['filter', 'frequency'])}
-            />
-           <Form.Input
-              label={`Filter Q: ${this.props.getEffect(['filter', 'Q'])}`}
-              fluid
-              min={0.01}
-              max={12}
-              name='reverb'
-              onChange={(e, {value}) => this.props.handleChangeEffect(this.props.currentIns.id, ['filter', 'Q'], {value})}
-              step={0.01}
-              type='range'
-              value={this.props.getEffect(['filter', 'Q'])}
-            />
-           <Form.Input
-              label={`Distortion: ${this.props.getEffect(['distortion', 'distortion'])}`}
-              fluid
-              min={0.01}
-              max={1}
-              name='distortion'
-              onChange={(e, {value}) => this.props.handleChangeEffect(this.props.currentIns.id, ['distortion', 'distortion'], {value})}
-              step={0.01}
-              type='range'
-              value={this.props.getEffect(['distortion', 'distortion'])}
-            />
-          </Form.Group>
-        <Divider />
 
         <Header as='h3'>Envelope</Header >
         <Form.Group widths='equal'>
@@ -173,6 +136,46 @@ export default class MembranesynthForm extends Component {
              value={this.props.currentIns.options.envelope.release}
            />
          </Form.Group>
+         <Divider />
+
+        <Header as='h3'>Effects</Header>
+        <Form.Group widths='equal'>
+          <Form.Input
+             label={`Filter Cutoff: ${this.props.getEffect(['filter', 'frequency'])} Hz`}
+             fluid
+             min={1}
+             max={18000}
+             name='reverb'
+             onChange={(e, {value}) => this.props.handleChangeEffect(this.props.currentIns.id, ['filter', 'frequency'], {value})}
+             step={1}
+             type='range'
+             value={this.props.getEffect(['filter', 'frequency'])}
+           />
+          <Form.Input
+             label={`Filter Q: ${this.props.getEffect(['filter', 'Q'])}`}
+             fluid
+             min={0.01}
+             max={12}
+             name='reverb'
+             onChange={(e, {value}) => this.props.handleChangeEffect(this.props.currentIns.id, ['filter', 'Q'], {value})}
+             step={0.01}
+             type='range'
+             value={this.props.getEffect(['filter', 'Q'])}
+           />
+          <Form.Input
+             label={`Distortion: ${this.props.getEffect(['distortion', 'distortion'])}`}
+             fluid
+             min={0.01}
+             max={1}
+             name='distortion'
+             onChange={(e, {value}) => this.props.handleChangeEffect(this.props.currentIns.id, ['distortion', 'distortion'], {value})}
+             step={0.01}
+             type='range'
+             value={this.props.getEffect(['distortion', 'distortion'])}
+           />
+         </Form.Group>
+        <Divider />
+
       </Form>
     )
   }

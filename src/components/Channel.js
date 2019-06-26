@@ -39,8 +39,6 @@ export default class Channel extends Component {
   }
 
   chooseNotes(note, active) {
-    console.log('note', note);
-    console.log('active', active);
     let track = this.props.tracks.find(t => {
       return (t.scene_id === this.props.currentScene.id && t.instrument_id === this.props.instrument.id)
     })
@@ -69,8 +67,6 @@ export default class Channel extends Component {
       this.props.updateTrack(track)
 
     } else {
-      console.log(track);
-      console.log(track.notes[i]);
       this.setState({
         showModal: true,
         currentNote: track.notes[i],

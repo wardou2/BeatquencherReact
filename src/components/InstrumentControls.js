@@ -61,7 +61,7 @@ export default class InstrumentControls extends Component {
 
   render(){
     return (
-      <div className='ins-control-div'>
+      <div className='ins-control-div glow'>
         <Header as='h2'>{this.props.currentIns.name}</Header>
         {this.renderControls()}
       </div>

@@ -6,16 +6,19 @@ const noiseTypeOptions = [
     key: 'white',
     text: 'White',
     value: 'white',
+    image: { avatar: true, src: '/images/white.jpg' },
   },
   {
     key: 'brown',
     text: 'Brown',
     value: 'brown',
+    image: { avatar: true, src: '/images/brown.jpg' },
   },
   {
     key: 'pink',
     text: 'Pink',
     value: 'pink',
+    image: { avatar: true, src: '/images/pink.jpg' },
   },
 ]
 
@@ -35,46 +38,17 @@ export default class NoisesynthForm extends Component {
     return (
       <Form>
         <Divider />
-        <Header as='h3'>Oscillator</Header>
-        <Form.Group widths='equal'>
+        <div className='form-width' >
+          <Header as='h4'>Noise Type</Header>
           <Dropdown
+            label= 'Noise Type'
             value={this.props.currentIns.options.noise.type}
             fluid
             selection
             options={noiseTypeOptions}
             onChange={(e, {value}) => this.handleChange(e, ['noise','type'],{value})}
           />
-          <Form.Input
-             label={`Reverb: ${this.props.getEffect(['reverb', 'wet'])*100}%`}
-             min={0}
-             max={1}
-             name='reverb'
-             onChange={(e, {value}) => this.props.handleChangeEffect(this.props.currentIns.id, ['reverb', 'wet'], {value})}
-             step={0.01}
-             type='range'
-             value={this.props.getEffect(['reverb', 'wet'])}
-           />
-          <Form.Input
-             label={`Filter Cutoff: ${this.props.getEffect(['filter', 'frequency'])} Hz`}
-             min={1}
-             max={18000}
-             name='reverb'
-             onChange={(e, {value}) => this.props.handleChangeEffect(this.props.currentIns.id, ['filter', 'frequency'], {value})}
-             step={1}
-             type='range'
-             value={this.props.getEffect(['filter', 'frequency'])}
-           />
-           <Form.Input
-              label={`Filter Q: ${this.props.getEffect(['filter', 'Q'])}`}
-              min={0.01}
-              max={20}
-              name='reverb'
-              onChange={(e, {value}) => this.props.handleChangeEffect(this.props.currentIns.id, ['filter', 'Q'], {value})}
-              step={0.01}
-              type='range'
-              value={this.props.getEffect(['filter', 'Q'])}
-            />
-        </Form.Group>
+        </div>
         <Divider />
 
         <Header as='h3'>Envelope</Header>
@@ -110,6 +84,42 @@ export default class NoisesynthForm extends Component {
              value={this.props.currentIns.options.envelope.sustain}
            />
          </Form.Group>
+         <Divider />
+
+         <Header as='h3'>Effects</Header>
+         <Form.Group widths='equal'>
+           <Form.Input
+              label={`Reverb: ${this.props.getEffect(['reverb', 'wet'])*100}%`}
+              min={0}
+              max={1}
+              name='reverb'
+              onChange={(e, {value}) => this.props.handleChangeEffect(this.props.currentIns.id, ['reverb', 'wet'], {value})}
+              step={0.01}
+              type='range'
+              value={this.props.getEffect(['reverb', 'wet'])}
+            />
+           <Form.Input
+              label={`Filter Cutoff: ${this.props.getEffect(['filter', 'frequency'])} Hz`}
+              min={1}
+              max={18000}
+              name='reverb'
+              onChange={(e, {value}) => this.props.handleChangeEffect(this.props.currentIns.id, ['filter', 'frequency'], {value})}
+              step={1}
+              type='range'
+              value={this.props.getEffect(['filter', 'frequency'])}
+            />
+            <Form.Input
+               label={`Filter Q: ${this.props.getEffect(['filter', 'Q'])}`}
+               min={0.01}
+               max={20}
+               name='reverb'
+               onChange={(e, {value}) => this.props.handleChangeEffect(this.props.currentIns.id, ['filter', 'Q'], {value})}
+               step={0.01}
+               type='range'
+               value={this.props.getEffect(['filter', 'Q'])}
+             />
+         </Form.Group>
+         <Divider />
       </Form>
     )
   }

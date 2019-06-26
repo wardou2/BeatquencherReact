@@ -63,14 +63,12 @@ export default class PolysynthForm extends Component {
   }
 
   componentWillMount() {
-    console.log(this.props.currentIns);
     this.setState({
       currentIns: this.props.currentIns
     })
   }
 
   handleChange(e, field, {value}) {
-    console.log('in the form', this.state.currentIns);
     let val = ((field[1] && field[1] === 'type')) ? value : parseFloat(value)
     let insCopy = Object.assign({}, this.state.currentIns);
 
@@ -143,6 +141,7 @@ export default class PolysynthForm extends Component {
          </Form.Group>
          <Divider />
 
+         <div style={{display: 'inline-block', width: '50%'}}>
          <Header as='h3'>Filter Envelope</Header >
          <Form.Group widths='equal'>
            <Form.Input
@@ -166,8 +165,8 @@ export default class PolysynthForm extends Component {
               value={this.state.currentIns.options.filter.Q}
             />
           </Form.Group>
+          </div>
 
-        <Header as='h3'>Filter Envelope</Header >
         <Form.Group widths='equal'>
           <Form.Input
              label={`Attack: ${this.state.currentIns.options.filterEnvelope.attack}s `}

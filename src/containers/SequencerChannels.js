@@ -12,6 +12,7 @@ export default class SequencerChannels extends Component {
   renderChannels() {
 
     if (this.props.instruments) {
+      this.props.instruments.sort((a, b) => (a.id > b.id) ? 1 : -1)
       return this.props.instruments.map(ins => {
          return  <Channel
             key={ins.id} instrument={ins} currentScene={this.props.currentScene}

@@ -96,7 +96,7 @@ export default class ProjectView extends Component {
 
       if (track.notes[step]) {
         if (ins.ins_type === 'closed_hihat') {
-          this['ins'+ins.id].triggerAttackRelease('32n', time)
+          this['ins'+ins.id].triggerAttackRelease('16n', time)
         } else if (ins.ins_type === 'open_hihat') {
           this['ins'+ins.id].triggerAttackRelease('8n', time)
         } else if (ins.ins_type === 'snare') {
@@ -132,7 +132,7 @@ export default class ProjectView extends Component {
 
         console.log('poly');
         this['ins'+ins.id] = new Tone.PolySynth(ins.options.polyphony, Tone.MonoSynth)
-        ins.options.filter = {"Q": 6}
+
         if (ins.options.oscillator.type.slice(0,2) === 'fm') {
           let insCopy = JSON.parse(JSON.stringify(ins))
           delete insCopy.options.oscillator
@@ -219,8 +219,6 @@ export default class ProjectView extends Component {
     let instrumentsCopy = [...this.state.instruments]
     let instrument = this.state.instruments.filter(ins => ins.id === ins_id)[0]
 
-    console.log('before', this['ins'+ins_id]);
-
     if (field[1]) {
       instrument["options"][field[0]][field[1]] = value
       this['ins'+ins_id].set({[field[0]]: {[field[1]]: value}})
@@ -228,8 +226,6 @@ export default class ProjectView extends Component {
       instrument["options"][field[0]] = value
       this['ins'+ins_id].set({[field[0]]: value})
     }
-
-    console.log('after', this['ins'+ins_id]);
 
     let foundIndex = instrumentsCopy.findIndex(ins => ins.id === ins_id)
     instrumentsCopy[foundIndex] = instrument
@@ -266,7 +262,7 @@ export default class ProjectView extends Component {
     if (index >= 0) {tracksCopy[index] = track}
     this.setState({
       tracks: tracksCopy
-    }, console.log('update tracks', this.state.tracks))
+    })
   }
 
   handleMute(ins_id) {
@@ -290,6 +286,7 @@ export default class ProjectView extends Component {
     this.setState({
       playing: !this.state.playing
     })
+
     Tone.Transport.toggle()
   }
 
@@ -314,8 +311,6 @@ export default class ProjectView extends Component {
           effects: ins.effects
         }})
       })
-      .then(res => res.json())
-      .then(res => console.log(res))
     })
   }
 

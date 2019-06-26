@@ -51,7 +51,6 @@ export default class SceneSelector extends Component {
   }
 
   showForm(type) {
-    console.log('show form');
     this.setState({
       formType: type,
       name: 'Scene ' + (this.props.currentProj.scenes.length+1)
@@ -59,20 +58,18 @@ export default class SceneSelector extends Component {
   }
 
   hideForm() {
-    console.log('hide form');
     this.setState({
       formType: ''
     })
   }
 
   handleChange = (e, { name, value }) => {
-    console.log(name)
-    console.log(value)
     this.setState({ [name]: value })
   }
 
   handleSubmitScene = () => {
     this.props.newScene(this.state)
+    this.hideForm()
   }
 
   handleSubmitProj = () => {
@@ -155,7 +152,7 @@ export default class SceneSelector extends Component {
             <br></br>
             <DeleteModal
               show={this.state.showModal} turnShowOff={this.turnShowOff}
-              currentProj={this.props.currentProj} setToDisplay={this.props.setToDisplay}
+              currentProj={this.props.currentProj} projectWasDeleted={this.props.projectWasDeleted}
             />
             <Segment>
               <Header as='h2'>Select Scene</Header>
