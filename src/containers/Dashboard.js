@@ -7,8 +7,7 @@ import NewProjectForm from '../components/NewProjectForm'
 import Tone from 'tone';
 import { Container } from 'semantic-ui-react'
 import Cookies from 'js-cookie'
-
-const BASE_URL = 'https://evening-brook-20328.herokuapp.com/api/v1/'
+import {BASE_URL} from '../api_url'
 
 export default class Dashboard extends Component {
 

@@ -3,8 +3,8 @@ import {Form, Button, Icon, Header, List, Segment } from 'semantic-ui-react'
 import * as edit from '../components/ContentEditable'
 import DeleteModal from '../components/DeleteModal'
 import Cookies from 'js-cookie'
+import {BASE_URL} from '../api_url'
 
-const BASE_URL = 'https://evening-brook-20328.herokuapp.com/api/v1/'
 const SCENES_URL = BASE_URL + 'scenes/'
 let EditableProjectName = edit.contentEditable('h1')
 

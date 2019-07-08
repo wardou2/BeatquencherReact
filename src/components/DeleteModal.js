@@ -3,6 +3,7 @@ import MonoEditNote from './MonoEditNote'
 import PolyEditNote from './PolyEditNote'
 import { BrowserRouter as Router, Route, Redirect, withRouter } from 'react-router-dom';
 import Cookies from 'js-cookie'
+import {BASE_URL} from '../api_url'
 
 import { Header, Image, Modal, Form, Dropdown, Button, Radio, Segment } from 'semantic-ui-react'
 
@@ -35,7 +36,7 @@ class EditNoteModal extends Component {
  }
 
  handleDelete = () => {
-   fetch('https://evening-brook-20328.herokuapp.com/api/v1/projects/'+this.props.currentProj.id, {
+   fetch(BASE_URL+'/projects/'+this.props.currentProj.id, {
      method: 'DELETE',
      headers: {
        'id_token': Cookies.get('id_token'),

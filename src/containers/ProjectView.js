@@ -6,8 +6,7 @@ import Monosynth from '../components/Monosynth'
 import * as edit from '../components/ContentEditable'
 import { Container, Form, Button, Icon } from 'semantic-ui-react'
 import Cookies from 'js-cookie'
-
-const BASE_URL = 'https://evening-brook-20328.herokuapp.com/api/v1/'
+import {BASE_URL} from '../api_url'
 
 export default class ProjectView extends Component {
 

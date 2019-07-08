@@ -2,8 +2,8 @@ import React, { Component} from 'react'
 import { Link } from 'react-router-dom';
 import { List, Icon, Header, Button, Segment } from 'semantic-ui-react'
 import Cookies from 'js-cookie'
+import {BASE_URL} from '../api_url'
 
-const BASE_URL = 'https://evening-brook-20328.herokuapp.com/api/v1/'
 const PROJECTS_URL = BASE_URL + 'projects/'
 
 export default class ProjectsList extends Component {

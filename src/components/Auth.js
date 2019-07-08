@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Cookies from 'js-cookie'
 import { Button, Icon, Container } from 'semantic-ui-react'
-
+import {BASE_URL} from '../api_url'
 
 const errorStyle = {'background-color': 'red'}
 
@@ -41,7 +41,7 @@ export default class Auth extends Component {
   }
 
   sendAuth = (name) => {
-    fetch('https://evening-brook-20328.herokuapp.com/login', {
+    fetch(BASE_URL+'/login', {
       method: 'POST',
       headers: {
         'id_token': Cookies.get('id_token'),

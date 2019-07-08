@@ -6,9 +6,8 @@ import './App.css';
 import Cookies from 'js-cookie'
 import Auth from './components/Auth'
 import Dashboard from './containers/Dashboard'
+import {BASE_URL} from './api_url'
 
-
-const BASE_URL = 'https://evening-brook-20328.herokuapp.com/api/v1/'
 const USERS_URL = BASE_URL + 'users/'
 const PROJECTS_URL = BASE_URL + 'projects/'
 
