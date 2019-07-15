@@ -15,8 +15,10 @@ export default class Auth extends Component {
     window.gapi.signin2.render(
       GOOGLE_BUTTON_ID,
       {
-        width: 200,
+        width: 230,
         height: 50,
+        longtitle: 'true',
+        theme: 'dark',
         onsuccess: this.onSuccess,
       },
     );
