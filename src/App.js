@@ -25,7 +25,9 @@ class App extends Component {
   }
 
   componentDidMount() {
-
+    window.gapi.load('auth2', function() {
+        window.gapi.auth2.init();
+    });
   }
 
   renderLoginRedirect = () => {
@@ -54,9 +56,14 @@ class App extends Component {
   }
 
   logOut = () => {
-    console.log('here');
-    this.setState({loggedIn: false})
-    Cookies.remove('id_token')
+    var auth2 = window.gapi.auth2.getAuthInstance();
+    auth2.signOut().then(() => {
+      console.log('User signed out.');
+      Cookies.remove('id_token')
+      Cookies.remove('email')
+      this.setState({loggedIn: false})
+    });
+
   }
 
   getUser() {
@@ -83,7 +90,7 @@ class App extends Component {
     return(
       <Router>
         {(!this.state.loggedIn) ? this.renderLoginRedirect() : <Redirect to='/'/>}
-        <div>
+        <div className='fill-page'>
           <Route exact path='/login' render={(props) => <Auth setCurrentUser={this.setCurrentUser} dispalayError={this.state.displayError}/>} />
           <Route
             exact path='/'
