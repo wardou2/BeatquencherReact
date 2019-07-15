@@ -81,13 +81,11 @@ export default class Dashboard extends Component {
   }
 
   setCurrentProj(proj) {
-    console.log('setCurrentProj', proj);
     let tdCopy = this.state.toDisplay
     this.setState({currentProj: proj, toDisplay: 'sceneSelector', pToDisplay: tdCopy})
   }
 
   setCurrentScene(scene) {
-    console.log('setCurrentScene', scene);
     Tone.Transport.cancel()
     let tdCopy = this.state.toDisplay
     this.setState({currentScene: scene, toDisplay: 'projectView', pToDisplay: tdCopy})
@@ -152,7 +150,6 @@ export default class Dashboard extends Component {
       body: JSON.stringify({scene: this.state.currentScene})
     })
     .then(res => res.json())
-    .then(json => console.log(json))
   }
 
   newScene(vals) {

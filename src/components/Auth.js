@@ -56,10 +56,10 @@ export default class Auth extends Component {
     return (
         <div className="login-wrapper">
             <div className='login-btn' id={GOOGLE_BUTTON_ID}></div>
-            <div class="color-beam purple" style={{animationDelay: "1s"}}></div>
-            <div class="color-beam yellow" style={{animationDelay: "2s"}}></div>
-            <div class="color-beam green" style={{animationDelay: "3s"}}></div>
-            <div class="color-beam blue" style={{animationDelay: "4s"}}></div>
+            <div className="color-beam purple" style={{animationDelay: "1s"}}></div>
+            <div className="color-beam yellow" style={{animationDelay: "2s"}}></div>
+            <div className="color-beam green" style={{animationDelay: "3s"}}></div>
+            <div className="color-beam blue" style={{animationDelay: "4s"}}></div>
         </div>
        )
    }

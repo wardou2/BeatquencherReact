@@ -33,7 +33,7 @@ export default class ProjectView extends Component {
   }
 
   componentDidMount() {
-    console.log('here');
+
     Tone.Transport.bpm.value = this.props.currentProj.tempo
     let currentTracks = this.props.currentProj.tracks.filter(track => {
       return track.scene_id === this.props.currentScene.id
@@ -89,9 +89,9 @@ export default class ProjectView extends Component {
           return (t.instrument_id === ins.id && t.scene_id === this.props.currentScene.id)
         })
 
-      // console.log('step', step)
-      // console.log('ins', ins);
-      // console.log('note', track.notes[step]);
+
+
+
 
       if (track.notes[step]) {
         if (ins.ins_type === 'closed_hihat') {
@@ -122,14 +122,14 @@ export default class ProjectView extends Component {
   loadInstrument(ins) {
     switch (ins.ins_type) {
       case 'monosynth':
-        console.log('mono');
+
         this['ins'+ins.id] = new Tone.MonoSynth()
         this['ins'+ins.id].set(ins.options)
         this.attachEffects(ins)
         break
       case 'polysynth':
 
-        console.log('poly');
+
         this['ins'+ins.id] = new Tone.PolySynth(ins.options.polyphony, Tone.MonoSynth)
 
         if (ins.options.oscillator.type.slice(0,2) === 'fm') {
@@ -143,26 +143,26 @@ export default class ProjectView extends Component {
         this.attachEffects(ins)
         break
       case 'bass_drum':
-        console.log('membrane');
+
         this['ins'+ins.id] = new Tone.MembraneSynth(ins.options)
-        console.log(this['ins'+ins.id]);
+
         this.attachEffects(ins)
         // this['ins'+ins.id].toMaster()
         break
       case 'closed_hihat':
-        console.log('metal');
+
         this['ins'+ins.id] = new Tone.MetalSynth(ins.options)
         // this['ins'+ins.id].toMaster()
         this.attachEffects(ins)
         break
       case 'open_hihat':
-        console.log('metal');
+
         this['ins'+ins.id] = new Tone.MetalSynth(ins.options)
         // this['ins'+ins.id].toMaster()
         this.attachEffects(ins)
         break
       case 'snare':
-        console.log('noise');
+
         this['ins'+ins.id] = new Tone.NoiseSynth(ins.options)
         this.attachEffects(ins)
         break
@@ -196,11 +196,11 @@ export default class ProjectView extends Component {
         this['ins'+ins.id+ins.effects[0].eff_type].connect(this['ins'+ins.id+ins.effects[1].eff_type])
         this['ins'+ins.id+ins.effects[1].eff_type].chain(this['ins'+ins.id+'vol'], Tone.Master)
       } else {
-        console.log('unfinished else');
+
         // for (let i=0; i < ins.effects.length; i++) {
         //   if (i === ins.effects.length-1) {
         //     this['ins'+ins.id+'_eff'+i].toMaster()
-        //     console.log(this['ins'+ins.id+'_eff'+i]);
+
         //   } else if (i === 0) {
         //     this['ins'+ins.id].connect(this['ins'+ins.id+'_eff'+i])
         //   } else {
@@ -338,7 +338,7 @@ export default class ProjectView extends Component {
             body: JSON.stringify({track: trackCopy})
           })
           .then(res => res.json())
-          .then(json => console.log(json))
+
     })
   }
 
