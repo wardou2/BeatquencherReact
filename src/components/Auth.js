@@ -1,47 +1,29 @@
 import React, { Component } from 'react'
 import Cookies from 'js-cookie'
-import { Button, Icon, Container } from 'semantic-ui-react'
+import { Button, Icon, Grid } from 'semantic-ui-react'
 import {BASE_URL} from '../api_url'
 
 const errorStyle = {'background-color': 'red'}
+const GOOGLE_BUTTON_ID = 'google-sign-in-button'
 
 export default class Auth extends Component {
   constructor(props) {
     super(props)
   }
 
-  componentDidMount () {
-    const oauthScript = document.createElement("script");
-    oauthScript.src = "https://cdn.rawgit.com/oauth-io/oauth-js/c5af4519/dist/oauth.js";
-
-    document.body.appendChild(oauthScript);
-  }
-
-  handleClick(e) {
-    // Prevents page reload
-    e.preventDefault();
-
-    // Initializes OAuth.io with API key
-    // Sign-up an account to get one
-    window.OAuth.initialize('dD7lG2sjeOKVRA-hIdKUqDrbrEc');
-
-    // Popup Google and ask for authorization
-    window.OAuth.popup('google').then((provider) => {
-
-      // Prompts 'welcome' message with User's name on successful login
-      // Check console logs for additional User info
-      provider.me().then((data) => {
-        Cookies.set("id_token", provider.id_token)
-        Cookies.set("email", data.email.toLowerCase())
-        let display_name = data.raw.names[0].displayName
-        this.sendAuth(display_name)
-      });
-
-    });
+  componentDidMount() {
+    window.gapi.signin2.render(
+      GOOGLE_BUTTON_ID,
+      {
+        width: 200,
+        height: 50,
+        onsuccess: this.onSuccess,
+      },
+    );
   }
 
   sendAuth = (name) => {
-    fetch(BASE_URL+'/login', {
+    fetch(BASE_URL+'login', {
       method: 'POST',
       headers: {
         'id_token': Cookies.get('id_token'),
@@ -59,15 +41,24 @@ export default class Auth extends Component {
             </div>
   }
 
-  render() {
-    return <Container textAlign='center'>
-              <br></br>
-              <br></br>
-              <br></br>
-              {(this.props.displayError) ? this.showError : null}
-              <Button color='google plus' onClick={(e) => this.handleClick(e)}>
-                <Icon name='google' /> Log in with Google
-              </Button>
-           </Container>
+  onSuccess = (googleUser) => {
+
+    var profile = googleUser.getBasicProfile();
+
+    Cookies.set("id_token", googleUser.getAuthResponse().id_token)
+    Cookies.set("email", profile.getEmail().toLowerCase())
+    this.sendAuth(profile.getName())
   }
+
+  render() {
+    return (
+        <div className="login-wrapper">
+            <div className='login-btn' id={GOOGLE_BUTTON_ID}></div>
+            <div class="circle purple" style={{animationDelay: "1s"}}></div>
+            <div class="circle yellow" style={{animationDelay: "2s"}}></div>
+            <div class="circle green" style={{animationDelay: "3s"}}></div>
+            <div class="circle blue" style={{animationDelay: "4s"}}></div>
+        </div>
+       )
+   }
 }
