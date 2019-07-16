@@ -96,8 +96,8 @@ export default class Channel extends Component {
 
   render(){
     return (
-      <Grid.Row divided={true} className={this.isSelected()}>
-        <Grid.Column width={2} onClick={() => this.props.setCurrentIns(this.props.instrument)}>
+      <Grid.Row divided={true} className={this.isSelected()} onClick={() => this.props.setCurrentIns(this.props.instrument)}>
+        <Grid.Column width={2} >
           <h4>{this.props.instrument.name}
           </h4>
           <Button

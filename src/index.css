@@ -156,7 +156,7 @@ code {
   font-size: 20px;
   text-align: left;
 
-  width: 10%;
+  width: 100px;
   float: left;
 
   /* top: 50%; left: 50%; */
@@ -170,7 +170,7 @@ code {
   font-size: 20px;
   text-align: right;
 
-  width: 10%;
+  width: 100px;
   float: right;
 
   /* top: 50%; left: 50%; */
@@ -200,9 +200,8 @@ code {
     position: absolute;
     opacity: 0;
     z-index: -1;
-    transition: 3s ease-in-out;
-    /* border-style: solid;
-    border-color: rgba(255,255,255,.05); */
+    transition: 1s ease-in-out;
+
 }
 
 .purple {
@@ -230,7 +229,7 @@ code {
                 0px 0px 1px 11vw #00FFBF,
                 0px 0px 0px 19vw #FF00F6,
                 0px 0px 30px 19vw rgba(255,255,255,0.4); */
-    box-shadow: 0px 0px 20px rgba(255,255,255,.4);
+    box-shadow: 0px 0px 20px rgba(255,255,255,.1);
     opacity: 1;
     animation: scaleIn 4s infinite cubic-bezier(.36, .11, .89, .32);
 }

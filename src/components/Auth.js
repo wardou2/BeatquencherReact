@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
 import Cookies from 'js-cookie'
-import { Button, Icon, Grid } from 'semantic-ui-react'
+import { Dimmer, Loader } from 'semantic-ui-react'
 import {BASE_URL} from '../api_url'
 
-const errorStyle = {'background-color': 'red'}
 const GOOGLE_BUTTON_ID = 'google-sign-in-button'
 
 export default class Auth extends Component {
@@ -25,6 +24,7 @@ export default class Auth extends Component {
   }
 
   sendAuth = (name) => {
+    this.props.setLoading(true)
     fetch(BASE_URL+'login', {
       method: 'POST',
       headers: {
@@ -34,13 +34,10 @@ export default class Auth extends Component {
       body: JSON.stringify({name: name, email: Cookies.get('email')})
     })
     .then(res => res.json())
-    .then(json => this.props.setCurrentUser(json.user))
-  }
-
-  showError = () => {
-    return <div style={errorStyle}>
-              Sign in failed, please try again.
-            </div>
+    .then(json => {
+        this.props.setLoading(false)
+        this.props.setCurrentUser(json.user)
+    })
   }
 
   onSuccess = (googleUser) => {

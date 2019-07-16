@@ -54,7 +54,7 @@ export default class ProjectsList extends Component {
     return(
       <div className='projects-list'>
         <br></br>
-        <Segment>
+        <Segment >
           <Header as='h2'>Select Project</Header>
           <Button onClick={this.props.startNewProject}>New Project</Button>
           {this.renderProjects()}

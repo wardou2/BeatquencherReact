@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Redirect, withRouter } from 'react-router-dom';
+import { Dimmer, Loader } from 'semantic-ui-react'
 
 import config from './config.json'
 import './App.css';
@@ -17,11 +18,13 @@ class App extends Component {
     this.state = {
       currentUser: {},
       displayError: '',
-      loggedIn: false
+      loggedIn: false,
+      loading: false
     }
 
     this.getUser = this.getUser.bind(this)
     this.setCurrentUser = this.setCurrentUser.bind(this)
+    this.setLoading = this.setLoading.bind(this)
   }
 
   componentDidMount() {
@@ -42,6 +45,13 @@ class App extends Component {
     return true;
   }
 
+  setLoading(boo) {
+      console.log('setLoading', boo);
+      this.setState({
+          loading: boo
+      })
+  }
+
   setCurrentUser(user) {
     this.setState({currentUser: user, loggedIn: true})
   }
@@ -58,16 +68,13 @@ class App extends Component {
   logOut = () => {
     var auth2 = window.gapi.auth2.getAuthInstance();
     auth2.signOut().then(() => {
-      console.log('User signed out.');
       Cookies.remove('id_token')
       Cookies.remove('email')
       this.setState({loggedIn: false})
     });
-
   }
 
   getUser() {
-    console.log('getUser', this.state.currentUser);
     let email = Cookies.get('email').toLowerCase()
     fetch(USERS_URL+'find', {
       method: 'PUT',
@@ -89,15 +96,20 @@ class App extends Component {
   render() {
     return(
       <Router>
-        {(!this.state.loggedIn) ? this.renderLoginRedirect() : <Redirect to='/'/>}
+      <Dimmer active={this.state.loading}>
+          <Loader>Loading</Loader>
+      </Dimmer>
+        {(!this.state.loggedIn) ? <Redirect to='/login' /> : <Redirect to='/'/>}
         <div className='fill-page'>
-          <Route exact path='/login' render={(props) => <Auth setCurrentUser={this.setCurrentUser} dispalayError={this.state.displayError}/>} />
+          <Route exact path='/login' render={(props) => <Auth
+              setCurrentUser={this.setCurrentUser} setLoading={this.setLoading}
+              dispalayError={this.state.displayError}/>} />
           <Route
             exact path='/'
             render={(props) => <Dashboard
-                                  currentUser={this.state.currentUser} loggedIn={this.state.loggedIn}
-                                  logOut={this.logOut}
-                                />}
+              currentUser={this.state.currentUser} loggedIn={this.state.loggedIn}
+              logOut={this.logOut}
+            />}
           />
         </div>
       </Router>

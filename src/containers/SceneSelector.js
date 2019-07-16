@@ -128,8 +128,8 @@ export default class SceneSelector extends Component {
       )
     } else {
       return <div>
-              <Button onClick={() => this.showForm('newScene')}>Add New Scene</Button>
-              <Button onClick={() => this.showForm('proj')}>Edit Project</Button>
+              <Button fluid onClick={() => this.showForm('newScene')} style={{marginBottom: '8px'}}>Add New Scene</Button>
+              <Button fluid onClick={() => this.showForm('proj')}>Edit Project</Button>
             </div>
     }
   }

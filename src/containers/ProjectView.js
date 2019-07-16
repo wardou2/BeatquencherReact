@@ -21,6 +21,7 @@ export default class ProjectView extends Component {
       count: 0
     }
     this.setCurrentIns = this.setCurrentIns.bind(this)
+    this.song = this.song.bind(this)
     this.loadInstrument = this.loadInstrument.bind(this)
     this.handleChangeInstrument = this.handleChangeInstrument.bind(this)
     this.playInstruments = this.playInstruments.bind(this)
@@ -81,18 +82,13 @@ export default class ProjectView extends Component {
     return true;
   }
 
-  song = (time) => {
+  song(time) {
     let step = this.counter % 16
     this.state.instruments.forEach(ins => {
 
       let track = this.state.tracks.find(t => {
           return (t.instrument_id === ins.id && t.scene_id === this.props.currentScene.id)
         })
-
-
-
-
-
       if (track.notes[step]) {
         if (ins.ins_type === 'closed_hihat') {
           this['ins'+ins.id].triggerAttackRelease('16n', time)
@@ -127,12 +123,12 @@ export default class ProjectView extends Component {
         this['ins'+ins.id].set(ins.options)
         this.attachEffects(ins)
         break
+
       case 'polysynth':
 
-
         this['ins'+ins.id] = new Tone.PolySynth(ins.options.polyphony, Tone.MonoSynth)
-
         if (ins.options.oscillator.type.slice(0,2) === 'fm') {
+          // Tone js gets really mad if you instantiate fm type oscillators on polysynths the same way you would others. Had to do this workaround
           let insCopy = JSON.parse(JSON.stringify(ins))
           delete insCopy.options.oscillator
           this['ins'+ins.id].set(insCopy.options)
@@ -142,25 +138,25 @@ export default class ProjectView extends Component {
         }
         this.attachEffects(ins)
         break
+
       case 'bass_drum':
 
         this['ins'+ins.id] = new Tone.MembraneSynth(ins.options)
-
         this.attachEffects(ins)
-        // this['ins'+ins.id].toMaster()
         break
+
       case 'closed_hihat':
 
         this['ins'+ins.id] = new Tone.MetalSynth(ins.options)
-        // this['ins'+ins.id].toMaster()
         this.attachEffects(ins)
         break
+
       case 'open_hihat':
 
         this['ins'+ins.id] = new Tone.MetalSynth(ins.options)
-        // this['ins'+ins.id].toMaster()
         this.attachEffects(ins)
         break
+
       case 'snare':
 
         this['ins'+ins.id] = new Tone.NoiseSynth(ins.options)
@@ -338,7 +334,6 @@ export default class ProjectView extends Component {
             body: JSON.stringify({track: trackCopy})
           })
           .then(res => res.json())
-
     })
   }
 
