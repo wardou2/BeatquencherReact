@@ -1,12 +1,14 @@
 import React, { Component } from 'react'
+import { BrowserRouter as Router, Route, Redirect, withRouter } from 'react-router-dom';
+import Tone from 'tone';
+import { Container } from 'semantic-ui-react'
+import Cookies from 'js-cookie'
+
 import Navbar from '../components/Navbar'
 import ProjectsList from './ProjectsList'
 import SceneSelector from './SceneSelector'
 import ProjectView from './ProjectView'
 import NewProjectForm from '../components/NewProjectForm'
-import Tone from 'tone';
-import { Container } from 'semantic-ui-react'
-import Cookies from 'js-cookie'
 import {BASE_URL} from '../api_url'
 
 export default class Dashboard extends Component {
@@ -83,12 +85,14 @@ export default class Dashboard extends Component {
   setCurrentProj(proj) {
     let tdCopy = this.state.toDisplay
     this.setState({currentProj: proj, toDisplay: 'sceneSelector', pToDisplay: tdCopy})
+    this.props.history.push('/scenes')
   }
 
   setCurrentScene(scene) {
     Tone.Transport.cancel()
     let tdCopy = this.state.toDisplay
     this.setState({currentScene: scene, toDisplay: 'projectView', pToDisplay: tdCopy})
+    this.props.history.push(`/projects/${this.state.currentProj.id}/${this.state.currentScene.id}`)
   }
 
   handleChangeProject(field, value) {
@@ -226,7 +230,25 @@ export default class Dashboard extends Component {
               handleToDisplay={this.handleToDisplay} pToDisplay={this.state.pToDisplay}
             />
             <Container textAlign="center" className='main-container'>
-              {this.conditionalRender()}
+              <Route exact path= '/projects' render={(props) => <ProjectsList
+                          currentUser={this.props.currentUser} setCurrentProj={this.setCurrentProj}
+                          startNewProject={this.startNewProject}
+                        />}
+              />
+              <Route path='/scenes' render={(props) => <SceneSelector
+                        currentUser={this.props.currentUser} currentProj={this.state.currentProj}
+                        setCurrentScene={this.setCurrentScene} newScene={this.newScene}
+                        handleChangeProject={this.handleChangeProject} saveProject={this.saveProject}
+                        projectWasDeleted={this.projectWasDeleted}
+                      />}
+              />
+              <Route path={`/projects/${this.state.currentProj.id}/${this.state.currentScene.id}`} render={(props) => <ProjectView
+                        currentUser={this.props.currentUser} currentProj={this.state.currentProj}
+                        currentScene={this.state.currentScene} handleChangeProject={this.handleChangeProject}
+                        saveProject={this.saveProject} handleChangeScene={this.handleChangeScene}
+                        saveScene={this.saveScene}
+                      />}
+              />
             </Container>
           </div>
   }
