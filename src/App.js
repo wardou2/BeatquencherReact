@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Redirect, withRouter } from 'react-router-dom';
 import { Dimmer, Loader } from 'semantic-ui-react'
+import history from './components/history';
 
 import config from './config.json'
 import './App.css';
@@ -46,7 +47,6 @@ class App extends Component {
   }
 
   setLoading(boo) {
-      console.log('setLoading', boo);
       this.setState({
           loading: boo
       })
@@ -94,21 +94,27 @@ class App extends Component {
   }
 
   render() {
+    let DashboardWithRouter = withRouter(Dashboard)
     return(
-      <Router>
-      <Dimmer active={this.state.loading}>
-          <Loader>Loading</Loader>
-      </Dimmer>
-        {(!this.state.loggedIn) ? <Redirect to='/login' /> : <Redirect to='/'/>}
+      <Router history={history}>
+        <Dimmer active={this.state.loading}>
+            <Loader>Loading</Loader>
+        </Dimmer>
+
+        {(!this.state.loggedIn) ? <Redirect to='/login' /> : <Redirect to='/projects'/>}
+
         <div className='fill-page'>
-          <Route exact path='/login' render={(props) => <Auth
+          <Route exact path='/login' render={(props) =>
+            <Auth
               setCurrentUser={this.setCurrentUser} setLoading={this.setLoading}
-              dispalayError={this.state.displayError}/>} />
+              dispalayError={this.state.displayError}/>}
+            />
           <Route
-            exact path='/'
-            render={(props) => <Dashboard
-              currentUser={this.state.currentUser} loggedIn={this.state.loggedIn}
-              logOut={this.logOut}
+            path='/'
+            render={(props) =>
+              <DashboardWithRouter
+                currentUser={this.state.currentUser} loggedIn={this.state.loggedIn}
+                logOut={this.logOut} history={history}
             />}
           />
         </div>

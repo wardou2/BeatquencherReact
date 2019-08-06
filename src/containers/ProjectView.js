@@ -72,6 +72,7 @@ export default class ProjectView extends Component {
         this.loadInstrument(ins)
       })
     })
+
   }
 
   isEmpty(obj) {
