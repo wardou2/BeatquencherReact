@@ -17,6 +17,8 @@ export default class Navbar extends Component {
   }
 
   getRoute = () => {
+    console.log(this.props.history)
+    this.props.history.goBack()
     switch (this.props.pToDisplay) {
       case 'projectSelector':
         return  <a onClick={() => this.props.handleToDisplay('', true)} className="nav-links"><Icon name='arrow alternate circle left outline'/>Projects</a>

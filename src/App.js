@@ -29,13 +29,28 @@ class App extends Component {
   }
 
   componentDidMount() {
-    window.gapi.load('auth2', function() {
-        window.gapi.auth2.init();
-    });
+    console.log('App didMount');
+    
+    // setTimeout(this.loadGapi, 1)
   }
 
+  // loadGapi = () => {
+
+  //   console.log('loading gapi');
+  //   window.gapi.load('auth2', function() {
+  //     window.gapi.auth2.init();
+  //   });
+
+  // }
+
   renderLoginRedirect = () => {
-    return (Cookies.get('id_token')) ? this.getUser() : <Redirect to='/login' />
+    if (Cookies.get('id_token')) {
+      console.log('id token found');
+      return this.getUser() 
+     } else {
+       console.log('no token, redirect');
+       return <Redirect to='/login' />
+     }
   }
 
   isEmpty(obj) {

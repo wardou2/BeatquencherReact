@@ -2,8 +2,14 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <script src="https://apis.google.com/js/platform.js?onload=triggerGoogleLoaded" async defer></script>
     <meta name="google-signin-client_id" content="510068393267-t5uivuplurovghmip1mrcrpvs2tbi936.apps.googleusercontent.com">
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <script>   
+      function triggerGoogleLoaded() {
+        console.log('Google event loaded')
+        window.dispatchEvent(new Event('google-loaded'))
+      }
+    </script>
 
     <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
 

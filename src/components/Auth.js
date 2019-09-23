@@ -1,16 +1,18 @@
 import React, { Component } from 'react'
 import Cookies from 'js-cookie'
-import { Dimmer, Loader } from 'semantic-ui-react'
 import {BASE_URL} from '../api_url'
 
 const GOOGLE_BUTTON_ID = 'google-sign-in-button'
 
 export default class Auth extends Component {
-  constructor(props) {
-    super(props)
-  }
 
   componentDidMount() {
+    console.log('Auth didMount');
+    window.addEventListener('google-loaded', this.loadButton)
+  }
+
+  loadButton = () => {
+    
     window.gapi.signin2.render(
       GOOGLE_BUTTON_ID,
       {
@@ -21,6 +23,7 @@ export default class Auth extends Component {
         onsuccess: this.onSuccess,
       },
     );
+  
   }
 
   sendAuth = (name) => {

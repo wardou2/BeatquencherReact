@@ -197,7 +197,7 @@ export default class Dashboard extends Component {
                   currentUser={this.props.currentUser} setCurrentProj={this.setCurrentProj}
                   startNewProject={this.startNewProject}
                 />
-        break
+
       case 'sceneSelector':
         return <SceneSelector
                   currentUser={this.props.currentUser} currentProj={this.state.currentProj}
@@ -205,7 +205,7 @@ export default class Dashboard extends Component {
                   handleChangeProject={this.handleChangeProject} saveProject={this.saveProject}
                   projectWasDeleted={this.projectWasDeleted}
                 />
-        break
+
       case 'projectView':
         return <ProjectView
                   currentUser={this.props.currentUser} currentProj={this.state.currentProj}
@@ -213,12 +213,12 @@ export default class Dashboard extends Component {
                   saveProject={this.saveProject} handleChangeScene={this.handleChangeScene}
                   saveScene={this.saveScene}
                 />
-        break
+
       case 'startNewProject':
         return <NewProjectForm
                   newProject={this.newProject}
                 />
-        break
+
       default:
         return <span>"Please Log In"</span>
       }
@@ -227,7 +227,7 @@ export default class Dashboard extends Component {
     return <div>
             <Navbar
               currentProj={this.state.currentProj} loggedIn={this.props.loggedIn} logOut={this.props.logOut}
-              handleToDisplay={this.handleToDisplay} pToDisplay={this.state.pToDisplay}
+              handleToDisplay={this.handleToDisplay} pToDisplay={this.state.pToDisplay} history={this.props.history}
             />
             <Container textAlign="center" className='main-container'>
               <Route exact path= '/projects' render={(props) => <ProjectsList
