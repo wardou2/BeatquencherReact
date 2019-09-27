@@ -190,6 +190,11 @@ export default class Dashboard extends Component {
     })
   }
 
+  logOut = () => {
+    this.props.history.push('/')
+    this.props.logOut()
+  }
+
   conditionalRender() {
     switch(this.state.toDisplay) {
       case 'projectSelector':
@@ -226,7 +231,7 @@ export default class Dashboard extends Component {
   render(){
     return <div>
             <Navbar
-              currentProj={this.state.currentProj} loggedIn={this.props.loggedIn} logOut={this.props.logOut}
+              currentProj={this.state.currentProj} loggedIn={this.props.loggedIn} logOut={this.logOut}
               handleToDisplay={this.handleToDisplay} pToDisplay={this.state.pToDisplay} history={this.props.history}
             />
             <Container textAlign="center" className='main-container'>

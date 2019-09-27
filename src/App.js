@@ -87,6 +87,7 @@ class App extends Component {
       Cookies.remove('email')
       this.setState({loggedIn: false})
     });
+    window.location.reload()
   }
 
   getUser() {
