@@ -84,14 +84,7 @@ export default class InstrumentControls extends Component {
                     />
                 );
             default:
-                return (
-                    <MonosynthForm
-                        currentIns={this.props.currentIns}
-                        handleChangeInstrument={
-                            this.props.handleChangeInstrument
-                        }
-                    />
-                );
+                return null;
         }
     }
 
