@@ -12,7 +12,7 @@ import history from "./components/history";
 import "./App.css";
 import Auth from "./components/Auth";
 import Dashboard from "./containers/Dashboard";
-import { BASE_URL } from "./api_url";
+import BASE_URL from "./api_url";
 
 const USERS_URL = `${BASE_URL}users/`;
 

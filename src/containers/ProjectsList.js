@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { List, Header, Button, Segment } from "semantic-ui-react";
 import Cookies from "js-cookie";
-import { BASE_URL } from "../api_url";
+import BASE_URL from "../api_url";
 
 const PROJECTS_URL = `${BASE_URL}projects/`;
 

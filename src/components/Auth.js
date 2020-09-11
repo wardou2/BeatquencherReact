@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Cookies from "js-cookie";
-import { BASE_URL } from "../api_url";
+import BASE_URL from "../api_url";
 
 const GOOGLE_BUTTON_ID = "google-sign-in-button";
 

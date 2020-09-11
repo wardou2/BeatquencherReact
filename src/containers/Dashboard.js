@@ -9,7 +9,7 @@ import ProjectsList from "./ProjectsList";
 import SceneSelector from "./SceneSelector";
 import ProjectView from "./ProjectView";
 import NewProjectForm from "../components/NewProjectForm";
-import { BASE_URL } from "../api_url";
+import BASE_URL from "../api_url";
 
 export default class Dashboard extends Component {
     constructor(props) {

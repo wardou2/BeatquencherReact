@@ -2,7 +2,7 @@ import React, { Component } from "react";
 
 import Cookies from "js-cookie";
 import { Modal, Button } from "semantic-ui-react";
-import { BASE_URL } from "../api_url";
+import BASE_URL from "../api_url";
 
 class EditNoteModal extends Component {
     constructor(props) {
