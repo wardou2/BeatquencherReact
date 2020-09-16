@@ -33,9 +33,7 @@ export default class ProjectView extends Component {
 
     componentDidMount() {
         Tone.Transport.bpm.value = this.props.currentProj.tempo;
-        const currentTracks = this.props.currentProj.tracks.filter((track) => {
-            return track.scene_id === this.props.currentScene.id;
-        });
+        const currentTracks = this.props.currentScene.tracks;
 
         currentTracks.forEach((t) => {
             const notesCopy = [];
@@ -396,7 +394,7 @@ export default class ProjectView extends Component {
 
     render() {
         const EditableSceneName = edit.contentEditable("h2");
-
+        console.log(this.props.currentProj);
         return (
             <div className="project-view-div">
                 <div className="project-info-div">

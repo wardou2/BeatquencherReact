@@ -1,10 +1,5 @@
 import React, { Component } from "react";
-import {
-    BrowserRouter as Router,
-    Route,
-    Redirect,
-    withRouter,
-} from "react-router-dom";
+
 import { Dimmer, Loader } from "semantic-ui-react";
 import Cookies from "js-cookie";
 import history from "./components/history";
@@ -76,46 +71,23 @@ class App extends Component {
     }
 
     render() {
-        const DashboardWithRouter = withRouter(Dashboard);
         return (
-            <Router history={history}>
+            <>
                 <Dimmer active={this.state.loading}>
                     <Loader>Loading</Loader>
                 </Dimmer>
 
-                {/* {!this.state.loggedIn ? (
-                    <Redirect to="/login" />
-                ) : (
-                    <Redirect to="/projects" />
-                )} */}
-
                 <div className="fill-page">
-                    <Route
-                        exact
-                        path="/login"
-                        render={(props) => (
-                            <Auth
-                                setCurrentUser={this.setCurrentUser}
-                                setLoading={this.setLoading}
-                                dispalayError={this.state.displayError}
-                            />
-                        )}
-                    />
-                    <Route
-                        path="/"
-                        render={(props) => (
-                            <DashboardWithRouter
-                                currentUser={this.state.currentUser}
-                                loggedIn={this.state.loggedIn}
-                                logOut={this.logOut}
-                                setCurrentUser={this.setCurrentUser}
-                                getUser={this.getUser}
-                                history={history}
-                            />
-                        )}
+                    <Dashboard
+                        currentUser={this.state.currentUser}
+                        loggedIn={this.state.loggedIn}
+                        logOut={this.logOut}
+                        setCurrentUser={this.setCurrentUser}
+                        getUser={this.getUser}
+                        history={history}
                     />
                 </div>
-            </Router>
+            </>
         );
     }
 }

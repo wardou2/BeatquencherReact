@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
 import Tone from "tone";
 import { Container } from "semantic-ui-react";
 import Cookies from "js-cookie";
@@ -19,6 +19,7 @@ export default class Dashboard extends Component {
             currentProj: {},
             currentScene: {},
         };
+        this.isEmpty = this.isEmpty.bind(this);
         this.setCurrentProj = this.setCurrentProj.bind(this);
         this.setCurrentScene = this.setCurrentScene.bind(this);
         this.handleChangeProject = this.handleChangeProject.bind(this);
@@ -27,6 +28,13 @@ export default class Dashboard extends Component {
         this.newScene = this.newScene.bind(this);
         this.handleChangeScene = this.handleChangeScene.bind(this);
         this.projectWasDeleted = this.projectWasDeleted.bind(this);
+    }
+
+    isEmpty(obj) {
+        for (const key in obj) {
+            if (Object.prototype.hasOwnProperty.call(obj, key)) return false;
+        }
+        return true;
     }
 
     startNewProject() {}
@@ -62,7 +70,6 @@ export default class Dashboard extends Component {
         this.setState({
             currentProj: proj,
         });
-        this.props.history.push("/scenes");
     }
 
     setCurrentScene(scene) {
@@ -166,7 +173,20 @@ export default class Dashboard extends Component {
 
     render() {
         return (
-            <div>
+            <Router>
+                {this.props.loggedIn ? (
+                    <Redirect to="/projects" />
+                ) : (
+                    <Redirect to="/" />
+                )}
+                {!this.isEmpty(this.state.currentProj) && (
+                    <Redirect to="/scenes" />
+                )}
+                {!this.isEmpty(this.state.currentScene) && (
+                    <Redirect
+                        to={`/projects/${this.state.currentProj.id}/${this.state.currentScene.id}`}
+                    />
+                )}
                 <Navbar
                     currentProj={this.state.currentProj}
                     loggedIn={this.props.loggedIn}
@@ -185,7 +205,7 @@ export default class Dashboard extends Component {
                         path="/projects"
                         render={(props) => (
                             <ProjectsList
-                                getUser={this.props.getUser}
+                                currentUser={this.props.currentUser}
                                 setCurrentProj={this.setCurrentProj}
                                 startNewProject={this.startNewProject}
                             />
@@ -220,7 +240,7 @@ export default class Dashboard extends Component {
                         )}
                     />
                 </Container>
-            </div>
+            </Router>
         );
     }
 }

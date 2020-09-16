@@ -35,15 +35,7 @@ export default class SceneSelector extends Component {
     }
 
     handleClick(scene) {
-        fetch(SCENES_URL + scene.id, {
-            method: "GET",
-            headers: {
-                id_token: Cookies.get("id_token"),
-                "Content-Type": "application/json",
-            },
-        })
-            .then((res) => res.json())
-            .then((json) => this.props.setCurrentScene(json));
+        this.props.setCurrentScene(scene);
     }
 
     showForm(type) {

@@ -1,9 +1,5 @@
 import React, { Component } from "react";
 import { List, Header, Button, Segment } from "semantic-ui-react";
-import Cookies from "js-cookie";
-import BASE_URL from "../api_url";
-
-const PROJECTS_URL = `${BASE_URL}projects/`;
 
 export default class ProjectsList extends Component {
     constructor(props) {
@@ -21,15 +17,7 @@ export default class ProjectsList extends Component {
     }
 
     handleClick(proj) {
-        fetch(PROJECTS_URL + proj.id, {
-            method: "GET",
-            headers: {
-                id_token: Cookies.get("id_token"),
-                "Content-Type": "application/json",
-            },
-        })
-            .then((res) => res.json())
-            .then((json) => this.props.setCurrentProj(json));
+        this.props.setCurrentProj(proj);
     }
 
     renderProjects() {
