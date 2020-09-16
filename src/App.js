@@ -62,7 +62,11 @@ class App extends Component {
         return response.json();
     };
 
-    logOut = () => {};
+    logOut = () => {
+        Cookies.remove("token");
+        Cookies.remove("user_id");
+        this.setState({ loggedIn: false });
+    };
 
     getUser(id) {
         // TODO: Handle Error

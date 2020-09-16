@@ -18,8 +18,6 @@ export default class Dashboard extends Component {
         this.state = {
             currentProj: {},
             currentScene: {},
-            toDisplay: "projectSelector",
-            pToDisplay: "",
         };
         this.setCurrentProj = this.setCurrentProj.bind(this);
         this.setCurrentScene = this.setCurrentScene.bind(this);
@@ -28,16 +26,10 @@ export default class Dashboard extends Component {
         this.newProject = this.newProject.bind(this);
         this.newScene = this.newScene.bind(this);
         this.handleChangeScene = this.handleChangeScene.bind(this);
-        this.handleToDisplay = this.handleToDisplay.bind(this);
         this.projectWasDeleted = this.projectWasDeleted.bind(this);
     }
 
-    startNewProject() {
-        this.setState({
-            toDisplay: "startNewProject",
-            pToDisplay: "projectSelector",
-        });
-    }
+    startNewProject() {}
 
     newProject(vals) {
         fetch(`${BASE_URL}init`, {
@@ -60,44 +52,23 @@ export default class Dashboard extends Component {
             .then((json) => this.setCurrentProj(json));
     }
 
-    handleToDisplay(other, resetProj = false) {
-        // let tdCopy = this.state.toDisplay
-        if (resetProj) {
-            this.setState({
-                currentProj: {},
-            });
-        }
-        Tone.Transport.stop();
-        this.setState({
-            toDisplay: this.state.pToDisplay,
-            pToDisplay: other,
-        });
-    }
-
     projectWasDeleted(path) {
         this.setState({
-            toDisplay: path,
             currentProj: {},
         });
     }
 
     setCurrentProj(proj) {
-        const tdCopy = this.state.toDisplay;
         this.setState({
             currentProj: proj,
-            toDisplay: "sceneSelector",
-            pToDisplay: tdCopy,
         });
         this.props.history.push("/scenes");
     }
 
     setCurrentScene(scene) {
         Tone.Transport.cancel();
-        const tdCopy = this.state.toDisplay;
         this.setState({
             currentScene: scene,
-            toDisplay: "projectView",
-            pToDisplay: tdCopy,
         });
         this.props.history.push(
             `/projects/${this.state.currentProj.id}/${this.state.currentScene.id}`
@@ -200,8 +171,6 @@ export default class Dashboard extends Component {
                     currentProj={this.state.currentProj}
                     loggedIn={this.props.loggedIn}
                     logOut={this.props.logOut}
-                    handleToDisplay={this.handleToDisplay}
-                    pToDisplay={this.state.pToDisplay}
                 />
                 <Container textAlign="center" className="main-container">
                     <Route
