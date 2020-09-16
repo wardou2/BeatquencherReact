@@ -151,6 +151,7 @@ export default class SceneSelector extends Component {
     }
 
     renderScenes() {
+        console.log(this.props.currentProj);
         return (
             <List divided relaxed>
                 {this.props.currentProj.scenes.map((scene) => {

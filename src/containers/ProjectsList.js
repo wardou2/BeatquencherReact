@@ -1,16 +1,11 @@
 import React, { Component } from "react";
 import { List, Header, Button, Segment } from "semantic-ui-react";
-import Cookies from "js-cookie";
-import BASE_URL from "../api_url";
-
-const PROJECTS_URL = `${BASE_URL}projects/`;
 
 export default class ProjectsList extends Component {
     constructor(props) {
         super(props);
         this.state = {};
         this.renderProjects = this.renderProjects.bind(this);
-        this.handleClick = this.handleClick.bind(this);
     }
 
     isEmpty(obj) {
@@ -18,18 +13,6 @@ export default class ProjectsList extends Component {
             if (Object.prototype.hasOwnProperty.call(obj, key)) return false;
         }
         return true;
-    }
-
-    handleClick(proj) {
-        fetch(PROJECTS_URL + proj.id, {
-            method: "GET",
-            headers: {
-                id_token: Cookies.get("id_token"),
-                "Content-Type": "application/json",
-            },
-        })
-            .then((res) => res.json())
-            .then((json) => this.props.setCurrentProj(json));
     }
 
     renderProjects() {
@@ -40,7 +23,7 @@ export default class ProjectsList extends Component {
                         return (
                             <List.Item
                                 key={proj.id}
-                                onClick={() => this.handleClick(proj)}
+                                onClick={() => this.props.getProject(proj)}
                             >
                                 <List.Content>
                                     <List.Header as="a">

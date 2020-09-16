@@ -4,15 +4,16 @@ import {
     Route,
     Redirect,
     withRouter,
+    Switch,
 } from "react-router-dom";
 import { Dimmer, Loader } from "semantic-ui-react";
 import Cookies from "js-cookie";
-import history from "./components/history";
 
 import "./App.css";
 import Auth from "./components/Auth";
 import Dashboard from "./containers/Dashboard";
 import BASE_URL from "./api_url";
+import history from "./components/history";
 
 const USERS_URL = `${BASE_URL}users/`;
 
@@ -36,14 +37,6 @@ class App extends Component {
             window.gapi.auth2.init();
         });
     }
-
-    renderLoginRedirect = () => {
-        return Cookies.get("id_token") ? (
-            this.getUser()
-        ) : (
-            <Redirect to="/login" />
-        );
-    };
 
     isEmpty(obj) {
         for (const key in obj) {
@@ -101,8 +94,9 @@ class App extends Component {
 
     render() {
         const DashboardWithRouter = withRouter(Dashboard);
+
         return (
-            <Router history={history}>
+            <Router>
                 <Dimmer active={this.state.loading}>
                     <Loader>Loading</Loader>
                 </Dimmer>
@@ -114,28 +108,23 @@ class App extends Component {
                 )}
 
                 <div className="fill-page">
-                    <Route
-                        exact
-                        path="/login"
-                        render={(props) => (
+                    <Switch>
+                        <Route path="/login">
                             <Auth
                                 setCurrentUser={this.setCurrentUser}
                                 setLoading={this.setLoading}
                                 dispalayError={this.state.displayError}
                             />
-                        )}
-                    />
-                    <Route
-                        path="/"
-                        render={(props) => (
+                        </Route>
+
+                        <Route path="/">
                             <DashboardWithRouter
                                 currentUser={this.state.currentUser}
                                 loggedIn={this.state.loggedIn}
                                 logOut={this.logOut}
-                                history={history}
                             />
-                        )}
-                    />
+                        </Route>
+                    </Switch>
                 </div>
             </Router>
         );

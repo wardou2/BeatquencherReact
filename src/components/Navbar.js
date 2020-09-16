@@ -21,46 +21,16 @@ export default class Navbar extends Component {
     };
 
     getRoute = () => {
-        switch (this.props.pToDisplay) {
-            case "projectSelector":
-                return (
-                    <a
-                        onClick={() => this.props.handleToDisplay("", true)}
-                        className="nav-links"
-                    >
-                        <Icon name="arrow alternate circle left outline" />
-                        Projects
-                    </a>
-                );
-            case "startNewProject":
-                return (
-                    <a
-                        onClick={() => this.props.handleToDisplay("", true)}
-                        className="nav-links"
-                    >
-                        <Icon name="arrow alternate circle left outline" />
-                        Projects
-                    </a>
-                );
-            case "sceneSelector":
-                return (
-                    <a
-                        onClick={() =>
-                            this.props.handleToDisplay("projectSelector")
-                        }
-                        className="nav-links"
-                    >
-                        <Icon name="arrow alternate circle left outline" />
-                        Scenes
-                    </a>
-                );
-            default:
-                return (
-                    <div>
-                        <Icon name="headphones" />
-                    </div>
-                );
-        }
+        return this.props.pToDisplay ? (
+            <Icon
+                onClick={this.props.history.goBack()}
+                name="arrow alternate circle left outline"
+            />
+        ) : (
+            <div>
+                <Icon name="headphones" />
+            </div>
+        );
     };
 
     render() {

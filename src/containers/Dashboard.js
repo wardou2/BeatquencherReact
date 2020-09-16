@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Route } from "react-router-dom";
+import { Route, Redirect, withRouter, Switch } from "react-router-dom";
 import Tone from "tone";
 import { Container } from "semantic-ui-react";
 import Cookies from "js-cookie";
@@ -10,6 +10,9 @@ import SceneSelector from "./SceneSelector";
 import ProjectView from "./ProjectView";
 import NewProjectForm from "../components/NewProjectForm";
 import BASE_URL from "../api_url";
+import history from "../components/history";
+
+const PROJECTS_URL = `${BASE_URL}projects/`;
 
 export default class Dashboard extends Component {
     constructor(props) {
@@ -22,7 +25,6 @@ export default class Dashboard extends Component {
         };
         this.setCurrentProj = this.setCurrentProj.bind(this);
         this.setCurrentScene = this.setCurrentScene.bind(this);
-        this.conditionalRender = this.conditionalRender.bind(this);
         this.handleChangeProject = this.handleChangeProject.bind(this);
         this.startNewProject = this.startNewProject.bind(this);
         this.newProject = this.newProject.bind(this);
@@ -30,6 +32,7 @@ export default class Dashboard extends Component {
         this.handleChangeScene = this.handleChangeScene.bind(this);
         this.handleToDisplay = this.handleToDisplay.bind(this);
         this.projectWasDeleted = this.projectWasDeleted.bind(this);
+        this.getProject = this.getProject.bind(this);
     }
 
     startNewProject() {
@@ -81,27 +84,43 @@ export default class Dashboard extends Component {
         });
     }
 
+    getProject(proj) {
+        fetch(PROJECTS_URL + proj.id, {
+            method: "GET",
+            headers: {
+                id_token: Cookies.get("id_token"),
+                "Content-Type": "application/json",
+            },
+        })
+            .then((res) => res.json())
+            .then((json) => this.setCurrentProj(json));
+    }
+
     setCurrentProj(proj) {
         const tdCopy = this.state.toDisplay;
-        this.setState({
-            currentProj: proj,
-            toDisplay: "sceneSelector",
-            pToDisplay: tdCopy,
-        });
-        this.props.history.push("/scenes");
+        console.log("here");
+        this.setState(
+            {
+                currentProj: proj,
+                toDisplay: "sceneSelector",
+                pToDisplay: tdCopy,
+            },
+            () => {
+                return (
+                    <Redirect path={`projects/${this.state.currentProj.id}`} />
+                );
+            }
+        );
     }
 
     setCurrentScene(scene) {
         Tone.Transport.cancel();
-        const tdCopy = this.state.toDisplay;
+        const tdCopy = `${this.state.toDisplay}`;
         this.setState({
             currentScene: scene,
             toDisplay: "projectView",
             pToDisplay: tdCopy,
         });
-        this.props.history.push(
-            `/projects/${this.state.currentProj.id}/${this.state.currentScene.id}`
-        );
     }
 
     handleChangeProject(field, value) {
@@ -193,49 +212,6 @@ export default class Dashboard extends Component {
             });
     }
 
-    conditionalRender() {
-        switch (this.state.toDisplay) {
-            case "projectSelector":
-                return (
-                    <ProjectsList
-                        currentUser={this.props.currentUser}
-                        setCurrentProj={this.setCurrentProj}
-                        startNewProject={this.startNewProject}
-                    />
-                );
-
-            case "sceneSelector":
-                return (
-                    <SceneSelector
-                        currentUser={this.props.currentUser}
-                        currentProj={this.state.currentProj}
-                        setCurrentScene={this.setCurrentScene}
-                        newScene={this.newScene}
-                        handleChangeProject={this.handleChangeProject}
-                        saveProject={this.saveProject}
-                        projectWasDeleted={this.projectWasDeleted}
-                    />
-                );
-
-            case "projectView":
-                return (
-                    <ProjectView
-                        currentUser={this.props.currentUser}
-                        currentProj={this.state.currentProj}
-                        currentScene={this.state.currentScene}
-                        handleChangeProject={this.handleChangeProject}
-                        saveProject={this.saveProject}
-                        handleChangeScene={this.handleChangeScene}
-                        saveScene={this.saveScene}
-                    />
-                );
-            case "startNewProject":
-                return <NewProjectForm newProject={this.newProject} />;
-            default:
-                return <span>"Please Log In"</span>;
-        }
-    }
-
     render() {
         return (
             <div>
@@ -245,47 +221,54 @@ export default class Dashboard extends Component {
                     logOut={this.props.logOut}
                     handleToDisplay={this.handleToDisplay}
                     pToDisplay={this.state.pToDisplay}
+                    history={this.props.history}
                 />
                 <Container textAlign="center" className="main-container">
-                    <Route
-                        exact
-                        path="/projects"
-                        render={(props) => (
-                            <ProjectsList
-                                currentUser={this.props.currentUser}
-                                setCurrentProj={this.setCurrentProj}
-                                startNewProject={this.startNewProject}
-                            />
-                        )}
-                    />
-                    <Route
-                        path="/scenes"
-                        render={(props) => (
-                            <SceneSelector
-                                currentUser={this.props.currentUser}
-                                currentProj={this.state.currentProj}
-                                setCurrentScene={this.setCurrentScene}
-                                newScene={this.newScene}
-                                handleChangeProject={this.handleChangeProject}
-                                saveProject={this.saveProject}
-                                projectWasDeleted={this.projectWasDeleted}
-                            />
-                        )}
-                    />
-                    <Route
-                        path={`/projects/${this.state.currentProj.id}/${this.state.currentScene.id}`}
-                        render={(props) => (
-                            <ProjectView
-                                currentUser={this.props.currentUser}
-                                currentProj={this.state.currentProj}
-                                currentScene={this.state.currentScene}
-                                handleChangeProject={this.handleChangeProject}
-                                saveProject={this.saveProject}
-                                handleChangeScene={this.handleChangeScene}
-                                saveScene={this.saveScene}
-                            />
-                        )}
-                    />
+                    <Switch>
+                        <Route
+                            exact
+                            path="/projects"
+                            render={(props) => (
+                                <ProjectsList
+                                    currentUser={this.props.currentUser}
+                                    getProject={this.getProject}
+                                    startNewProject={this.startNewProject}
+                                />
+                            )}
+                        />
+                        <Route
+                            path={`projects/${this.state.currentProj.id}`}
+                            render={(props) => (
+                                <SceneSelector
+                                    currentUser={this.props.currentUser}
+                                    currentProj={this.state.currentProj}
+                                    setCurrentScene={this.setCurrentScene}
+                                    newScene={this.newScene}
+                                    handleChangeProject={
+                                        this.handleChangeProject
+                                    }
+                                    saveProject={this.saveProject}
+                                    projectWasDeleted={this.projectWasDeleted}
+                                />
+                            )}
+                        />
+                        <Route
+                            path={`/projects/${this.state.currentProj.id}/${this.state.currentScene.id}`}
+                            render={(props) => (
+                                <ProjectView
+                                    currentUser={this.props.currentUser}
+                                    currentProj={this.state.currentProj}
+                                    currentScene={this.state.currentScene}
+                                    handleChangeProject={
+                                        this.handleChangeProject
+                                    }
+                                    saveProject={this.saveProject}
+                                    handleChangeScene={this.handleChangeScene}
+                                    saveScene={this.saveScene}
+                                />
+                            )}
+                        />
+                    </Switch>
                 </Container>
             </div>
         );
