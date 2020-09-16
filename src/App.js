@@ -12,9 +12,7 @@ import history from "./components/history";
 import "./App.css";
 import Auth from "./components/Auth";
 import Dashboard from "./containers/Dashboard";
-import BASE_URL from "./api_url";
-
-const USERS_URL = `${BASE_URL}users/`;
+import { getUser } from "./api/User";
 
 class App extends Component {
     constructor() {
@@ -32,18 +30,11 @@ class App extends Component {
     }
 
     componentDidMount() {
-        window.gapi.load("auth2", () => {
-            window.gapi.auth2.init();
-        });
+        /** Fetch user details if cookies stored */
+        if (Cookies.get("token") && Cookies.get("user_id")) {
+            this.getUser(Cookies.get("user_id"));
+        }
     }
-
-    renderLoginRedirect = () => {
-        return Cookies.get("id_token") ? (
-            this.getUser()
-        ) : (
-            <Redirect to="/login" />
-        );
-    };
 
     isEmpty(obj) {
         for (const key in obj) {
@@ -65,38 +56,19 @@ class App extends Component {
     handleErrors = (response) => {
         if (!response.ok) {
             this.setState({ displayError: true, loggedIn: false });
-            Cookies.remove("id_token");
+            Cookies.remove("token");
             throw response;
         }
         return response.json();
     };
 
-    logOut = () => {
-        const auth2 = window.gapi.auth2.getAuthInstance();
-        auth2.signOut().then(() => {
-            Cookies.remove("id_token");
-            Cookies.remove("email");
-            this.setState({ loggedIn: false });
-        });
-    };
+    logOut = () => {};
 
-    getUser() {
-        const email = Cookies.get("email").toLowerCase();
-        fetch(`${USERS_URL}find`, {
-            method: "PUT",
-            headers: {
-                id_token: Cookies.get("id_token"),
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ email }),
-        })
-            .then((res) => this.handleErrors(res))
-            .then((json) => this.setCurrentUser(json))
-            .catch((error) => {
-                error.text().then((errorMessage) => {
-                    this.setState({ displayError: errorMessage });
-                });
-            });
+    getUser(id) {
+        // TODO: Handle Error
+        getUser(id)
+            .then(this.setCurrentUser)
+            .catch((err) => console.log(err));
     }
 
     render() {
@@ -107,11 +79,11 @@ class App extends Component {
                     <Loader>Loading</Loader>
                 </Dimmer>
 
-                {!this.state.loggedIn ? (
+                {/* {!this.state.loggedIn ? (
                     <Redirect to="/login" />
                 ) : (
                     <Redirect to="/projects" />
-                )}
+                )} */}
 
                 <div className="fill-page">
                     <Route
@@ -132,6 +104,8 @@ class App extends Component {
                                 currentUser={this.state.currentUser}
                                 loggedIn={this.state.loggedIn}
                                 logOut={this.logOut}
+                                setCurrentUser={this.setCurrentUser}
+                                getUser={this.getUser}
                                 history={history}
                             />
                         )}

@@ -10,6 +10,7 @@ import SceneSelector from "./SceneSelector";
 import ProjectView from "./ProjectView";
 import NewProjectForm from "../components/NewProjectForm";
 import BASE_URL from "../api_url";
+import Landing from "../components/Landing";
 
 export default class Dashboard extends Component {
     constructor(props) {
@@ -22,7 +23,6 @@ export default class Dashboard extends Component {
         };
         this.setCurrentProj = this.setCurrentProj.bind(this);
         this.setCurrentScene = this.setCurrentScene.bind(this);
-        this.conditionalRender = this.conditionalRender.bind(this);
         this.handleChangeProject = this.handleChangeProject.bind(this);
         this.startNewProject = this.startNewProject.bind(this);
         this.newProject = this.newProject.bind(this);
@@ -193,49 +193,6 @@ export default class Dashboard extends Component {
             });
     }
 
-    conditionalRender() {
-        switch (this.state.toDisplay) {
-            case "projectSelector":
-                return (
-                    <ProjectsList
-                        currentUser={this.props.currentUser}
-                        setCurrentProj={this.setCurrentProj}
-                        startNewProject={this.startNewProject}
-                    />
-                );
-
-            case "sceneSelector":
-                return (
-                    <SceneSelector
-                        currentUser={this.props.currentUser}
-                        currentProj={this.state.currentProj}
-                        setCurrentScene={this.setCurrentScene}
-                        newScene={this.newScene}
-                        handleChangeProject={this.handleChangeProject}
-                        saveProject={this.saveProject}
-                        projectWasDeleted={this.projectWasDeleted}
-                    />
-                );
-
-            case "projectView":
-                return (
-                    <ProjectView
-                        currentUser={this.props.currentUser}
-                        currentProj={this.state.currentProj}
-                        currentScene={this.state.currentScene}
-                        handleChangeProject={this.handleChangeProject}
-                        saveProject={this.saveProject}
-                        handleChangeScene={this.handleChangeScene}
-                        saveScene={this.saveScene}
-                    />
-                );
-            case "startNewProject":
-                return <NewProjectForm newProject={this.newProject} />;
-            default:
-                return <span>"Please Log In"</span>;
-        }
-    }
-
     render() {
         return (
             <div>
@@ -249,10 +206,17 @@ export default class Dashboard extends Component {
                 <Container textAlign="center" className="main-container">
                     <Route
                         exact
+                        path="/"
+                        render={(props) => (
+                            <Landing getUser={this.props.getUser} />
+                        )}
+                    />
+                    <Route
+                        exact
                         path="/projects"
                         render={(props) => (
                             <ProjectsList
-                                currentUser={this.props.currentUser}
+                                getUser={this.props.getUser}
                                 setCurrentProj={this.setCurrentProj}
                                 startNewProject={this.startNewProject}
                             />

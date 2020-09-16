@@ -5,16 +5,6 @@ import BASE_URL from "../api_url";
 const GOOGLE_BUTTON_ID = "google-sign-in-button";
 
 export default class Auth extends Component {
-    componentDidMount() {
-        window.gapi.signin2.render(GOOGLE_BUTTON_ID, {
-            width: 230,
-            height: 50,
-            longtitle: "true",
-            theme: "dark",
-            onsuccess: this.onSuccess,
-        });
-    }
-
     sendAuth = (name) => {
         this.props.setLoading(true);
         fetch(`${BASE_URL}login`, {
