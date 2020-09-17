@@ -35,9 +35,9 @@ export default class ProjectView extends Component {
         Tone.Transport.bpm.value = this.props.currentProj.tempo;
         const currentTracks = this.props.currentScene.tracks;
 
-        currentTracks.forEach((t) => {
+        currentTracks.forEach((track) => {
             const notesCopy = [];
-            t.notes.forEach((n) => {
+            track.notes.forEach((n) => {
                 if (n.includes("-")) {
                     notesCopy.push(n.split("-"));
                 } else {
@@ -45,7 +45,7 @@ export default class ProjectView extends Component {
                 }
             });
             // eslint-disable-next-line no-param-reassign
-            t.notes = notesCopy;
+            track.notes = notesCopy;
         });
 
         this.setState(

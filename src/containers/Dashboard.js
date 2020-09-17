@@ -1,5 +1,11 @@
+/* eslint-disable max-classes-per-file */
 import React, { Component } from "react";
-import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Redirect,
+} from "react-router-dom";
 import Tone from "tone";
 import { Container } from "semantic-ui-react";
 import Cookies from "js-cookie";
@@ -11,6 +17,7 @@ import ProjectView from "./ProjectView";
 import NewProjectForm from "../components/NewProjectForm";
 import BASE_URL from "../api_url";
 import Landing from "../components/Landing";
+import { newProject } from "../api/Project";
 
 export default class Dashboard extends Component {
     constructor(props) {
@@ -23,7 +30,6 @@ export default class Dashboard extends Component {
         this.setCurrentProj = this.setCurrentProj.bind(this);
         this.setCurrentScene = this.setCurrentScene.bind(this);
         this.handleChangeProject = this.handleChangeProject.bind(this);
-        this.startNewProject = this.startNewProject.bind(this);
         this.newProject = this.newProject.bind(this);
         this.newScene = this.newScene.bind(this);
         this.handleChangeScene = this.handleChangeScene.bind(this);
@@ -37,27 +43,11 @@ export default class Dashboard extends Component {
         return true;
     }
 
-    startNewProject() {}
-
-    newProject(vals) {
-        fetch(`${BASE_URL}init`, {
-            method: "POST",
-            headers: {
-                id_token: Cookies.get("id_token"),
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                project: {
-                    title: vals.name,
-                    tempo: vals.tempo,
-                    user_id: this.props.currentUser.id,
-                    scene_count: vals.scenes,
-                },
-            }),
-        })
-            .then((res) => res.json())
-            .catch((error) => new Error("Error", error))
-            .then((json) => this.setCurrentProj(json));
+    newProject(projectData) {
+        // TODO: Error handle
+        newProject(projectData)
+            .then((project) => this.setCurrentProj(project))
+            .catch((err) => console.log(err));
     }
 
     projectWasDeleted(path) {
@@ -67,6 +57,7 @@ export default class Dashboard extends Component {
     }
 
     setCurrentProj(proj) {
+        console.log("here");
         this.setState({
             currentProj: proj,
         });
@@ -172,18 +163,21 @@ export default class Dashboard extends Component {
     }
 
     render() {
+        // TODO: Optimize routing. This can't be the best solution.
+        // Also, redirect when users go to /scenes without a project loaded, for example.
         return (
-            <Router>
+            <DebugRouter>
                 {this.props.loggedIn ? (
                     <Redirect to="/projects" />
                 ) : (
                     <Redirect to="/" />
                 )}
                 {!this.isEmpty(this.state.currentProj) && (
-                    <Redirect to="/scenes" />
+                    <Redirect push to="/scenes" />
                 )}
                 {!this.isEmpty(this.state.currentScene) && (
                     <Redirect
+                        push
                         to={`/projects/${this.state.currentProj.id}/${this.state.currentScene.id}`}
                     />
                 )}
@@ -193,54 +187,87 @@ export default class Dashboard extends Component {
                     logOut={this.props.logOut}
                 />
                 <Container textAlign="center" className="main-container">
-                    <Route
-                        exact
-                        path="/"
-                        render={(props) => (
-                            <Landing getUser={this.props.getUser} />
-                        )}
-                    />
-                    <Route
-                        exact
-                        path="/projects"
-                        render={(props) => (
-                            <ProjectsList
-                                currentUser={this.props.currentUser}
-                                setCurrentProj={this.setCurrentProj}
-                                startNewProject={this.startNewProject}
-                            />
-                        )}
-                    />
-                    <Route
-                        path="/scenes"
-                        render={(props) => (
-                            <SceneSelector
-                                currentUser={this.props.currentUser}
-                                currentProj={this.state.currentProj}
-                                setCurrentScene={this.setCurrentScene}
-                                newScene={this.newScene}
-                                handleChangeProject={this.handleChangeProject}
-                                saveProject={this.saveProject}
-                                projectWasDeleted={this.projectWasDeleted}
-                            />
-                        )}
-                    />
-                    <Route
-                        path={`/projects/${this.state.currentProj.id}/${this.state.currentScene.id}`}
-                        render={(props) => (
-                            <ProjectView
-                                currentUser={this.props.currentUser}
-                                currentProj={this.state.currentProj}
-                                currentScene={this.state.currentScene}
-                                handleChangeProject={this.handleChangeProject}
-                                saveProject={this.saveProject}
-                                handleChangeScene={this.handleChangeScene}
-                                saveScene={this.saveScene}
-                            />
-                        )}
-                    />
+                    <Switch>
+                        <Route
+                            path={`/projects/${this.state.currentProj.id}/${this.state.currentScene.id}`}
+                            render={(props) => (
+                                <ProjectView
+                                    currentUser={this.props.currentUser}
+                                    currentProj={this.state.currentProj}
+                                    currentScene={this.state.currentScene}
+                                    handleChangeProject={
+                                        this.handleChangeProject
+                                    }
+                                    saveProject={this.saveProject}
+                                    handleChangeScene={this.handleChangeScene}
+                                    saveScene={this.saveScene}
+                                />
+                            )}
+                        />
+                        <Route
+                            exact
+                            path="/projects/new"
+                            render={() => (
+                                <NewProjectForm newProject={this.newProject} />
+                            )}
+                        />
+                        <Route
+                            path="/projects"
+                            render={(props) => (
+                                <ProjectsList
+                                    currentUser={this.props.currentUser}
+                                    setCurrentProj={this.setCurrentProj}
+                                    startNewProject={this.startNewProject}
+                                />
+                            )}
+                        />
+                        <Route
+                            path="/scenes"
+                            render={(props) => (
+                                <SceneSelector
+                                    currentUser={this.props.currentUser}
+                                    currentProj={this.state.currentProj}
+                                    setCurrentScene={this.setCurrentScene}
+                                    newScene={this.newScene}
+                                    handleChangeProject={
+                                        this.handleChangeProject
+                                    }
+                                    saveProject={this.saveProject}
+                                    projectWasDeleted={this.projectWasDeleted}
+                                />
+                            )}
+                        />
+                        <Route
+                            path="/"
+                            render={(props) => (
+                                <Landing getUser={this.props.getUser} />
+                            )}
+                        />
+                    </Switch>
                 </Container>
-            </Router>
+            </DebugRouter>
         );
+    }
+}
+
+/**
+ * Debug Router for React Router
+ */
+class DebugRouter extends Router {
+    constructor(props) {
+        super(props);
+        console.log(
+            "initial history is: ",
+            JSON.stringify(this.history, null, 2)
+        );
+        this.history.listen((location, action) => {
+            console.log(
+                `The current URL is ${location.pathname}${location.search}${location.hash}`
+            );
+            console.log(
+                `The last navigation action was ${action}`,
+                JSON.stringify(this.history, null, 2)
+            );
+        });
     }
 }

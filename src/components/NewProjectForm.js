@@ -5,9 +5,8 @@ export default class NewProjectForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            name: "",
+            title: "",
             tempo: 120,
-            scenes: 3,
         };
     }
 
@@ -18,7 +17,7 @@ export default class NewProjectForm extends Component {
     };
 
     render() {
-        const { name, tempo, scenes } = this.state;
+        const { name, tempo } = this.state;
 
         return (
             <div className="projects-list">
@@ -27,9 +26,9 @@ export default class NewProjectForm extends Component {
                     <Form onSubmit={this.handleSubmit}>
                         <h1>New Project</h1>
                         <Form.Input
-                            label="Name"
-                            placeholder="Name"
-                            name="name"
+                            label="Title"
+                            placeholder="Title"
+                            name="title"
                             value={name}
                             onChange={this.handleChange}
                         />
@@ -39,13 +38,6 @@ export default class NewProjectForm extends Component {
                             name="tempo"
                             value={tempo}
                             type={"number"}
-                            onChange={this.handleChange}
-                        />
-                        <Form.Input
-                            label="Number of Scenes"
-                            name="scenes"
-                            value={scenes}
-                            type="number"
                             onChange={this.handleChange}
                         />
                         <Button type="submit">Submit</Button>
