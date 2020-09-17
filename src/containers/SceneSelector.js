@@ -56,7 +56,7 @@ export default class SceneSelector extends Component {
     };
 
     handleSubmitScene = () => {
-        this.props.newScene(this.state);
+        this.props.newScene({ name: this.state.name });
         this.hideForm();
     };
 

@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-
-import Cookies from "js-cookie";
 import { Modal, Button } from "semantic-ui-react";
-import BASE_URL from "../api_url";
+
+import RoutedButton from "./RoutedButton";
+import { deleteProject } from "../api/Project";
 
 class EditNoteModal extends Component {
     constructor(props) {
@@ -31,16 +31,9 @@ class EditNoteModal extends Component {
     };
 
     handleDelete = () => {
-        fetch(`${BASE_URL}/projects/${this.props.currentProj.id}`, {
-            method: "DELETE",
-            headers: {
-                id_token: Cookies.get("id_token"),
-                "Content-Type": "application/json",
-            },
-        });
-
-        this.props.projectWasDeleted("projectSelector");
-        // this.close()
+        deleteProject({ id: this.props.currentProj.id }).then(() =>
+            this.props.projectWasDeleted()
+        );
     };
 
     render() {
@@ -59,9 +52,12 @@ class EditNoteModal extends Component {
                         <Button.Group>
                             <Button onClick={this.close}>Cancel</Button>
                             <Button.Or />
-                            <Button negative onClick={this.handleDelete}>
-                                Delete
-                            </Button>
+                            <RoutedButton
+                                negative
+                                text="Delete"
+                                callback={this.handleDelete}
+                                path="/projects"
+                            />
                         </Button.Group>
                     </Modal.Actions>
                 </Modal>

@@ -17,7 +17,7 @@ import ProjectView from "./ProjectView";
 import NewProjectForm from "../components/NewProjectForm";
 import BASE_URL from "../api_url";
 import Landing from "../components/Landing";
-import { newProject } from "../api/Project";
+import { newProject, newScene } from "../api/Project";
 
 export default class Dashboard extends Component {
     constructor(props) {
@@ -50,14 +50,17 @@ export default class Dashboard extends Component {
             .catch((err) => console.log(err));
     }
 
-    projectWasDeleted(path) {
-        this.setState({
-            currentProj: {},
-        });
+    projectWasDeleted() {
+        this.setState(
+            {
+                currentProj: {},
+            },
+            // Refresh User (with projects) to reflect state on server
+            () => this.props.getUser(this.props.currentUser.id)
+        );
     }
 
     setCurrentProj(proj) {
-        console.log("here");
         this.setState({
             currentProj: proj,
         });
@@ -134,32 +137,17 @@ export default class Dashboard extends Component {
         }).then((res) => res.json());
     };
 
-    newScene(vals) {
-        fetch(`${BASE_URL}scenes`, {
-            method: "POST",
-            headers: {
-                id_token: Cookies.get("id_token"),
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                scene: {
-                    name: vals.name,
-                    project_id: this.state.currentProj.id,
-                },
-            }),
-        })
-            .then((res) => res.json())
-            .then((json) => {
-                let projCopy = this.state.currentProj;
-                projCopy = {
-                    ...projCopy,
-                    scenes: [...projCopy.scenes, json],
-                    tracks: [...projCopy.tracks, ...json.tracks],
-                };
-                this.setState({
-                    currentProj: projCopy,
-                });
+    newScene({ name }) {
+        newScene({ name, project: this.state.currentProj.id }).then((json) => {
+            let projCopy = this.state.currentProj;
+            projCopy = {
+                ...projCopy,
+                scenes: [...projCopy.scenes, json],
+            };
+            this.setState({
+                currentProj: projCopy,
             });
+        });
     }
 
     render() {

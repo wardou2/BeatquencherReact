@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { List, Header, Button, Segment } from "semantic-ui-react";
-import { Redirect, Route } from "react-router-dom";
+import { List, Header, Segment } from "semantic-ui-react";
+import RoutedButton from "../components/RoutedButton";
 
 export default class ProjectsList extends Component {
     constructor(props) {
@@ -51,20 +51,10 @@ export default class ProjectsList extends Component {
                 <br></br>
                 <Segment>
                     <Header as="h2">Select Project</Header>
-                    <RoutedButton />
+                    <RoutedButton text="New Project" path="/projects/new" />
                     {this.renderProjects()}
                 </Segment>
             </div>
         );
     }
 }
-
-const RoutedButton = () => (
-    <Route
-        render={({ history }) => (
-            <Button onClick={() => history.push("/projects/new")}>
-                New Project
-            </Button>
-        )}
-    />
-);
