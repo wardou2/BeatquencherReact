@@ -1,12 +1,10 @@
 import React, { Component } from "react";
 import { Form, Button, Icon, Header, List, Segment } from "semantic-ui-react";
-import Cookies from "js-cookie";
+import { withRouter } from "react-router-dom";
+
 import DeleteModal from "../components/DeleteModal";
-import BASE_URL from "../api_url";
 
-const SCENES_URL = `${BASE_URL}scenes/`;
-
-export default class SceneSelector extends Component {
+class SceneSelector extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -35,6 +33,9 @@ export default class SceneSelector extends Component {
     }
 
     handleClick(scene) {
+        this.props.history.push(
+            `/projects/${this.props.currentProj.id}/${scene.id}`
+        );
         this.props.setCurrentScene(scene);
     }
 
@@ -180,3 +181,5 @@ export default class SceneSelector extends Component {
         );
     }
 }
+
+export default withRouter(SceneSelector);

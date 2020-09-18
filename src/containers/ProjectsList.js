@@ -1,8 +1,9 @@
 import React, { Component } from "react";
+import { withRouter } from "react-router-dom";
 import { List, Header, Segment } from "semantic-ui-react";
 import RoutedButton from "../components/RoutedButton";
 
-export default class ProjectsList extends Component {
+class ProjectsList extends Component {
     constructor(props) {
         super(props);
         this.state = {};
@@ -18,6 +19,7 @@ export default class ProjectsList extends Component {
     }
 
     handleClick(proj) {
+        this.props.history.push(`/projects/${proj.id}`);
         this.props.setCurrentProj(proj);
     }
 
@@ -58,3 +60,5 @@ export default class ProjectsList extends Component {
         );
     }
 }
+
+export default withRouter(ProjectsList);

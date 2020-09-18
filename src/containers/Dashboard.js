@@ -71,9 +71,6 @@ export default class Dashboard extends Component {
         this.setState({
             currentScene: scene,
         });
-        this.props.history.push(
-            `/projects/${this.state.currentProj.id}/${this.state.currentScene.id}`
-        );
     }
 
     handleChangeProject(field, value) {
@@ -140,23 +137,12 @@ export default class Dashboard extends Component {
     }
 
     render() {
-        // TODO: Optimize routing. This can't be the best solution.
-        // Also, redirect when users go to /scenes without a project loaded, for example.
         return (
             <DebugRouter>
                 {this.props.loggedIn ? (
                     <Redirect to="/projects" />
                 ) : (
                     <Redirect to="/" />
-                )}
-                {!this.isEmpty(this.state.currentProj) && (
-                    <Redirect push to="/scenes" />
-                )}
-                {!this.isEmpty(this.state.currentScene) && (
-                    <Redirect
-                        push
-                        to={`/projects/${this.state.currentProj.id}/${this.state.currentScene.id}`}
-                    />
                 )}
                 <Navbar
                     currentProj={this.state.currentProj}
@@ -189,17 +175,7 @@ export default class Dashboard extends Component {
                             )}
                         />
                         <Route
-                            path="/projects"
-                            render={(props) => (
-                                <ProjectsList
-                                    currentUser={this.props.currentUser}
-                                    setCurrentProj={this.setCurrentProj}
-                                    startNewProject={this.startNewProject}
-                                />
-                            )}
-                        />
-                        <Route
-                            path="/scenes"
+                            path={`/projects/${this.state.currentProj.id}`}
                             render={(props) => (
                                 <SceneSelector
                                     currentUser={this.props.currentUser}
@@ -211,6 +187,16 @@ export default class Dashboard extends Component {
                                     }
                                     saveProject={this.saveProject}
                                     projectWasDeleted={this.projectWasDeleted}
+                                />
+                            )}
+                        />
+                        <Route
+                            path="/projects"
+                            render={(props) => (
+                                <ProjectsList
+                                    currentUser={this.props.currentUser}
+                                    setCurrentProj={this.setCurrentProj}
+                                    startNewProject={this.startNewProject}
                                 />
                             )}
                         />
