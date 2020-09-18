@@ -1,16 +1,16 @@
 import React from "react";
 import { Button, Segment } from "semantic-ui-react";
-import Login from "./Login";
+import NewUser from "./NewUser";
 
 const Landing = ({ getUser }) => {
     return (
-        <div className="projects-list">
+        <div>
             <br></br>
             <Segment>
                 <Button.Group>
                     <Button>Demo without Logging in</Button>
                     <Button.Or />
-                    <Login getUser={getUser} />
+                    <NewUser getUser={getUser} />
                 </Button.Group>
             </Segment>
         </div>

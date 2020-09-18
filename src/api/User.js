@@ -17,6 +17,22 @@ export const getAuth = async (username, password) => {
     }
 };
 
+export const newUser = async (email, password) => {
+    const response = await fetch(`${BASE_URL}/users/register`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+    });
+
+    if (!response.ok) {
+        throw new Error(`HTTP Error! status: ${response.status}`);
+    } else {
+        return response.json();
+    }
+};
+
 export const getUser = async (id) => {
     const response = await fetch(`${BASE_URL}/users/${id}`, {
         method: "GET",

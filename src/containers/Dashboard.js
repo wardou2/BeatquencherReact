@@ -148,6 +148,7 @@ export default class Dashboard extends Component {
                     currentProj={this.state.currentProj}
                     loggedIn={this.props.loggedIn}
                     logOut={this.props.logOut}
+                    getUser={this.props.getUser}
                 />
                 <Container textAlign="center" className="main-container">
                     <Switch>

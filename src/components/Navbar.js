@@ -2,6 +2,7 @@
 import React, { Component } from "react";
 import { Icon, Header } from "semantic-ui-react";
 import { withRouter } from "react-router-dom";
+import Login from "./Login";
 
 class Navbar extends Component {
     isEmpty = (obj) => {
@@ -11,13 +12,13 @@ class Navbar extends Component {
         return true;
     };
 
-    showLogout = () => {
-        return (
-            this.props.loggedIn && (
-                <a onClick={this.props.logOut} className="nav-links">
-                    Logout
-                </a>
-            )
+    showLoginLogout = () => {
+        return this.props.loggedIn ? (
+            <a onClick={this.props.logOut} className="nav-links">
+                Logout
+            </a>
+        ) : (
+            <Login getUser={this.props.getUser} />
         );
     };
 
@@ -68,7 +69,7 @@ class Navbar extends Component {
                     id="js-navbar-toggle"
                     onClick={this.toggleMenuVisible}
                 >
-                    {this.showLogout()}
+                    {this.showLoginLogout()}
                 </div>
             </div>
         );
