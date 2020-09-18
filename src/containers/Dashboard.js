@@ -17,7 +17,7 @@ import ProjectView from "./ProjectView";
 import NewProjectForm from "../components/NewProjectForm";
 import BASE_URL from "../api_url";
 import Landing from "../components/Landing";
-import { newProject, newScene } from "../api/Project";
+import { newProject, saveProject, newScene } from "../api/Project";
 
 export default class Dashboard extends Component {
     constructor(props) {
@@ -83,6 +83,7 @@ export default class Dashboard extends Component {
         } else {
             projCopy[field[0]] = parseInt(value.value, 10);
         }
+        saveProject({ project: projCopy });
         this.setState({
             currentProj: projCopy,
         });
@@ -111,19 +112,7 @@ export default class Dashboard extends Component {
     }
 
     saveProject = () => {
-        fetch(`${BASE_URL}projects/${this.state.currentProj.id}`, {
-            method: "PATCH",
-            headers: {
-                id_token: Cookies.get("id_token"),
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                project: {
-                    title: this.state.currentProj.title,
-                    tempo: this.state.currentProj.tempo,
-                },
-            }),
-        });
+        saveProject({ project: this.state.currentProj });
     };
 
     saveScene = () => {

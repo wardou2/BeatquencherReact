@@ -6,6 +6,7 @@ import SequencerChannels from "./SequencerChannels";
 import InstrumentControls from "../components/InstrumentControls";
 import * as edit from "../components/ContentEditable";
 import BASE_URL from "../api_url";
+import { saveInstrument, saveScene } from "../api/Project";
 
 export default class ProjectView extends Component {
     constructor(props) {
@@ -341,30 +342,12 @@ export default class ProjectView extends Component {
     }
 
     saveAll() {
-        this.saveInstruments();
-        this.saveTracks();
-        this.props.saveProject();
-        this.props.saveScene();
-    }
-
-    saveInstruments = () => {
         this.state.instruments.forEach((ins) => {
-            fetch(`${BASE_URL}instruments/${ins.id}`, {
-                method: "PATCH",
-                headers: {
-                    id_token: Cookies.get("id_token"),
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    instrument: {
-                        ins_type: ins.ins_type,
-                        options: ins.options,
-                        effects: ins.effects,
-                    },
-                }),
-            });
+            saveInstrument({ ins });
         });
-    };
+        saveScene({ scene: this.state.scene });
+        this.props.saveProject();
+    }
 
     saveTracks = () => {
         this.state.tracks.forEach((track) => {

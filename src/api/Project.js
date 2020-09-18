@@ -21,6 +21,26 @@ export const newProject = async ({ title, tempo }) => {
     }
 };
 
+export const saveProject = async ({ project }) => {
+    const response = await fetch(`${BASE_URL}/projects/${project.id}`, {
+        method: "PATCH",
+        headers: {
+            Authorization: `Token ${Cookies.get("token")}`,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            title: project.title,
+            tempo: project.tempo,
+        }),
+    });
+
+    if (!response.ok) {
+        throw new Error(`HTTP Error! status: ${response.status}`);
+    } else {
+        return response.json();
+    }
+};
+
 export const deleteProject = async ({ id }) => {
     const response = await fetch(`${BASE_URL}/projects/${id}`, {
         method: "DELETE",
@@ -45,6 +65,46 @@ export const newScene = async ({ name, project }) => {
             name,
             project,
             tracks: [],
+        }),
+    });
+
+    if (!response.ok) {
+        throw new Error(`HTTP Error! status: ${response.status}`);
+    } else {
+        return response.json();
+    }
+};
+
+export const saveScene = async ({ scene }) => {
+    const response = await fetch(`${BASE_URL}/scenes/${scene.id}`, {
+        method: "PATCH",
+        headers: {
+            Authorization: `Token ${Cookies.get("token")}`,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(scene),
+    });
+
+    if (!response.ok) {
+        throw new Error(`HTTP Error! status: ${response.status}`);
+    } else {
+        return response.json();
+    }
+};
+
+export const saveInstrument = async ({ ins }) => {
+    const response = await fetch(`${BASE_URL}/instruments/${ins.id}`, {
+        method: "PATCH",
+        headers: {
+            Authorization: `Token ${Cookies.get("token")}`,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            instrument: {
+                ins_type: ins.ins_type,
+                options: ins.options,
+                effects: ins.effects,
+            },
         }),
     });
 
