@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Button, Form, Header, Modal } from "semantic-ui-react";
 import Cookies from "js-cookie";
 import { getAuth } from "../api/User";

@@ -19,7 +19,10 @@ class ProjectsList extends Component {
     }
 
     handleClick(proj) {
-        this.props.history.push(`/projects/${proj.id}`);
+        this.props.history.push({
+            pathname: `/projects/${proj.id}`,
+            state: { from: "/projects/" },
+        });
         this.props.setCurrentProj(proj);
     }
 

@@ -1,8 +1,9 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { Component } from "react";
 import { Icon, Header } from "semantic-ui-react";
+import { withRouter } from "react-router-dom";
 
-export default class Navbar extends Component {
+class Navbar extends Component {
     isEmpty = (obj) => {
         for (const key in obj) {
             if (Object.prototype.hasOwnProperty.call(obj, key)) return false;
@@ -21,46 +22,34 @@ export default class Navbar extends Component {
     };
 
     getRoute = () => {
-        switch (this.props.pToDisplay) {
-            case "projectSelector":
-                return (
-                    <a
-                        onClick={() => this.props.handleToDisplay("", true)}
-                        className="nav-links"
-                    >
-                        <Icon name="arrow alternate circle left outline" />
-                        Projects
-                    </a>
-                );
-            case "startNewProject":
-                return (
-                    <a
-                        onClick={() => this.props.handleToDisplay("", true)}
-                        className="nav-links"
-                    >
-                        <Icon name="arrow alternate circle left outline" />
-                        Projects
-                    </a>
-                );
-            case "sceneSelector":
-                return (
-                    <a
-                        onClick={() =>
-                            this.props.handleToDisplay("projectSelector")
-                        }
-                        className="nav-links"
-                    >
-                        <Icon name="arrow alternate circle left outline" />
-                        Scenes
-                    </a>
-                );
-            default:
-                return (
-                    <div>
-                        <Icon name="headphones" />
-                    </div>
-                );
+        if (this.props.location.state?.from === "/projects/") {
+            return (
+                <a
+                    onClick={() => this.props.history.goBack()}
+                    className="nav-links"
+                >
+                    <Icon name="arrow alternate circle left outline" />
+                    Projects
+                </a>
+            );
         }
+        if (this.props.location.state?.from.includes("/projects/")) {
+            return (
+                <a
+                    onClick={() => this.props.history.goBack()}
+                    className="nav-links"
+                >
+                    <Icon name="arrow alternate circle left outline" />
+                    Scenes
+                </a>
+            );
+        }
+
+        return (
+            <div>
+                <Icon name="headphones" />
+            </div>
+        );
     };
 
     render() {
@@ -85,3 +74,5 @@ export default class Navbar extends Component {
         );
     }
 }
+
+export default withRouter(Navbar);

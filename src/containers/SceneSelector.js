@@ -33,9 +33,10 @@ class SceneSelector extends Component {
     }
 
     handleClick(scene) {
-        this.props.history.push(
-            `/projects/${this.props.currentProj.id}/${scene.id}`
-        );
+        this.props.history.push({
+            pathname: `/projects/${this.props.currentProj.id}/${scene.id}`,
+            state: { from: `/projects/${this.props.currentProj.id}` },
+        });
         this.props.setCurrentScene(scene);
     }
 
