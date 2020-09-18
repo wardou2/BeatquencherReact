@@ -9,7 +9,12 @@ import SceneSelector from "./SceneSelector";
 import ProjectView from "./ProjectView";
 import NewProjectForm from "../components/NewProjectForm";
 import Landing from "../components/Landing";
-import { newProject, saveProject, newScene } from "../api/Project";
+import {
+    newProject,
+    saveProject,
+    newScene,
+    getDefaultProject,
+} from "../api/Project";
 
 class Dashboard extends Component {
     constructor(props) {
@@ -17,6 +22,7 @@ class Dashboard extends Component {
         this.state = {
             currentProj: {},
             currentScene: {},
+            isDemo: false,
         };
         this.isEmpty = this.isEmpty.bind(this);
         this.setCurrentProj = this.setCurrentProj.bind(this);
@@ -86,7 +92,9 @@ class Dashboard extends Component {
     }
 
     saveProject = () => {
-        saveProject({ project: this.state.currentProj });
+        saveProject({ project: this.state.currentProj }).catch((err) =>
+            console.log(err)
+        );
     };
 
     newScene({ name }) {
@@ -101,6 +109,16 @@ class Dashboard extends Component {
             });
         });
     }
+
+    startDemo = async () => {
+        const project = await getDefaultProject().catch((err) =>
+            console.log(err)
+        );
+        this.setState({
+            isDemo: true,
+        });
+        this.setCurrentProj(project);
+    };
 
     render() {
         return (
@@ -169,7 +187,10 @@ class Dashboard extends Component {
                         <Route
                             path="/"
                             render={(props) => (
-                                <Landing getUser={this.props.getUser} />
+                                <Landing
+                                    getUser={this.props.getUser}
+                                    startDemo={this.startDemo}
+                                />
                             )}
                         />
                     </Switch>

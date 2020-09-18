@@ -114,3 +114,15 @@ export const saveInstrument = async ({ ins }) => {
         return response.json();
     }
 };
+
+export const getDefaultProject = async () => {
+    const response = await fetch(`${BASE_URL}/projects/default`, {
+        method: "GET",
+    });
+
+    if (!response.ok) {
+        throw new Error(`HTTP Error! status: ${response.status}`);
+    } else {
+        return response.json();
+    }
+};
