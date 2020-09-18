@@ -2,10 +2,9 @@ import React, { Component } from "react";
 
 import { Dimmer, Loader } from "semantic-ui-react";
 import Cookies from "js-cookie";
-import history from "./components/history";
 
 import "./App.css";
-import Auth from "./components/Auth";
+import { BrowserRouter as Router } from "react-router-dom";
 import Dashboard from "./containers/Dashboard";
 import { getUser } from "./api/User";
 
@@ -72,7 +71,7 @@ class App extends Component {
 
     render() {
         return (
-            <>
+            <Router>
                 <Dimmer active={this.state.loading}>
                     <Loader>Loading</Loader>
                 </Dimmer>
@@ -84,10 +83,9 @@ class App extends Component {
                         logOut={this.logOut}
                         setCurrentUser={this.setCurrentUser}
                         getUser={this.getUser}
-                        history={history}
                     />
                 </div>
-            </>
+            </Router>
         );
     }
 }

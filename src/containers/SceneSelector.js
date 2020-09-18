@@ -1,10 +1,9 @@
 import React, { Component } from "react";
 import { Form, Button, Icon, Header, List, Segment } from "semantic-ui-react";
-import { withRouter } from "react-router-dom";
 
 import DeleteModal from "../components/DeleteModal";
 
-class SceneSelector extends Component {
+export default class SceneSelector extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -33,10 +32,6 @@ class SceneSelector extends Component {
     }
 
     handleClick(scene) {
-        this.props.history.push({
-            pathname: `/projects/${this.props.currentProj.id}/${scene.id}`,
-            state: { from: `/projects/${this.props.currentProj.id}` },
-        });
         this.props.setCurrentScene(scene);
     }
 
@@ -182,5 +177,3 @@ class SceneSelector extends Component {
         );
     }
 }
-
-export default withRouter(SceneSelector);

@@ -1,25 +1,17 @@
-/* eslint-disable max-classes-per-file */
 import React, { Component } from "react";
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    Redirect,
-} from "react-router-dom";
+import { Switch, Route, Redirect, withRouter } from "react-router-dom";
 import Tone from "tone";
 import { Container } from "semantic-ui-react";
-import Cookies from "js-cookie";
 
 import Navbar from "../components/Navbar";
 import ProjectsList from "./ProjectsList";
 import SceneSelector from "./SceneSelector";
 import ProjectView from "./ProjectView";
 import NewProjectForm from "../components/NewProjectForm";
-import BASE_URL from "../api_url";
 import Landing from "../components/Landing";
 import { newProject, saveProject, newScene } from "../api/Project";
 
-export default class Dashboard extends Component {
+class Dashboard extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -32,7 +24,6 @@ export default class Dashboard extends Component {
         this.handleChangeProject = this.handleChangeProject.bind(this);
         this.newProject = this.newProject.bind(this);
         this.newScene = this.newScene.bind(this);
-        this.handleChangeScene = this.handleChangeScene.bind(this);
         this.projectWasDeleted = this.projectWasDeleted.bind(this);
     }
 
@@ -64,12 +55,20 @@ export default class Dashboard extends Component {
         this.setState({
             currentProj: proj,
         });
+        this.props.history.push({
+            pathname: `/projects/${proj.id}`,
+            state: { from: "/projects/" },
+        });
     }
 
     setCurrentScene(scene) {
         Tone.Transport.cancel();
         this.setState({
             currentScene: scene,
+        });
+        this.props.history.push({
+            pathname: `/projects/${this.state.currentProj.id}/${scene.id}`,
+            state: { from: `/projects/${this.state.currentProj.id}` },
         });
     }
 
@@ -86,41 +85,8 @@ export default class Dashboard extends Component {
         });
     }
 
-    handleChangeScene(field, value) {
-        const currentSceneCopy = this.state.currentScene;
-        const scenesCopy = this.state.currentProj.scenes;
-
-        if (field[0] === "name") {
-            currentSceneCopy[field[0]] = value;
-        }
-
-        const foundIndex = scenesCopy.findIndex(
-            (scene) => scene.id === currentSceneCopy.id
-        );
-        scenesCopy[foundIndex] = currentSceneCopy;
-
-        const currentProjCopy = this.state.currentProj;
-        currentProjCopy.scenes = scenesCopy;
-
-        this.setState({
-            currentScene: currentSceneCopy,
-            currentProj: currentProjCopy,
-        });
-    }
-
     saveProject = () => {
         saveProject({ project: this.state.currentProj });
-    };
-
-    saveScene = () => {
-        fetch(`${BASE_URL}scenes/${this.state.currentScene.id}`, {
-            method: "PATCH",
-            headers: {
-                id_token: Cookies.get("id_token"),
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ scene: this.state.currentScene }),
-        }).then((res) => res.json());
     };
 
     newScene({ name }) {
@@ -138,7 +104,7 @@ export default class Dashboard extends Component {
 
     render() {
         return (
-            <DebugRouter>
+            <>
                 {this.props.loggedIn ? (
                     <Redirect to="/projects" />
                 ) : (
@@ -164,7 +130,6 @@ export default class Dashboard extends Component {
                                     }
                                     saveProject={this.saveProject}
                                     handleChangeScene={this.handleChangeScene}
-                                    saveScene={this.saveScene}
                                 />
                             )}
                         />
@@ -209,29 +174,9 @@ export default class Dashboard extends Component {
                         />
                     </Switch>
                 </Container>
-            </DebugRouter>
+            </>
         );
     }
 }
 
-/**
- * Debug Router for React Router
- */
-class DebugRouter extends Router {
-    constructor(props) {
-        super(props);
-        console.log(
-            "initial history is: ",
-            JSON.stringify(this.history, null, 2)
-        );
-        this.history.listen((location, action) => {
-            console.log(
-                `The current URL is ${location.pathname}${location.search}${location.hash}`
-            );
-            console.log(
-                `The last navigation action was ${action}`,
-                JSON.stringify(this.history, null, 2)
-            );
-        });
-    }
-}
+export default withRouter(Dashboard);

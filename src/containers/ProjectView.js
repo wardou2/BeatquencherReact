@@ -28,7 +28,6 @@ export default class ProjectView extends Component {
         this.attachEffects = this.attachEffects.bind(this);
         this.handleChangeEffect = this.handleChangeEffect.bind(this);
         this.handleMute = this.handleMute.bind(this);
-        this.handleChangeProject = this.handleChangeProject.bind(this);
         this.saveAll = this.saveAll.bind(this);
     }
 
@@ -329,10 +328,6 @@ export default class ProjectView extends Component {
         );
     }
 
-    handleChangeProject(field, value) {
-        this.props.handleChangeProject(field, value);
-    }
-
     playInstruments() {
         this.setState({
             playing: !this.state.playing,
@@ -376,7 +371,7 @@ export default class ProjectView extends Component {
     };
 
     handleChangeTempo = (field, value) => {
-        this.handleChangeProject(["tempo"], value);
+        this.props.handleChangeProject(["tempo"], value);
         Tone.Transport.bpm.value = value.value;
     };
 
