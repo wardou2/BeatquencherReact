@@ -20,17 +20,9 @@ export default class Channel extends Component {
         this.chooseNotes = this.chooseNotes.bind(this);
     }
 
-    componentDidMount() {
-        const track = this.props.tracks.find((t) => {
-            return (
-                t.scene_id === this.props.currentScene.id &&
-                t.instrument_id === this.props.instrument.id
-            );
-        });
-        this.setState({ track });
-    }
-
     getRightNote() {
+        // Closed Hihat needs different own note to sound good
+        // TODO: Can this be done elsewhere? Seems inefficient
         switch (this.props.instrument.ins_type) {
             case "closed_hihat":
                 return "C4";
@@ -40,42 +32,27 @@ export default class Channel extends Component {
     }
 
     chooseNotes(note, active) {
-        const track = this.props.tracks.find((t) => {
-            return (
-                t.scene_id === this.props.currentScene.id &&
-                t.instrument_id === this.props.instrument.id
-            );
-        });
-        const notesCopy = this.state.track.notes;
+        const notesCopy = this.props.track.notes;
         notesCopy[this.state.currentI] = active ? note : "";
 
-        track.notes = notesCopy;
-        this.props.updateTrack(this.state.track);
+        this.props.updateTrack(notesCopy, this.props.track.id);
         this.turnShowOff();
     }
 
     toggleCell(i, instrument) {
-        const track = this.props.tracks.find((t) => {
-            return (
-                t.scene_id === this.props.currentScene.id &&
-                t.instrument_id === this.props.instrument.id
-            );
-        });
-
         if (!instrument.melodic) {
-            const notesCopy = track.notes;
+            const notesCopy = this.props.track.notes;
             if (notesCopy[i]) {
                 notesCopy[i] = "";
             } else {
                 notesCopy[i] = this.getRightNote();
             }
 
-            track.notes = notesCopy;
-            this.props.updateTrack(track);
+            this.props.updateTrack(notesCopy, this.props.track.id);
         } else {
             this.setState({
                 showModal: true,
-                currentNote: track.notes[i],
+                currentNote: this.props.track.notes[i],
                 currentI: i,
             });
         }
@@ -146,7 +123,7 @@ export default class Channel extends Component {
                         toggleCell={this.toggleCell}
                         instrument={this.props.instrument}
                         currentScene={this.props.currentScene}
-                        track={this.state.track}
+                        track={this.props.track}
                         currentCount={this.props.currentCount}
                         isPlaying={this.props.isPlaying}
                     />

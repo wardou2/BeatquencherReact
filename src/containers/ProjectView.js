@@ -14,7 +14,7 @@ export default class ProjectView extends Component {
             instruments: [],
             currentIns: {},
             properIns: [],
-            tracks: [],
+            scene: {},
             playing: false,
             count: 0,
         };
@@ -32,10 +32,14 @@ export default class ProjectView extends Component {
     }
 
     componentDidMount() {
+        // Store Instruments and Scene in state here.
         Tone.Transport.bpm.value = this.props.currentProj.tempo;
-        const currentTracks = this.props.currentScene.tracks;
-
-        currentTracks.forEach((track) => {
+        const currentScene = JSON.parse(
+            JSON.stringify(this.props.currentScene)
+        );
+        // Sanitize Tracks
+        // TODO: Can this be removed?
+        currentScene.tracks.forEach((track, i) => {
             const notesCopy = [];
             track.notes.forEach((n) => {
                 if (n.includes("-")) {
@@ -44,14 +48,15 @@ export default class ProjectView extends Component {
                     notesCopy.push(n);
                 }
             });
-            // eslint-disable-next-line no-param-reassign
-            track.notes = notesCopy;
+            currentScene.tracks[i].notes = notesCopy;
         });
 
         this.setState(
             {
-                instruments: this.props.currentProj.instruments,
-                tracks: currentTracks,
+                instruments: JSON.parse(
+                    JSON.stringify(this.props.currentProj.instruments)
+                ),
+                scene: currentScene,
             },
             () => {
                 this.counter = 0;
@@ -81,11 +86,8 @@ export default class ProjectView extends Component {
     song(time) {
         const step = this.counter % 16;
         this.state.instruments.forEach((ins) => {
-            const track = this.state.tracks.find((t) => {
-                return (
-                    t.instrument_id === ins.id &&
-                    t.scene_id === this.props.currentScene.id
-                );
+            const track = this.state.scene.tracks.find((t) => {
+                return t.instrument === ins.id;
             });
             if (track.notes[step]) {
                 if (ins.ins_type === "closed_hihat") {
@@ -292,14 +294,17 @@ export default class ProjectView extends Component {
         );
     }
 
-    updateTrack(track) {
-        const tracksCopy = [...this.state.tracks];
-        const index = tracksCopy.indexOf((t) => t.id === track.id);
+    updateTrack(notes, id) {
+        const tracksCopy = [...this.state.scene.tracks];
+        const index = tracksCopy.indexOf((t) => t.id === id);
         if (index >= 0) {
-            tracksCopy[index] = track;
+            tracksCopy[index].notes = notes;
         }
         this.setState({
-            tracks: tracksCopy,
+            scene: {
+                ...this.state.scene,
+                tracks: tracksCopy,
+            },
         });
     }
 
@@ -394,13 +399,13 @@ export default class ProjectView extends Component {
 
     render() {
         const EditableSceneName = edit.contentEditable("h2");
-        console.log(this.props.currentProj);
+
         return (
             <div className="project-view-div">
                 <div className="project-info-div">
                     <EditableSceneName
                         className="clickable"
-                        value={this.props.currentScene.name}
+                        value={this.state.scene.name}
                         onSave={(val) =>
                             this.props.handleChangeScene(["name"], val)
                         }
@@ -433,10 +438,9 @@ export default class ProjectView extends Component {
                 <br></br>
                 <SequencerChannels
                     instruments={this.state.instruments}
-                    currentScene={this.props.currentScene}
+                    tracks={this.state.scene.tracks}
                     handleChangeInstrument={this.handleChangeInstrument}
                     handleMute={this.handleMute}
-                    tracks={this.state.tracks}
                     setCurrentIns={this.setCurrentIns}
                     updateTrack={this.updateTrack}
                     currentIns={this.state.currentIns}
