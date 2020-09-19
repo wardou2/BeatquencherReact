@@ -56,15 +56,9 @@ export default class PolysynthForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            currentIns: {},
+            currentIns: this.props.currentIns,
         };
         this.handleChange = this.handleChange.bind(this);
-    }
-
-    componentWillMount() {
-        this.setState({
-            currentIns: this.props.currentIns,
-        });
     }
 
     handleChange(_e, field, { value }) {
