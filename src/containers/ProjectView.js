@@ -370,9 +370,9 @@ export default class ProjectView extends Component {
         });
     };
 
-    handleChangeTempo = (field, value) => {
-        this.props.handleChangeProject(["tempo"], value);
-        Tone.Transport.bpm.value = value.value;
+    handleChangeTempo = (tempo) => {
+        this.props.handleChangeTempo(tempo);
+        Tone.Transport.bpm.value = tempo;
     };
 
     render() {
@@ -397,7 +397,11 @@ export default class ProjectView extends Component {
                                     <Icon name="play" />
                                 )}
                             </Button>
-                            <Button icon onClick={() => this.saveAll()}>
+                            <Button
+                                icon
+                                onClick={() => this.saveAll()}
+                                disabled={!this.props.loggedIn}
+                            >
                                 <Icon name="save" />
                             </Button>
                             <Form.Input
@@ -405,7 +409,7 @@ export default class ProjectView extends Component {
                                 name="tempo"
                                 fluid
                                 onChange={(e, { value }) =>
-                                    this.handleChangeTempo(["tempo"], { value })
+                                    this.handleChangeTempo(value)
                                 }
                                 type="number"
                                 value={this.props.currentProj.tempo}

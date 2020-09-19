@@ -27,7 +27,7 @@ class Dashboard extends Component {
         this.isEmpty = this.isEmpty.bind(this);
         this.setCurrentProj = this.setCurrentProj.bind(this);
         this.setCurrentScene = this.setCurrentScene.bind(this);
-        this.handleChangeProject = this.handleChangeProject.bind(this);
+        this.handleChangeProjTitle = this.handleChangeProjTitle.bind(this);
         this.newProject = this.newProject.bind(this);
         this.newScene = this.newScene.bind(this);
         this.projectWasDeleted = this.projectWasDeleted.bind(this);
@@ -78,18 +78,24 @@ class Dashboard extends Component {
         });
     }
 
-    handleChangeProject(field, value) {
-        const projCopy = this.state.currentProj;
-        if (field[0] === "title") {
-            projCopy[field[0]] = value;
-        } else {
-            projCopy[field[0]] = parseInt(value.value, 10);
-        }
+    handleChangeProjTitle(newTitle) {
+        const projCopy = JSON.parse(JSON.stringify(this.state.currentProj));
+        projCopy.title = newTitle;
         saveProject({ project: projCopy });
         this.setState({
             currentProj: projCopy,
         });
     }
+
+    handleChangeTempo = (tempo) => {
+        const projCopy = JSON.parse(JSON.stringify(this.state.currentProj));
+        this.setState({
+            currentProj: {
+                ...projCopy,
+                tempo,
+            },
+        });
+    };
 
     saveProject = () => {
         saveProject({ project: this.state.currentProj }).catch((err) =>
@@ -143,11 +149,10 @@ class Dashboard extends Component {
                                     currentUser={this.props.currentUser}
                                     currentProj={this.state.currentProj}
                                     currentScene={this.state.currentScene}
-                                    handleChangeProject={
-                                        this.handleChangeProject
-                                    }
                                     saveProject={this.saveProject}
                                     handleChangeScene={this.handleChangeScene}
+                                    handleChangeTempo={this.handleChangeTempo}
+                                    loggedIn={this.props.loggedIn}
                                 />
                             )}
                         />
@@ -166,11 +171,12 @@ class Dashboard extends Component {
                                     currentProj={this.state.currentProj}
                                     setCurrentScene={this.setCurrentScene}
                                     newScene={this.newScene}
-                                    handleChangeProject={
-                                        this.handleChangeProject
+                                    handleChangeProjTitle={
+                                        this.handleChangeProjTitle
                                     }
                                     saveProject={this.saveProject}
                                     projectWasDeleted={this.projectWasDeleted}
+                                    loggedIn={this.props.loggedIn}
                                 />
                             )}
                         />

@@ -11,7 +11,6 @@ export default class SceneSelector extends Component {
             name: "",
             title: "",
             editing: false,
-
             showModal: false,
         };
         this.renderScenes = this.renderScenes.bind(this);
@@ -58,7 +57,7 @@ export default class SceneSelector extends Component {
     };
 
     handleSubmitProj = () => {
-        this.props.handleChangeProject(["title"], this.state.title);
+        this.props.handleChangeProjTitle(this.state.title);
         this.setState({
             editing: false,
             formType: "",
@@ -129,10 +128,15 @@ export default class SceneSelector extends Component {
                     fluid
                     onClick={() => this.showForm("newScene")}
                     style={{ marginBottom: "8px" }}
+                    disabled={!this.props.loggedIn}
                 >
                     Add New Scene
                 </Button>
-                <Button fluid onClick={() => this.showForm("proj")}>
+                <Button
+                    fluid
+                    onClick={() => this.showForm("proj")}
+                    disabled={!this.props.loggedIn}
+                >
                     Edit Project
                 </Button>
             </div>
