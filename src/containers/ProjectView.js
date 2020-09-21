@@ -371,7 +371,7 @@ export default class ProjectView extends Component {
     };
 
     handleChangeTempo = (tempo) => {
-        this.props.handleChangeTempo(tempo);
+        this.props.handleChangeProj("tempo", tempo);
         Tone.Transport.bpm.value = tempo;
     };
 

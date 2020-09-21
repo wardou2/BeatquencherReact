@@ -57,7 +57,7 @@ export default class SceneSelector extends Component {
     };
 
     handleSubmitProj = () => {
-        this.props.handleChangeProjTitle(this.state.title);
+        this.props.handleChangeProj("title", this.state.title, true);
         this.setState({
             editing: false,
             formType: "",

@@ -20,47 +20,60 @@ class Dashboard extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            currentProj: {},
             currentScene: {},
+            projects: [],
             isDemo: false,
+            currentProjIndex: null,
         };
-        this.isEmpty = this.isEmpty.bind(this);
         this.setCurrentProj = this.setCurrentProj.bind(this);
         this.setCurrentScene = this.setCurrentScene.bind(this);
-        this.handleChangeProjTitle = this.handleChangeProjTitle.bind(this);
+        this.handleChangeProj = this.handleChangeProj.bind(this);
         this.newProject = this.newProject.bind(this);
         this.newScene = this.newScene.bind(this);
         this.projectWasDeleted = this.projectWasDeleted.bind(this);
     }
 
-    isEmpty(obj) {
-        for (const key in obj) {
-            if (Object.prototype.hasOwnProperty.call(obj, key)) return false;
+    componentDidUpdate(prevProps) {
+        if (this.props.currentUser?.id !== prevProps.currentUser.id) {
+            const projectsCopy = JSON.parse(
+                JSON.stringify(this.props.currentUser.projects)
+            );
+            this.setState({ projects: projectsCopy });
         }
-        return true;
     }
 
     newProject(projectData) {
         // TODO: Error handle
         newProject(projectData)
-            .then((project) => this.setCurrentProj(project))
+            .then((project) => {
+                const projectsCopy = this.state.projects;
+                projectsCopy.push(project);
+                this.setState(
+                    {
+                        projects: projectsCopy,
+                        currentProjIndex: projectsCopy.length - 1,
+                    },
+                    () => this.setCurrentProj(this.state.currentProjIndex)
+                );
+            })
             .catch((err) => console.log(err));
     }
 
     projectWasDeleted() {
-        this.setState(
-            {
-                currentProj: {},
-            },
-            // Refresh User (with projects) to reflect state on server
-            () => this.props.getUser(this.props.currentUser.id)
-        );
+        const projectsCopy = this.state.projects;
+        projectsCopy.splice(this.state.currentProjIndex, 1);
+        this.setState({
+            currentProjIndex: null,
+            projects: projectsCopy,
+        });
     }
 
-    setCurrentProj(proj) {
+    setCurrentProj(index) {
         this.setState({
-            currentProj: proj,
+            currentProjIndex: index,
         });
+        if (index === null) return;
+        const proj = this.state.projects[index];
         this.props.history.push({
             pathname: `/projects/${proj.id}`,
             state: { from: "/projects/" },
@@ -73,34 +86,36 @@ class Dashboard extends Component {
             currentScene: scene,
         });
         this.props.history.push({
-            pathname: `/projects/${this.state.currentProj.id}/${scene.id}`,
-            state: { from: `/projects/${this.state.currentProj.id}` },
-        });
-    }
-
-    handleChangeProjTitle(newTitle) {
-        const projCopy = JSON.parse(JSON.stringify(this.state.currentProj));
-        projCopy.title = newTitle;
-        saveProject({ project: projCopy });
-        this.setState({
-            currentProj: projCopy,
-        });
-    }
-
-    handleChangeTempo = (tempo) => {
-        const projCopy = JSON.parse(JSON.stringify(this.state.currentProj));
-        this.setState({
-            currentProj: {
-                ...projCopy,
-                tempo,
+            pathname: `/projects/${
+                this.state.projects[this.state.currentProjIndex].id
+            }/${scene.id}`,
+            state: {
+                from: `/projects/${
+                    this.state.projects[this.state.currentProjIndex].id
+                }`,
             },
         });
-    };
+    }
+
+    handleChangeProj(field, value, save = false) {
+        const currentProjCopy = this.state.projects[
+            this.state.currentProjIndex
+        ];
+        currentProjCopy[field] = value;
+
+        const projectsCopy = this.state.projects;
+        projectsCopy[this.state.currentProjIndex] = currentProjCopy;
+
+        save && saveProject({ project: currentProjCopy });
+        this.setState({
+            projects: projectsCopy,
+        });
+    }
 
     saveProject = () => {
-        saveProject({ project: this.state.currentProj }).catch((err) =>
-            console.log(err)
-        );
+        saveProject({
+            project: this.state.projects[this.state.currentProjIndex],
+        }).catch((err) => console.log(err));
     };
 
     newScene({ name }) {
@@ -122,11 +137,13 @@ class Dashboard extends Component {
         );
         this.setState({
             isDemo: true,
+            projects: [project],
         });
-        this.setCurrentProj(project);
+        this.setCurrentProj(0);
     };
 
     render() {
+        const currentProj = this.state.projects[this.state.currentProjIndex];
         return (
             <>
                 {this.props.loggedIn ? (
@@ -135,7 +152,7 @@ class Dashboard extends Component {
                     <Redirect to="/" />
                 )}
                 <Navbar
-                    currentProj={this.state.currentProj}
+                    currentProj={currentProj}
                     loggedIn={this.props.loggedIn}
                     logOut={this.props.logOut}
                     getUser={this.props.getUser}
@@ -143,15 +160,15 @@ class Dashboard extends Component {
                 <Container textAlign="center" className="main-container">
                     <Switch>
                         <Route
-                            path={`/projects/${this.state.currentProj.id}/${this.state.currentScene.id}`}
+                            path={`/projects/${currentProj?.id}/${this.state.currentScene.id}`}
                             render={(props) => (
                                 <ProjectView
                                     currentUser={this.props.currentUser}
-                                    currentProj={this.state.currentProj}
+                                    currentProj={currentProj}
                                     currentScene={this.state.currentScene}
                                     saveProject={this.saveProject}
                                     handleChangeScene={this.handleChangeScene}
-                                    handleChangeTempo={this.handleChangeTempo}
+                                    handleChangeProj={this.handleChangeProj}
                                     loggedIn={this.props.loggedIn}
                                 />
                             )}
@@ -164,16 +181,14 @@ class Dashboard extends Component {
                             )}
                         />
                         <Route
-                            path={`/projects/${this.state.currentProj.id}`}
+                            path={`/projects/${currentProj?.id}`}
                             render={(props) => (
                                 <SceneSelector
                                     currentUser={this.props.currentUser}
-                                    currentProj={this.state.currentProj}
+                                    currentProj={currentProj}
                                     setCurrentScene={this.setCurrentScene}
                                     newScene={this.newScene}
-                                    handleChangeProjTitle={
-                                        this.handleChangeProjTitle
-                                    }
+                                    handleChangeProj={this.handleChangeProj}
                                     saveProject={this.saveProject}
                                     projectWasDeleted={this.projectWasDeleted}
                                     loggedIn={this.props.loggedIn}
@@ -184,7 +199,7 @@ class Dashboard extends Component {
                             path="/projects"
                             render={(props) => (
                                 <ProjectsList
-                                    currentUser={this.props.currentUser}
+                                    projects={this.state.projects}
                                     setCurrentProj={this.setCurrentProj}
                                     startNewProject={this.startNewProject}
                                 />

@@ -10,6 +10,10 @@ export default class ProjectsList extends Component {
         this.handleClick = this.handleClick.bind(this);
     }
 
+    componentDidMount() {
+        this.props.setCurrentProj(null);
+    }
+
     isEmpty(obj) {
         for (const key in obj) {
             if (Object.prototype.hasOwnProperty.call(obj, key)) return false;
@@ -17,19 +21,19 @@ export default class ProjectsList extends Component {
         return true;
     }
 
-    handleClick(proj) {
-        this.props.setCurrentProj(proj);
+    handleClick(index) {
+        this.props.setCurrentProj(index);
     }
 
     renderProjects() {
-        if (!this.isEmpty(this.props.currentUser)) {
+        if (this.props.projects) {
             return (
                 <List divided relaxed>
-                    {this.props.currentUser.projects.map((proj) => {
+                    {this.props.projects.map((proj, index) => {
                         return (
                             <List.Item
                                 key={proj.id}
-                                onClick={() => this.handleClick(proj)}
+                                onClick={() => this.handleClick(index)}
                             >
                                 <List.Content>
                                     <List.Header as="a">
