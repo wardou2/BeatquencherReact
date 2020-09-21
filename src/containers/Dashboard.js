@@ -115,19 +115,27 @@ class Dashboard extends Component {
     saveProject = () => {
         saveProject({
             project: this.state.projects[this.state.currentProjIndex],
-        }).catch((err) => console.log(err));
+        })
+            .then((project) => {
+                const projectsCopy = this.state.projects;
+                projectsCopy[this.state.currentProjIndex] = project;
+                this.setState({
+                    projects: projectsCopy,
+                });
+            })
+            .catch((err) => console.log(err));
     };
 
     newScene({ name }) {
-        newScene({ name, project: this.state.currentProj.id }).then((json) => {
-            let projCopy = this.state.currentProj;
-            projCopy = {
-                ...projCopy,
-                scenes: [...projCopy.scenes, json],
-            };
-            this.setState({
-                currentProj: projCopy,
-            });
+        newScene({
+            name,
+            project: this.state.projects[this.state.currentProjIndex].id,
+        }).then((json) => {
+            const currentScenesCopy = [
+                ...this.state.projects[this.state.currentProjIndex].scenes,
+                json,
+            ];
+            this.handleChangeProj("scenes", currentScenesCopy);
         });
     }
 

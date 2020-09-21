@@ -12,7 +12,6 @@ export default class ProjectView extends Component {
         this.state = {
             instruments: [],
             currentIns: {},
-            properIns: [],
             scene: {},
             playing: false,
             count: 0,
@@ -49,11 +48,13 @@ export default class ProjectView extends Component {
             currentScene.tracks[i].notes = notesCopy;
         });
 
+        const instrumentsCopy = JSON.parse(
+            JSON.stringify(this.props.currentProj.instruments)
+        );
+        instrumentsCopy.sort((a, b) => (a.id < b.id ? 1 : -1));
         this.setState(
             {
-                instruments: JSON.parse(
-                    JSON.stringify(this.props.currentProj.instruments)
-                ),
+                instruments: instrumentsCopy,
                 scene: currentScene,
             },
             () => {

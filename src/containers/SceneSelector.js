@@ -37,7 +37,9 @@ export default class SceneSelector extends Component {
     showForm(type) {
         this.setState({
             formType: type,
-            name: `Scene ${this.props.currentProj.scenes.length + 1}`,
+            name: `Scene ${(this.props.currentProj.scenes.length + 10)
+                .toString(36)
+                .toUpperCase()}`,
         });
     }
 
@@ -144,9 +146,11 @@ export default class SceneSelector extends Component {
     }
 
     renderScenes() {
+        const sortedScenes = [].concat(this.props.currentProj.scenes);
+        sortedScenes.sort((a, b) => (a.id > b.id ? 1 : -1));
         return (
             <List divided relaxed>
-                {this.props.currentProj.scenes.map((scene) => {
+                {sortedScenes.map((scene) => {
                     return (
                         <List.Item
                             key={scene.id}

@@ -6,7 +6,6 @@ export default class SequencerChannels extends Component {
     renderChannels() {
         if (!this.props.instruments) return null;
 
-        // this.props.instruments.sort((a, b) => (a.id > b.id ? 1 : -1));
         return this.props.instruments.map((ins) => {
             const track = this.props.tracks.find(
                 (t) => t.instrument === ins.id
