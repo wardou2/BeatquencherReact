@@ -1,11 +1,9 @@
 import React, { Component } from "react";
 import Tone from "tone";
 import { Form, Button, Icon } from "semantic-ui-react";
-import Cookies from "js-cookie";
 import SequencerChannels from "./SequencerChannels";
 import InstrumentControls from "../components/InstrumentControls";
 import * as edit from "../components/ContentEditable";
-import BASE_URL from "../api_url";
 import { saveInstrument, saveScene } from "../api/Project";
 
 export default class ProjectView extends Component {
@@ -343,32 +341,6 @@ export default class ProjectView extends Component {
         saveScene({ scene: this.state.scene }).catch((err) => console.log(err));
         this.props.saveProject();
     }
-
-    saveTracks = () => {
-        this.state.tracks.forEach((track) => {
-            const trackCopy = { ...track };
-            const notesCopy = [];
-
-            trackCopy.notes.forEach((n) => {
-                if (Array.isArray(n)) {
-                    notesCopy.push(n.join("-"));
-                } else {
-                    notesCopy.push(n);
-                }
-            });
-
-            trackCopy.notes = notesCopy;
-
-            fetch(`${BASE_URL}tracks/${trackCopy.id}`, {
-                method: "PATCH",
-                headers: {
-                    id_token: Cookies.get("id_token"),
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ track: trackCopy }),
-            }).then((res) => res.json());
-        });
-    };
 
     handleChangeTempo = (tempo) => {
         this.props.handleChangeProj("tempo", tempo);
