@@ -1,23 +1,32 @@
 import React, { useState } from "react";
-import { Button, Form, Header, Modal } from "semantic-ui-react";
+import { Button, Form, Modal } from "semantic-ui-react";
 import Cookies from "js-cookie";
 import { newUser, getAuth } from "../api/User";
+import ErrorMessage from "./ErrorMessage";
 
 function NewUser({ getUser }) {
     const [open, setOpen] = useState(false);
     const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const [password1, setPassword1] = useState("");
     const [password2, setPassword2] = useState("");
+    const [errors, setErrors] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     const handleSubmit = () => {
-        newUser(email, password)
-            .then(() => getAuth(email, password))
-            .then(({ token, id }) => {
-                Cookies.set("token", token);
-                Cookies.set("user_id", id);
-                getUser(id);
-            })
-            .catch((err) => console.log(err));
+        setLoading(true);
+        !disableSubmit() &&
+            newUser(email, password1)
+                .then(() => getAuth(email, password1))
+                .then(({ token, id }) => {
+                    Cookies.set("token", token);
+                    Cookies.set("user_id", id);
+                    getUser(id);
+                    setLoading(false);
+                })
+                .catch((err) => {
+                    setLoading(false);
+                    setErrors(err.data);
+                });
     };
 
     const validateEmail = () => {
@@ -27,54 +36,65 @@ function NewUser({ getUser }) {
 
     const disableSubmit = () => {
         return (
-            password !== password2 || password.length < 8 || !validateEmail()
+            password1 !== password2 || password1.length < 8 || !validateEmail()
         );
     };
 
     return (
         <Modal
-            onClose={() => setOpen(false)}
+            onClose={() => {
+                setErrors(null);
+                setEmail("");
+                setPassword1("");
+                setPassword2("");
+                setOpen(false);
+            }}
             onOpen={() => setOpen(true)}
             open={open}
             trigger={<Button primary>Create Account</Button>}
-            size="small"
+            size="tiny"
         >
-            <Modal.Header>Login</Modal.Header>
+            <Modal.Header>Create a new account</Modal.Header>
             <Modal.Content>
-                <Modal.Description>
-                    <Header>Create a new account</Header>
-                    <Form>
-                        <Form.Input
-                            value={email}
-                            onChange={(e, { value }) => setEmail(value)}
-                            label="Email"
+                <Form onSubmit={handleSubmit} loading={loading}>
+                    <Form.Input
+                        value={email}
+                        onChange={(e, { value }) => setEmail(value)}
+                        label="Email:"
+                        error={errors?.email}
+                    />
+                    <Form.Input
+                        value={password1}
+                        onChange={(e, { value }) => setPassword1(value)}
+                        label="Password:"
+                        type="password"
+                        error={errors?.password}
+                    />
+                    <Form.Input
+                        value={password2}
+                        onChange={(e, { value }) => setPassword2(value)}
+                        label="Enter your password again:"
+                        type="password"
+                    />
+                    <Button.Group
+                        floated="right"
+                        style={{ marginBottom: "14px" }}
+                    >
+                        <Button type="button" onClick={() => setOpen(false)}>
+                            Cancel
+                        </Button>
+                        <Button
+                            disabled={disableSubmit()}
+                            type="submit"
+                            content="Create"
+                            primary
                         />
-                        <Form.Input
-                            value={password}
-                            onChange={(e, { value }) => setPassword(value)}
-                            label="Password"
-                            type="password"
-                        />
-                        <Form.Input
-                            value={password2}
-                            onChange={(e, { value }) => setPassword2(value)}
-                            label="Enter password again"
-                            type="password"
-                        />
-                    </Form>
-                </Modal.Description>
+                    </Button.Group>
+                </Form>
+                {errors?.non_field_errors && (
+                    <ErrorMessage errors={errors.non_field_errors} />
+                )}
             </Modal.Content>
-            <Modal.Actions>
-                <Button color="black" onClick={() => setOpen(false)}>
-                    Cancel
-                </Button>
-                <Button
-                    content="Login"
-                    onClick={handleSubmit}
-                    positive
-                    disabled={disableSubmit()}
-                />
-            </Modal.Actions>
         </Modal>
     );
 }

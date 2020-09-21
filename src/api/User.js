@@ -1,4 +1,5 @@
 import Cookies from "js-cookie";
+import ValidationError from "./Errors";
 import BASE_URL from "../api_url";
 
 export const getAuth = async (username, password) => {
@@ -11,7 +12,11 @@ export const getAuth = async (username, password) => {
     });
 
     if (!response.ok) {
-        throw new Error(`HTTP Error! status: ${response.status}`);
+        const json = await response.json();
+        throw new ValidationError(
+            `HTTP Error! status: ${response.status}`,
+            json
+        );
     } else {
         return response.json();
     }
@@ -27,7 +32,11 @@ export const newUser = async (email, password) => {
     });
 
     if (!response.ok) {
-        throw new Error(`HTTP Error! status: ${response.status}`);
+        const json = await response.json();
+        throw new ValidationError(
+            `HTTP Error! status: ${response.status}`,
+            json
+        );
     } else {
         return response.json();
     }
@@ -43,7 +52,11 @@ export const getUser = async (id) => {
     });
 
     if (!response.ok) {
-        throw new Error(`HTTP Error! status: ${response.status}`);
+        const json = await response.json();
+        throw new ValidationError(
+            `HTTP Error! status: ${response.status}`,
+            json
+        );
     } else {
         return response.json();
     }
