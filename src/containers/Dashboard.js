@@ -32,6 +32,7 @@ class Dashboard extends Component {
         this.newProject = this.newProject.bind(this);
         this.newScene = this.newScene.bind(this);
         this.projectWasDeleted = this.projectWasDeleted.bind(this);
+        this.sceneWasDeleted = this.sceneWasDeleted.bind(this);
     }
 
     componentDidUpdate(prevProps) {
@@ -156,6 +157,14 @@ class Dashboard extends Component {
         this.handleChangeProj("scenes", currentScenesCopy);
     }
 
+    sceneWasDeleted(sceneId) {
+        const currentScenesCopy = this.currentProj.scenes.filter(
+            (scene) => scene.id !== sceneId
+        );
+
+        this.handleChangeProj("scenes", currentScenesCopy);
+    }
+
     startDemo = async () => {
         const project = await getDefaultProject().catch((err) =>
             console.log(err)
@@ -217,6 +226,7 @@ class Dashboard extends Component {
                                     projectWasDeleted={this.projectWasDeleted}
                                     loggedIn={this.props.loggedIn}
                                     renameScene={this.renameScene}
+                                    sceneWasDeleted={this.sceneWasDeleted}
                                 />
                             )}
                         />
