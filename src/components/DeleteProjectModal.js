@@ -10,9 +10,7 @@ const DeleteProjectModal = ({
     turnShowOff,
 }) => {
     const handleDelete = () => {
-        deleteProject({ id: currentProj.id })
-            .then(() => projectWasDeleted())
-            .catch((err) => console.log(err));
+        deleteProject({ id: currentProj.id }).then(() => projectWasDeleted());
     };
 
     const Route = (
