@@ -1,9 +1,8 @@
 import React, { Component } from "react";
 import Tone from "tone";
-import { Form, Button, Icon } from "semantic-ui-react";
+import { Form, Button, Icon, Header } from "semantic-ui-react";
 import SequencerChannels from "./SequencerChannels";
 import InstrumentControls from "../components/InstrumentControls";
-import * as edit from "../components/ContentEditable";
 import { saveInstrument, saveScene } from "../api/Project";
 
 export default class ProjectView extends Component {
@@ -351,18 +350,12 @@ export default class ProjectView extends Component {
     };
 
     render() {
-        const EditableSceneName = edit.contentEditable("h2");
-
         return (
             <div className="project-view-div">
                 <div className="project-info-div">
-                    <EditableSceneName
-                        className="clickable"
-                        value={this.state.scene.name}
-                        onSave={(val) =>
-                            this.props.handleChangeScene(["name"], val)
-                        }
-                    />
+                    <Header size="large" className="glow">
+                        {this.state.scene.name}
+                    </Header>
                     <Form size="small">
                         <Form.Group>
                             <Button icon onClick={() => this.playInstruments()}>
