@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import Tone from "tone";
-import { Form, Button, Icon, Header } from "semantic-ui-react";
+import { Button, Icon, Label, Grid, Container } from "semantic-ui-react";
 import SequencerChannels from "./SequencerChannels";
 import InstrumentControls from "../components/InstrumentControls";
 import { saveInstrument, saveScene } from "../api/Project";
+import EditableText from "../components/EditableText";
 
 export default class ProjectView extends Component {
     constructor(props) {
@@ -14,6 +15,7 @@ export default class ProjectView extends Component {
             scene: {},
             playing: false,
             count: 0,
+            editingTempo: false,
         };
         this.setCurrentIns = this.setCurrentIns.bind(this);
         this.song = this.song.bind(this);
@@ -347,45 +349,90 @@ export default class ProjectView extends Component {
     handleChangeTempo = (tempo) => {
         this.props.handleChangeProj("tempo", tempo);
         Tone.Transport.bpm.value = tempo;
+        this.setState({
+            editingTempo: false,
+        });
+    };
+
+    handleButtonTempo = ({ up }) => {
+        let newTempo = this.props.currentProj.tempo;
+        if (up) {
+            newTempo += 1;
+        } else {
+            newTempo -= 1;
+        }
+        this.props.handleChangeProj("tempo", newTempo);
+        Tone.Transport.bpm.value = newTempo;
     };
 
     render() {
         return (
-            <div className="project-view-div">
+            <Container className="project-view-div">
                 <div className="project-info-div">
-                    <Header size="large" className="glow">
-                        {this.state.scene.name}
-                    </Header>
-                    <Form size="small">
-                        <Form.Group>
-                            <Button icon onClick={() => this.playInstruments()}>
+                    <Grid verticalAlign="middle" padded>
+                        <Grid.Column width={4} />
+                        <Grid.Column width={8}>
+                            <Button
+                                icon
+                                labelPosition="right"
+                                onClick={() => this.playInstruments()}
+                            >
                                 {this.state.playing ? (
                                     <Icon name="pause" />
                                 ) : (
                                     <Icon name="play" />
                                 )}
+                                {this.state.playing ? "Pause" : "Play"}
                             </Button>
                             <Button
                                 icon
+                                labelPosition="left"
                                 onClick={() => this.saveAll()}
                                 disabled={!this.props.loggedIn}
                             >
+                                Save
                                 <Icon name="save" />
                             </Button>
-                            <Form.Input
-                                label="Tempo (bpm)"
-                                name="tempo"
-                                fluid
-                                onChange={(e, { value }) =>
-                                    this.handleChangeTempo(value)
-                                }
-                                type="number"
-                                value={this.props.currentProj.tempo}
-                            />
-                        </Form.Group>
-                    </Form>
+                        </Grid.Column>
+                        <Grid.Column width={4}>
+                            <Label size="medium">
+                                Tempo:
+                                <Label.Detail
+                                    as="a"
+                                    onClick={() =>
+                                        this.setState({
+                                            editingTempo: true,
+                                        })
+                                    }
+                                >
+                                    <EditableText
+                                        text={this.props.currentProj.tempo}
+                                        editing={this.state.editingTempo}
+                                        submit={this.handleChangeTempo}
+                                    />
+                                </Label.Detail>
+                                <Label.Detail as="a">
+                                    <Icon
+                                        name="arrow up"
+                                        onClick={() =>
+                                            this.handleButtonTempo({ up: true })
+                                        }
+                                    />
+                                </Label.Detail>
+                                <Label.Detail as="a">
+                                    <Icon
+                                        name="arrow down"
+                                        onClick={() =>
+                                            this.handleButtonTempo({
+                                                up: false,
+                                            })
+                                        }
+                                    />
+                                </Label.Detail>
+                            </Label>
+                        </Grid.Column>
+                    </Grid>
                 </div>
-                <br></br>
                 <SequencerChannels
                     instruments={this.state.instruments}
                     tracks={this.state.scene.tracks}
@@ -402,7 +449,7 @@ export default class ProjectView extends Component {
                     handleChangeInstrument={this.handleChangeInstrument}
                     handleChangeEffect={this.handleChangeEffect}
                 />
-            </div>
+            </Container>
         );
     }
 }
