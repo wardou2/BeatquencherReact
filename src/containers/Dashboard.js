@@ -180,8 +180,12 @@ class Dashboard extends Component {
         this.setState({
             isDemo: true,
             projects: [project],
+            currentProjIndex: 0,
         });
-        this.setCurrentProj(0);
+        this.props.history.push({
+            pathname: `/projects/${project.id}`,
+            state: { from: "/" },
+        });
     };
 
     render() {

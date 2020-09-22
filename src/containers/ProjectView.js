@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import Tone from "tone";
-import { Button, Icon, Label, Grid, Container } from "semantic-ui-react";
+import { Container } from "semantic-ui-react";
 import SequencerChannels from "./SequencerChannels";
 import InstrumentControls from "../components/InstrumentControls";
 import { saveInstrument, saveScene } from "../api/Project";
-import EditableText from "../components/EditableText";
+import ProjectControls from "../components/ProjectControls";
 
 export default class ProjectView extends Component {
     constructor(props) {
@@ -346,93 +346,17 @@ export default class ProjectView extends Component {
         this.props.saveProject();
     }
 
-    handleChangeTempo = (tempo) => {
-        this.props.handleChangeProj("tempo", tempo);
-        Tone.Transport.bpm.value = tempo;
-        this.setState({
-            editingTempo: false,
-        });
-    };
-
-    handleButtonTempo = ({ up }) => {
-        let newTempo = this.props.currentProj.tempo;
-        if (up) {
-            newTempo += 1;
-        } else {
-            newTempo -= 1;
-        }
-        this.props.handleChangeProj("tempo", newTempo);
-        Tone.Transport.bpm.value = newTempo;
-    };
-
     render() {
         return (
             <Container className="project-view-div">
-                <div className="project-info-div">
-                    <Grid verticalAlign="middle" padded>
-                        <Grid.Column width={4} />
-                        <Grid.Column width={8}>
-                            <Button
-                                icon
-                                labelPosition="right"
-                                onClick={() => this.playInstruments()}
-                            >
-                                {this.state.playing ? (
-                                    <Icon name="pause" />
-                                ) : (
-                                    <Icon name="play" />
-                                )}
-                                {this.state.playing ? "Pause" : "Play"}
-                            </Button>
-                            <Button
-                                icon
-                                labelPosition="left"
-                                onClick={() => this.saveAll()}
-                                disabled={!this.props.loggedIn}
-                            >
-                                Save
-                                <Icon name="save" />
-                            </Button>
-                        </Grid.Column>
-                        <Grid.Column width={4}>
-                            <Label size="medium">
-                                Tempo:
-                                <Label.Detail
-                                    as="a"
-                                    onClick={() =>
-                                        this.setState({
-                                            editingTempo: true,
-                                        })
-                                    }
-                                >
-                                    <EditableText
-                                        text={this.props.currentProj.tempo}
-                                        editing={this.state.editingTempo}
-                                        submit={this.handleChangeTempo}
-                                    />
-                                </Label.Detail>
-                                <Label.Detail as="a">
-                                    <Icon
-                                        name="arrow up"
-                                        onClick={() =>
-                                            this.handleButtonTempo({ up: true })
-                                        }
-                                    />
-                                </Label.Detail>
-                                <Label.Detail as="a">
-                                    <Icon
-                                        name="arrow down"
-                                        onClick={() =>
-                                            this.handleButtonTempo({
-                                                up: false,
-                                            })
-                                        }
-                                    />
-                                </Label.Detail>
-                            </Label>
-                        </Grid.Column>
-                    </Grid>
-                </div>
+                <ProjectControls
+                    playInstruments={this.playInstruments}
+                    saveAll={this.saveAll}
+                    isPlaying={this.state.playing}
+                    loggedIn={this.props.loggedIn}
+                    currentProj={this.props.currentProj}
+                    handleChangeProj={this.props.handleChangeProj}
+                />
                 <SequencerChannels
                     instruments={this.state.instruments}
                     tracks={this.state.scene.tracks}
