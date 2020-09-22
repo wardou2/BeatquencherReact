@@ -26,6 +26,7 @@ class App extends Component {
     componentDidMount() {
         /** Fetch user details if cookies stored */
         if (Cookies.get("token") && Cookies.get("user_id")) {
+            this.setLoading(true);
             this.getUser(Cookies.get("user_id"));
         }
     }
@@ -37,9 +38,9 @@ class App extends Component {
         return true;
     }
 
-    setLoading(boo) {
+    setLoading(bool) {
         this.setState({
-            loading: boo,
+            loading: bool,
         });
     }
 
@@ -66,6 +67,7 @@ class App extends Component {
         // TODO: Handle Error
         getUser(id)
             .then(this.setCurrentUser)
+            .then(() => setTimeout(() => this.setLoading(false), 100))
             .catch((err) => console.log(err));
     }
 
