@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { Form, Button, Icon, Header, List, Segment } from "semantic-ui-react";
 
-import DeleteModal from "../components/DeleteModal";
+import DeleteProjectModal from "../components/DeleteProjectModal";
+import DeleteSceneModal from "../components/DeleteSceneModal";
 
 export default class SceneSelector extends Component {
     constructor(props) {
@@ -11,7 +12,10 @@ export default class SceneSelector extends Component {
             name: "",
             title: "",
             editing: false,
-            showModal: false,
+            showModal: {
+                project: false,
+                scene: false,
+            },
             scene: null,
         };
         this.renderScenes = this.renderScenes.bind(this);
@@ -70,15 +74,11 @@ export default class SceneSelector extends Component {
         this.hideForm();
     };
 
-    showDeleteModal = () => {
+    toggleShowModal = (selector) => {
+        const showModalCopy = { ...this.state.showModal };
+        showModalCopy[selector] = !showModalCopy[selector];
         this.setState({
-            showModal: true,
-        });
-    };
-
-    turnShowOff = () => {
-        this.setState({
-            showModal: false,
+            showModal: showModalCopy,
         });
     };
 
@@ -122,7 +122,10 @@ export default class SceneSelector extends Component {
                         onChange={this.handleChange}
                     />
                     <Button type="submit">Submit</Button>
-                    <Button negative onClick={this.showDeleteModal}>
+                    <Button
+                        negative
+                        onClick={() => this.toggleShowModal("project")}
+                    >
                         Delete Project
                     </Button>
                 </Form>
@@ -180,20 +183,30 @@ export default class SceneSelector extends Component {
     }
 
     renderScenes() {
+        // TODO: Styles on list... Pretty hacky
         const sortedScenes = [].concat(this.props.currentProj.scenes);
         sortedScenes.sort((a, b) => (a.id > b.id ? 1 : -1));
         return (
-            <List divided selection verticalAlign="middle">
+            <List divided selection relaxed="very" verticalAlign="middle">
                 {sortedScenes.map((scene) => {
                     return (
                         <List.Item key={scene.id}>
                             {this.props.loggedIn && (
                                 <>
-                                    <List.Content
-                                        floated="left"
-                                        style={{ opacity: "0%" }}
-                                    >
-                                        <List.Icon name="edit" link />
+                                    <List.Content floated="right">
+                                        <List.Icon
+                                            name="delete"
+                                            link
+                                            onClick={() =>
+                                                this.setState({
+                                                    showModal: {
+                                                        ...this.state.showModal,
+                                                        scene: true,
+                                                    },
+                                                    scene,
+                                                })
+                                            }
+                                        />
                                     </List.Content>
                                     <List.Content
                                         floated="right"
@@ -205,7 +218,25 @@ export default class SceneSelector extends Component {
                                             });
                                         }}
                                     >
-                                        <List.Icon name="edit" link />
+                                        <List.Icon
+                                            name="edit"
+                                            link
+                                            aria-label="Edit"
+                                        />
+                                    </List.Content>
+                                    <List.Content
+                                        floated="left"
+                                        style={{ opacity: "0%" }}
+                                        onClick={() => this.handleClick(scene)}
+                                    >
+                                        <List.Icon name="delete" />
+                                    </List.Content>
+                                    <List.Content
+                                        floated="left"
+                                        style={{ opacity: "0%" }}
+                                        onClick={() => this.handleClick(scene)}
+                                    >
+                                        <List.Icon name="edit" />
                                     </List.Content>
                                 </>
                             )}
@@ -226,13 +257,23 @@ export default class SceneSelector extends Component {
     render() {
         return (
             <div className="projects-list">
+                {this.state.showModal.project && (
+                    <DeleteProjectModal
+                        turnShowOff={() => this.toggleShowModal("project")}
+                        currentProj={this.props.currentProj}
+                        projectWasDeleted={this.props.projectWasDeleted}
+                    />
+                )}
+                {this.state.showModal.scene && (
+                    <DeleteSceneModal
+                        turnShowOff={() => this.toggleShowModal("scene")}
+                        scene={this.state.scene}
+                        sceneWasDeleted={() =>
+                            this.props.sceneWasDeleted(this.state.scene.id)
+                        }
+                    />
+                )}
                 <br></br>
-                <DeleteModal
-                    show={this.state.showModal}
-                    turnShowOff={this.turnShowOff}
-                    currentProj={this.props.currentProj}
-                    projectWasDeleted={this.props.projectWasDeleted}
-                />
                 <Segment>
                     <Header as="h2">Select Scene</Header>
                     {this.renderScenes()}

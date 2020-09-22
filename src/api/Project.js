@@ -92,6 +92,19 @@ export const saveScene = async ({ scene }) => {
     }
 };
 
+export const deleteScene = async ({ id }) => {
+    const response = await fetch(`${BASE_URL}/scenes/${id}`, {
+        method: "DELETE",
+        headers: {
+            Authorization: `Token ${Cookies.get("token")}`,
+        },
+    });
+
+    if (!response.ok) {
+        throw new Error(`HTTP Error! status: ${response.status}`);
+    }
+};
+
 export const saveInstrument = async ({ ins }) => {
     const response = await fetch(`${BASE_URL}/instruments/${ins.id}`, {
         method: "PATCH",
