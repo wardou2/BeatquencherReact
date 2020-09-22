@@ -13,6 +13,7 @@ import {
     newProject,
     saveProject,
     newScene,
+    saveScene,
     getDefaultProject,
 } from "../api/Project";
 
@@ -139,6 +140,22 @@ class Dashboard extends Component {
         });
     }
 
+    renameScene(sceneId, newName) {
+        let sceneCopy;
+        const currentScenesCopy = this.currentProj.scenes.map((scene) => {
+            if (scene.id === sceneId) {
+                sceneCopy = JSON.parse(JSON.stringify(scene));
+                sceneCopy.name = newName;
+                return sceneCopy;
+            }
+            return scene;
+        });
+
+        saveScene({ scene: sceneCopy }).catch((err) => console.log(err));
+
+        this.handleChangeProj("scenes", currentScenesCopy);
+    }
+
     startDemo = async () => {
         const project = await getDefaultProject().catch((err) =>
             console.log(err)
@@ -151,7 +168,7 @@ class Dashboard extends Component {
     };
 
     render() {
-        const currentProj = this.state.projects[this.state.currentProjIndex];
+        this.currentProj = this.state.projects[this.state.currentProjIndex];
         return (
             <>
                 {this.props.loggedIn ? (
@@ -160,7 +177,7 @@ class Dashboard extends Component {
                     <Redirect to="/" />
                 )}
                 <Navbar
-                    currentProj={currentProj}
+                    currentProj={this.currentProj}
                     loggedIn={this.props.loggedIn}
                     logOut={this.props.logOut}
                     getUser={this.props.getUser}
@@ -168,11 +185,11 @@ class Dashboard extends Component {
                 <Container textAlign="center" className="main-container">
                     <Switch>
                         <Route
-                            path={`/projects/${currentProj?.id}/${this.state.currentScene.id}`}
+                            path={`/projects/${this.currentProj?.id}/${this.state.currentScene.id}`}
                             render={(props) => (
                                 <ProjectView
                                     currentUser={this.props.currentUser}
-                                    currentProj={currentProj}
+                                    currentProj={this.currentProj}
                                     currentScene={this.state.currentScene}
                                     saveProject={this.saveProject}
                                     handleChangeScene={this.handleChangeScene}
@@ -189,17 +206,17 @@ class Dashboard extends Component {
                             )}
                         />
                         <Route
-                            path={`/projects/${currentProj?.id}`}
+                            path={`/projects/${this.currentProj?.id}`}
                             render={(props) => (
                                 <SceneSelector
-                                    currentUser={this.props.currentUser}
-                                    currentProj={currentProj}
+                                    currentProj={this.currentProj}
                                     setCurrentScene={this.setCurrentScene}
                                     newScene={this.newScene}
                                     handleChangeProj={this.handleChangeProj}
                                     saveProject={this.saveProject}
                                     projectWasDeleted={this.projectWasDeleted}
                                     loggedIn={this.props.loggedIn}
+                                    renameScene={this.renameScene}
                                 />
                             )}
                         />

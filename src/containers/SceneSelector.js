@@ -12,6 +12,7 @@ export default class SceneSelector extends Component {
             title: "",
             editing: false,
             showModal: false,
+            scene: null,
         };
         this.renderScenes = this.renderScenes.bind(this);
         this.handleClick = this.handleClick.bind(this);
@@ -45,6 +46,7 @@ export default class SceneSelector extends Component {
 
     hideForm() {
         this.setState({
+            editing: false,
             formType: "",
         });
     }
@@ -60,10 +62,12 @@ export default class SceneSelector extends Component {
 
     handleSubmitProj = () => {
         this.props.handleChangeProj("title", this.state.title, true);
-        this.setState({
-            editing: false,
-            formType: "",
-        });
+        this.hideForm();
+    };
+
+    handleRenameScene = () => {
+        this.props.renameScene(this.state.scene.id, this.state.name);
+        this.hideForm();
     };
 
     showDeleteModal = () => {
@@ -124,11 +128,41 @@ export default class SceneSelector extends Component {
                 </Form>
             );
         }
+        if (this.state.formType === "renameScene") {
+            return (
+                <Form onSubmit={() => this.handleRenameScene()}>
+                    <div className="fake-close-btn">
+                        <Icon name="close" />
+                    </div>
+                    <div className="close-btn">
+                        <Icon name="close" onClick={this.hideForm} />
+                    </div>
+                    <Header as="h2">Rename Scene</Header>
+                    <Form.Input
+                        label="Name"
+                        placeholder="Name"
+                        name="name"
+                        value={this.state.name}
+                        onChange={this.handleChange}
+                    />
+                    <Button type="submit">Submit</Button>
+                </Form>
+            );
+        }
         return (
             <div>
                 <Button
                     fluid
-                    onClick={() => this.showForm("newScene")}
+                    onClick={() =>
+                        this.setState({
+                            formType: "newScene",
+                            name: `Scene ${(
+                                this.props.currentProj.scenes.length + 10
+                            )
+                                .toString(36)
+                                .toUpperCase()}`,
+                        })
+                    }
                     style={{ marginBottom: "8px" }}
                     disabled={!this.props.loggedIn}
                 >
@@ -136,7 +170,7 @@ export default class SceneSelector extends Component {
                 </Button>
                 <Button
                     fluid
-                    onClick={() => this.showForm("proj")}
+                    onClick={() => this.setState({ formType: "proj" })}
                     disabled={!this.props.loggedIn}
                 >
                     Edit Project
@@ -149,15 +183,38 @@ export default class SceneSelector extends Component {
         const sortedScenes = [].concat(this.props.currentProj.scenes);
         sortedScenes.sort((a, b) => (a.id > b.id ? 1 : -1));
         return (
-            <List divided relaxed>
+            <List divided selection verticalAlign="middle">
                 {sortedScenes.map((scene) => {
                     return (
-                        <List.Item
-                            key={scene.id}
-                            onClick={() => this.handleClick(scene)}
-                        >
-                            <List.Content>
-                                <List.Header as="a">{scene.name}</List.Header>
+                        <List.Item key={scene.id}>
+                            {this.props.loggedIn && (
+                                <>
+                                    <List.Content
+                                        floated="left"
+                                        style={{ opacity: "0%" }}
+                                    >
+                                        <List.Icon name="edit" link />
+                                    </List.Content>
+                                    <List.Content
+                                        floated="right"
+                                        onClick={() => {
+                                            this.setState({
+                                                scene,
+                                                name: scene.name,
+                                                formType: "renameScene",
+                                            });
+                                        }}
+                                    >
+                                        <List.Icon name="edit" link />
+                                    </List.Content>
+                                </>
+                            )}
+                            <List.Content as="a">
+                                <List.Header
+                                    onClick={() => this.handleClick(scene)}
+                                >
+                                    {scene.name}
+                                </List.Header>
                             </List.Content>
                         </List.Item>
                     );
