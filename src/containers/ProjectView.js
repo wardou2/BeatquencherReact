@@ -339,8 +339,8 @@ export default class ProjectView extends Component {
         this.state.instruments.forEach((ins) => {
             saveInstrument({ ins }).catch((err) => console.log(err));
         });
-        this.props
-            .saveScene({ scene: this.state.scene })
+        saveScene({ scene: this.state.scene })
+            .then((scene) => this.props.sceneWasSaved(scene))
             .catch((err) => console.log(err));
         this.props.saveProject();
     }

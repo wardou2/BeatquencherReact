@@ -33,6 +33,7 @@ class Dashboard extends Component {
         this.newScene = this.newScene.bind(this);
         this.projectWasDeleted = this.projectWasDeleted.bind(this);
         this.sceneWasDeleted = this.sceneWasDeleted.bind(this);
+        this.sceneWasSaved = this.sceneWasSaved.bind(this);
     }
 
     componentDidUpdate(prevProps) {
@@ -143,7 +144,7 @@ class Dashboard extends Component {
 
     renameScene(sceneId, newName) {
         let sceneCopy;
-        const currentScenesCopy = this.currentProj.scenes.map((scene) => {
+        const scenesCopy = this.currentProj.scenes.map((scene) => {
             if (scene.id === sceneId) {
                 sceneCopy = JSON.parse(JSON.stringify(scene));
                 sceneCopy.name = newName;
@@ -154,7 +155,14 @@ class Dashboard extends Component {
 
         saveScene({ scene: sceneCopy }).catch((err) => console.log(err));
 
-        this.handleChangeProj("scenes", currentScenesCopy);
+        this.handleChangeProj("scenes", scenesCopy);
+    }
+
+    sceneWasSaved(changedScene) {
+        const scenesCopy = this.currentProj.scenes.map((scene) => {
+            return scene.id === changedScene.id ? changedScene : scene;
+        });
+        this.handleChangeProj("scenes", scenesCopy);
     }
 
     sceneWasDeleted(sceneId) {
@@ -204,6 +212,7 @@ class Dashboard extends Component {
                                     handleChangeScene={this.handleChangeScene}
                                     handleChangeProj={this.handleChangeProj}
                                     loggedIn={this.props.loggedIn}
+                                    sceneWasSaved={this.sceneWasSaved}
                                 />
                             )}
                         />

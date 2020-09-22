@@ -112,13 +112,7 @@ export const saveInstrument = async ({ ins }) => {
             Authorization: `Token ${Cookies.get("token")}`,
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-            instrument: {
-                ins_type: ins.ins_type,
-                options: ins.options,
-                effects: ins.effects,
-            },
-        }),
+        body: JSON.stringify(ins),
     });
 
     if (!response.ok) {
