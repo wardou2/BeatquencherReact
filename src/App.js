@@ -4,9 +4,11 @@ import { Dimmer, Loader } from "semantic-ui-react";
 import Cookies from "js-cookie";
 
 import "./App.css";
-import { BrowserRouter as Router } from "react-router-dom";
+import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
 import Dashboard from "./containers/Dashboard";
+import Landing from "./components/Landing";
 import { getUser } from "./api/User";
+import { getDefaultProject } from "./api/Project";
 
 class App extends Component {
     constructor() {
@@ -71,20 +73,56 @@ class App extends Component {
             .catch((err) => console.log(err));
     }
 
+    startDemo = async (history) => {
+        const project = await getDefaultProject().catch((err) =>
+            console.log(err)
+        );
+        this.setState({
+            isDemo: true,
+            currentUser: {
+                id: -1,
+                projects: [project],
+            },
+        });
+        history.push({
+            pathname: `/projects/${project.id}`,
+            state: { from: "/" },
+        });
+    };
+
     render() {
         return (
             <Router>
+                {this.state.loggedIn ? (
+                    <Redirect to="/projects" />
+                ) : (
+                    <Redirect to="/" />
+                )}
                 <Dimmer active={this.state.loading}>
                     <Loader>Loading</Loader>
                 </Dimmer>
 
                 <div className="fill-page">
-                    <Dashboard
-                        currentUser={this.state.currentUser}
-                        loggedIn={this.state.loggedIn}
-                        logOut={this.logOut}
-                        setCurrentUser={this.setCurrentUser}
-                        getUser={this.getUser}
+                    <Route
+                        path="/projects"
+                        render={(props) => (
+                            <Dashboard
+                                currentUser={this.state.currentUser}
+                                loggedIn={this.state.loggedIn}
+                                logOut={this.logOut}
+                                setCurrentUser={this.setCurrentUser}
+                                getUser={this.getUser}
+                            />
+                        )}
+                    />
+                    <Route
+                        path="/"
+                        render={(props) => (
+                            <Landing
+                                getUser={this.getUser}
+                                startDemo={this.startDemo}
+                            />
+                        )}
                     />
                 </div>
             </Router>

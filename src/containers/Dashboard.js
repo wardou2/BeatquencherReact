@@ -1,21 +1,14 @@
 import React, { Component } from "react";
-import { Switch, Route, Redirect, withRouter } from "react-router-dom";
+import { Switch, Route, withRouter } from "react-router-dom";
 import Tone from "tone";
-import { Container } from "semantic-ui-react";
 
 import Navbar from "../components/Navbar";
 import ProjectsList from "./ProjectsList";
 import SceneSelector from "./SceneSelector";
 import ProjectView from "./ProjectView";
 import NewProjectForm from "../components/NewProjectForm";
-import Landing from "../components/Landing";
-import {
-    newProject,
-    saveProject,
-    newScene,
-    saveScene,
-    getDefaultProject,
-} from "../api/Project";
+
+import { newProject, saveProject, newScene, saveScene } from "../api/Project";
 
 class Dashboard extends Component {
     constructor(props) {
@@ -173,37 +166,17 @@ class Dashboard extends Component {
         this.handleChangeProj("scenes", currentScenesCopy);
     }
 
-    startDemo = async () => {
-        const project = await getDefaultProject().catch((err) =>
-            console.log(err)
-        );
-        this.setState({
-            isDemo: true,
-            projects: [project],
-            currentProjIndex: 0,
-        });
-        this.props.history.push({
-            pathname: `/projects/${project.id}`,
-            state: { from: "/" },
-        });
-    };
-
     render() {
         this.currentProj = this.state.projects[this.state.currentProjIndex];
         return (
             <>
-                {this.props.loggedIn ? (
-                    <Redirect to="/projects" />
-                ) : (
-                    <Redirect to="/" />
-                )}
-                <Navbar
-                    currentProj={this.currentProj}
-                    loggedIn={this.props.loggedIn}
-                    logOut={this.props.logOut}
-                    getUser={this.props.getUser}
-                />
-                <Container textAlign="center" className="main-container">
+                <div className="main-container">
+                    <Navbar
+                        currentProj={this.currentProj}
+                        loggedIn={this.props.loggedIn}
+                        logOut={this.props.logOut}
+                        getUser={this.props.getUser}
+                    />
                     <Switch>
                         <Route
                             path={`/projects/${this.currentProj?.id}/${this.state.currentScene.id}`}
@@ -253,17 +226,8 @@ class Dashboard extends Component {
                                 />
                             )}
                         />
-                        <Route
-                            path="/"
-                            render={(props) => (
-                                <Landing
-                                    getUser={this.props.getUser}
-                                    startDemo={this.startDemo}
-                                />
-                            )}
-                        />
                     </Switch>
-                </Container>
+                </div>
             </>
         );
     }

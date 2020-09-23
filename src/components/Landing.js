@@ -1,28 +1,29 @@
 import React from "react";
-import { Button, Segment, Grid, Divider } from "semantic-ui-react";
-import NewUser from "./NewUser";
+import { withRouter } from "react-router-dom";
 
-const Landing = ({ getUser, startDemo }) => {
+import NewUser from "./NewUser";
+import StyledButton from "./StyledButton";
+
+import "../styles/landing.css";
+
+const Landing = ({ getUser, startDemo, history }) => {
     return (
-        <div>
-            <br></br>
-            <Segment placeholder>
-                <Grid columns={2} stackable textAlign="center">
-                    <Divider vertical>OR</Divider>
-                    <Grid.Row verticalAlign="middle">
-                        <Grid.Column>
-                            <Button onClick={startDemo}>
-                                Demo without Logging in
-                            </Button>
-                        </Grid.Column>
-                        <Grid.Column>
-                            <NewUser getUser={getUser} />
-                        </Grid.Column>
-                    </Grid.Row>
-                </Grid>
-            </Segment>
+        <div className="landing-container">
+            <div className="landing-child">
+                <div className="landing-header glow">BEATQUENCHER</div>
+                <div>
+                    <div className="landing-button-wrapper">
+                        <StyledButton callback={() => startDemo(history)}>
+                            DEMO WITHOUT LOGGING IN
+                        </StyledButton>
+                    </div>
+                    <div className="landing-button-wrapper">
+                        <NewUser getUser={getUser} />
+                    </div>
+                </div>
+            </div>
         </div>
     );
 };
 
-export default Landing;
+export default withRouter(Landing);

@@ -1,0 +1,40 @@
+.landing-container {
+    display: flex;
+    height: 100%;
+    padding: 5em;
+    text-align: center;
+
+    background-image: url("/images/landing-background.jpg");
+    background-color: #cccccc; /* Used if the image is unavailable */
+
+    background-position: center; /* Center the image */
+    background-repeat: no-repeat; /* Do not repeat the image */
+    background-size: cover; /* Resize the background image to cover the entire container */
+}
+
+.landing-child {
+    flex: 2;
+    margin: 0.5em;
+}
+
+.landing-img-wrapper {
+    flex: 3;
+    align-self: center;
+    margin: 0.5em;
+}
+
+.landing-header {
+    font-size: 5em;
+    margin-bottom: 1em;
+}
+
+.landing-img {
+    max-width: 100%;
+    width: auto;
+    height: auto;
+}
+
+.landing-button-wrapper {
+    padding: 0.2em;
+    display: inline-block;
+}

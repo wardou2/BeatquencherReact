@@ -3,6 +3,7 @@ import { Button, Form, Modal } from "semantic-ui-react";
 import Cookies from "js-cookie";
 import { newUser, getAuth } from "../api/User";
 import ErrorMessage from "./ErrorMessage";
+import StyledButton from "./StyledButton";
 
 function NewUser({ getUser }) {
     const [open, setOpen] = useState(false);
@@ -51,7 +52,11 @@ function NewUser({ getUser }) {
             }}
             onOpen={() => setOpen(true)}
             open={open}
-            trigger={<Button primary>Create Account</Button>}
+            trigger={
+                <StyledButton callback={() => setOpen(true)}>
+                    LOG IN / CREATE ACCOUNT
+                </StyledButton>
+            }
             size="tiny"
         >
             <Modal.Header>Create a new account</Modal.Header>
