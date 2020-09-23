@@ -62,7 +62,7 @@ class Navbar extends Component {
                     <h1 className="glow">
                         {!this.isEmpty(this.props.currentProj)
                             ? this.props.currentProj.title
-                            : "BEATQUENCER"}
+                            : "BEATQUENCHER"}
                     </h1>
                 </div>
                 <div className="navbar-links" onClick={this.toggleMenuVisible}>

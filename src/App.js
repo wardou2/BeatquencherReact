@@ -18,6 +18,7 @@ class App extends Component {
             displayError: "",
             loggedIn: false,
             loading: false,
+            isDemo: false,
         };
 
         this.getUser = this.getUser.bind(this);
@@ -112,6 +113,7 @@ class App extends Component {
                                 logOut={this.logOut}
                                 setCurrentUser={this.setCurrentUser}
                                 getUser={this.getUser}
+                                isDemo={this.state.isDemo}
                             />
                         )}
                     />

@@ -16,7 +16,6 @@ class Dashboard extends Component {
         this.state = {
             currentScene: {},
             projects: [],
-            isDemo: false,
             currentProjIndex: null,
         };
         this.setCurrentProj = this.setCurrentProj.bind(this);
@@ -35,6 +34,11 @@ class Dashboard extends Component {
                 JSON.stringify(this.props.currentUser.projects)
             );
             this.setState({ projects: projectsCopy });
+        }
+        if (this.props.isDemo) {
+            this.setState({
+                currentProjIndex: 0,
+            });
         }
     }
 
@@ -168,6 +172,7 @@ class Dashboard extends Component {
 
     render() {
         this.currentProj = this.state.projects[this.state.currentProjIndex];
+        console.log(this.currentProj?.id);
         return (
             <>
                 <div className="main-container">
