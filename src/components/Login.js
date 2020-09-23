@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import { Button, Form, Modal } from "semantic-ui-react";
 import Cookies from "js-cookie";
 import { getAuth } from "../api/User";
+import NewUser from "./NewUser";
 import ErrorMessage from "./ErrorMessage";
+import StyledButton from "./StyledButton";
 
 function Login({ getUser }) {
     const [open, setOpen] = useState(false);
@@ -18,7 +20,7 @@ function Login({ getUser }) {
                 Cookies.set("token", token);
                 Cookies.set("user_id", id);
                 getUser(id);
-                setLoading(false);
+                handleClose();
             })
             .catch((err) => {
                 setLoading(false);
@@ -26,16 +28,23 @@ function Login({ getUser }) {
             });
     };
 
+    const handleClose = () => {
+        setPassword("");
+        setErrors(null);
+        setLoading(false);
+        setOpen(false);
+    };
+
     return (
         <Modal
-            onClose={() => {
-                setPassword("");
-                setErrors(null);
-                setOpen(false);
-            }}
+            onClose={handleClose}
             onOpen={() => setOpen(true)}
             open={open}
-            trigger={<a className="nav-links">Log In</a>}
+            trigger={
+                <StyledButton callback={() => setOpen(true)}>
+                    LOG IN / CREATE ACCOUNT
+                </StyledButton>
+            }
             size="tiny"
         >
             <Modal.Header>Log in to your account</Modal.Header>
@@ -58,15 +67,18 @@ function Login({ getUser }) {
                         floated="right"
                         style={{ marginBottom: "14px" }}
                     >
-                        <Button type="button" onClick={() => setOpen(false)}>
+                        <StyledButton callback={handleClose} type="button">
                             Cancel
-                        </Button>
-                        <Button type="submit" content="Login" primary />
+                        </StyledButton>
+                        <StyledButton primary type="submit">
+                            Login
+                        </StyledButton>
                     </Button.Group>
                 </Form>
                 {errors?.non_field_errors && (
                     <ErrorMessage errors={errors.non_field_errors} />
                 )}
+                <NewUser getUser={getUser} />
             </Modal.Content>
         </Modal>
     );

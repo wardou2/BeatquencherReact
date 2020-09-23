@@ -1,7 +1,7 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
 
-import NewUser from "./NewUser";
+import Login from "./Login";
 import StyledButton from "./StyledButton";
 
 import "../styles/landing.css";
@@ -18,7 +18,7 @@ const Landing = ({ getUser, startDemo, history }) => {
                         </StyledButton>
                     </div>
                     <div className="landing-button-wrapper">
-                        <NewUser getUser={getUser} />
+                        <Login getUser={getUser} />
                     </div>
                 </div>
             </div>

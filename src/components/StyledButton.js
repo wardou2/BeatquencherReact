@@ -1,8 +1,15 @@
 import React from "react";
 
-const StyledButton = ({ callback, children }) => {
+const StyledButton = ({ callback, children, ...args }) => {
+    const { type, disabled } = args;
+
     return (
-        <button className="link--is-button" onClick={callback}>
+        <button
+            type={type}
+            disabled={disabled}
+            className="link--is-button"
+            onClick={callback}
+        >
             {children}
         </button>
     );

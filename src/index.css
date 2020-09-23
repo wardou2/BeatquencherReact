@@ -7,15 +7,16 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 
-    /* background: rgb(0, 191, 255);
-    background: linear-gradient(
-        0deg,
-        rgba(47, 97, 114, 0.2) 0%,
-        rgba(75, 0, 130, 0.3) 100%
-    );
-    background-repeat: no-repeat; */
-    /* background-attachment: fixed; */
     background-color: #ffff;
+}
+
+/* Overwrite Semantic */
+.ui.modal {
+    border-radius: 0 !important;
+}
+
+.ui.modal > .header {
+    font-family: "Montserrat", sans-serif;
 }
 
 #root {

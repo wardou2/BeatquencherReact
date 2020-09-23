@@ -41,20 +41,22 @@ function NewUser({ getUser }) {
         );
     };
 
+    const handleClose = () => {
+        setErrors(null);
+        setEmail("");
+        setPassword1("");
+        setPassword2("");
+        setOpen(false);
+    };
+
     return (
         <Modal
-            onClose={() => {
-                setErrors(null);
-                setEmail("");
-                setPassword1("");
-                setPassword2("");
-                setOpen(false);
-            }}
+            onClose={handleClose}
             onOpen={() => setOpen(true)}
             open={open}
             trigger={
                 <StyledButton callback={() => setOpen(true)}>
-                    LOG IN / CREATE ACCOUNT
+                    CREATE ACCOUNT
                 </StyledButton>
             }
             size="tiny"
@@ -85,15 +87,12 @@ function NewUser({ getUser }) {
                         floated="right"
                         style={{ marginBottom: "14px" }}
                     >
-                        <Button type="button" onClick={() => setOpen(false)}>
+                        <StyledButton callback={handleClose} type="button">
                             Cancel
-                        </Button>
-                        <Button
-                            disabled={disableSubmit()}
-                            type="submit"
-                            content="Create"
-                            primary
-                        />
+                        </StyledButton>
+                        <StyledButton type="submit" disabled={disableSubmit()}>
+                            Create
+                        </StyledButton>
                     </Button.Group>
                 </Form>
                 {errors?.non_field_errors && (
