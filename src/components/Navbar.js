@@ -26,24 +26,24 @@ class Navbar extends Component {
     getRoute = () => {
         if (this.props.location.state?.from === "/projects/") {
             return (
-                <a
+                <div
                     onClick={() => this.props.history.goBack()}
-                    className="nav-links"
+                    className="navbar-link"
                 >
-                    <Icon name="arrow alternate circle left outline" />
+                    <Icon name="arrow left" />
                     Projects
-                </a>
+                </div>
             );
         }
         if (this.props.location.state?.from.includes("/projects/")) {
             return (
-                <a
+                <div
                     onClick={() => this.props.history.goBack()}
-                    className="nav-links"
+                    className="navbar-link"
                 >
-                    <Icon name="arrow alternate circle left outline" />
+                    <Icon name="arrow left" />
                     Scenes
-                </a>
+                </div>
             );
         }
 
@@ -57,15 +57,18 @@ class Navbar extends Component {
     render() {
         return (
             <div className="navbar">
-                <div className="blank-div">{this.getRoute()}</div>
-                <div className="nav-title">
+                <div className="navbar-links">{this.getRoute()}</div>
+                <div className="navbar-title">
                     <h1 className="glow">
                         {!this.isEmpty(this.props.currentProj)
                             ? this.props.currentProj.title
                             : "BEATQUENCHER"}
                     </h1>
                 </div>
-                <div className="navbar-links" onClick={this.toggleMenuVisible}>
+                <div
+                    className="navbar-loginlogout"
+                    onClick={this.toggleMenuVisible}
+                >
                     {this.showLoginLogout()}
                 </div>
             </div>

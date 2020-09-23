@@ -7,7 +7,7 @@
     align-items: center;
 }
 
-.blank-div {
+.navbar-links {
     color: #777777;
     font-size: 1.5em;
     flex: 1;
@@ -15,29 +15,22 @@
     margin-left: 0.5em;
 }
 
-.nav-title {
+.navbar-title {
     flex: 1;
 }
 
-.navbar-links {
+.navbar-loginlogout {
     flex: 1;
     text-align: right;
 }
 
-.nav-links {
+.navbar-link {
     display: inline-block;
     cursor: pointer;
 
     font-size: 20px;
 }
 
-.in-line {
-    display: inline;
-}
-
-.login-wrapper {
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.navbar-link:hover {
+    color: #5053ff;
 }
