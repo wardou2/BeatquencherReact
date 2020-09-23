@@ -1,8 +1,11 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { Component } from "react";
-import { Icon, Header } from "semantic-ui-react";
+import { Icon } from "semantic-ui-react";
 import { withRouter } from "react-router-dom";
 import Login from "./Login";
+import StyledButton from "./StyledButton";
+
+import "../styles/navbar.css";
 
 class Navbar extends Component {
     isEmpty = (obj) => {
@@ -14,9 +17,7 @@ class Navbar extends Component {
 
     showLoginLogout = () => {
         return this.props.loggedIn ? (
-            <a onClick={this.props.logOut} className="nav-links">
-                Logout
-            </a>
+            <StyledButton callback={this.props.logOut}>Logout</StyledButton>
         ) : (
             <Login getUser={this.props.getUser} />
         );
@@ -58,17 +59,13 @@ class Navbar extends Component {
             <div className="navbar">
                 <div className="blank-div">{this.getRoute()}</div>
                 <div className="nav-title">
-                    <Header as="h1" className="glow">
+                    <h1 className="glow">
                         {!this.isEmpty(this.props.currentProj)
                             ? this.props.currentProj.title
-                            : "Beatquencher"}
-                    </Header>
+                            : "BEATQUENCER"}
+                    </h1>
                 </div>
-                <div
-                    className="navbar-links"
-                    id="js-navbar-toggle"
-                    onClick={this.toggleMenuVisible}
-                >
+                <div className="navbar-links" onClick={this.toggleMenuVisible}>
                     {this.showLoginLogout()}
                 </div>
             </div>
