@@ -69,7 +69,7 @@ class App extends Component {
         // TODO: Handle Error
         getUser(id)
             .then(this.setCurrentUser)
-            .then(() => setTimeout(() => this.setLoading(false), 100))
+            .then(() => this.setLoading(false))
             .catch((err) => console.log(err));
     }
 

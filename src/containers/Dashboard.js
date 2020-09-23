@@ -29,8 +29,8 @@ class Dashboard extends Component {
         this.sceneWasSaved = this.sceneWasSaved.bind(this);
     }
 
-    componentDidUpdate(prevProps) {
-        if (this.props.currentUser?.id !== prevProps.currentUser.id) {
+    componentDidMount() {
+        if (this.props.currentUser.projects) {
             const projectsCopy = JSON.parse(
                 JSON.stringify(this.props.currentUser.projects)
             );
