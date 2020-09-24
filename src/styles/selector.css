@@ -40,11 +40,12 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
+
+    flex-grow: 1;
 }
 
 .project-header {
-    flex: 1;
+    flex-grow: 0;
     margin: 1em;
 }
 
@@ -54,6 +55,9 @@
     width: 50%;
     max-height: 300px;
     overflow-y: auto;
+
+    flex-grow: 0;
+    flex-basis: auto;
 }
 
 .project-button-container {

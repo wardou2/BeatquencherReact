@@ -20,11 +20,10 @@ export default class NewProjectForm extends Component {
         const { name, tempo } = this.state;
 
         return (
-            <div className="projects-list">
-                <br></br>
-                <Segment>
+            <div className="new-project-form-container">
+                <Segment className="new-project-form">
                     <Form onSubmit={this.handleSubmit}>
-                        <h1>New Project</h1>
+                        <h2>New Project</h2>
                         <Form.Input
                             label="Title"
                             placeholder="Title"
