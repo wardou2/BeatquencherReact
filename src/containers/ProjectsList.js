@@ -1,6 +1,8 @@
 import React, { Component } from "react";
-import { List, Header, Segment } from "semantic-ui-react";
+import { List } from "semantic-ui-react";
 import RoutedButton from "../components/RoutedButton";
+
+import "../styles/selector.css";
 
 export default class ProjectsList extends Component {
     constructor(props) {
@@ -28,7 +30,7 @@ export default class ProjectsList extends Component {
     renderProjects() {
         if (this.props.projects) {
             return (
-                <List divided relaxed>
+                <List animated divided selection relaxed="very">
                     {this.props.projects.map((proj, index) => {
                         return (
                             <List.Item
@@ -51,13 +53,16 @@ export default class ProjectsList extends Component {
 
     render() {
         return (
-            <div className="projects-list">
-                <br></br>
-                <Segment>
-                    <Header as="h2">Select Project</Header>
-                    <RoutedButton text="New Project" path="/projects/new" />
+            <div className="project-selector">
+                <div className="project-header">
+                    <h2>Select Project</h2>
+                </div>
+                <div className="project-list-scrollable">
                     {this.renderProjects()}
-                </Segment>
+                </div>
+                <div className="project-button-container">
+                    <RoutedButton text="New Project" path="/projects/new" />
+                </div>
             </div>
         );
     }

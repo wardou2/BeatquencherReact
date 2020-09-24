@@ -289,7 +289,6 @@ export default class SceneSelector extends Component {
                         }
                     />
                 )}
-                <br></br>
                 <div className="scene-list-container">
                     <h2>Select Scene</h2>
                     {this.renderScenes()}
