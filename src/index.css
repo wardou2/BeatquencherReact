@@ -15,7 +15,29 @@ body {
     border-radius: 0 !important;
 }
 
+.ui.header {
+    font-family: "Montserrat", sans-serif;
+}
+
 .ui.modal > .header {
+    font-family: "Montserrat", sans-serif;
+}
+
+.ui.list .list > .item .header,
+.ui.list > .item .header {
+    font-family: "Montserrat", sans-serif;
+}
+
+/* Fix small list items on top and bottom of list */
+.ui[class*="very relaxed"].list:not(.horizontal) > .item:not(:last-child) {
+    padding-top: 0.85714286em;
+}
+.ui[class*="very relaxed"].list:not(.horizontal) > .item:not(:first-child) {
+    padding-bottom: 0.85714286em;
+}
+
+.ui.button {
+    border-radius: 0 !important;
     font-family: "Montserrat", sans-serif;
 }
 
@@ -145,6 +167,18 @@ h5 {
 
 .link--is-button:hover {
     background-color: #cccccc;
+}
+
+.link--is-button--negative {
+    color: #ffffff;
+    background-color: #db2828;
+}
+.link--is-button--negative:hover {
+    background-color: rgb(255, 112, 112);
+}
+
+.fluid {
+    width: 100%;
 }
 /* ---------old login stuff (too fun to fully remove...)----------- */
 

@@ -172,7 +172,6 @@ class Dashboard extends Component {
 
     render() {
         this.currentProj = this.state.projects[this.state.currentProjIndex];
-        console.log(this.currentProj?.id);
         return (
             <>
                 <div className="main-container">

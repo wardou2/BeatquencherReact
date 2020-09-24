@@ -1,8 +1,11 @@
 import React, { Component } from "react";
-import { Form, Button, Icon, Header, List, Segment } from "semantic-ui-react";
+import { Form, Button, Icon, Header, List } from "semantic-ui-react";
 
 import DeleteProjectModal from "../components/DeleteProjectModal";
 import DeleteSceneModal from "../components/DeleteSceneModal";
+import StyledButton from "../components/StyledButton";
+
+import "../styles/selector.css";
 
 export default class SceneSelector extends Component {
     constructor(props) {
@@ -113,7 +116,7 @@ export default class SceneSelector extends Component {
                     <div className="close-btn">
                         <Icon name="close" onClick={this.hideForm} />
                     </div>
-                    <Header as="h2">Edit Project</Header>
+                    <h3>Edit Project</h3>
                     <Form.Input
                         label="Title"
                         placeholder="Title"
@@ -121,13 +124,15 @@ export default class SceneSelector extends Component {
                         value={this.state.title}
                         onChange={this.handleChange}
                     />
-                    <Button type="submit">Submit</Button>
+
                     <Button
                         negative
                         onClick={() => this.toggleShowModal("project")}
                     >
                         Delete Project
                     </Button>
+
+                    <Button type="submit">Submit Title</Button>
                 </Form>
             );
         }
@@ -140,7 +145,7 @@ export default class SceneSelector extends Component {
                     <div className="close-btn">
                         <Icon name="close" onClick={this.hideForm} />
                     </div>
-                    <Header as="h2">Rename Scene</Header>
+                    <h3>Rename Scene</h3>
                     <Form.Input
                         label="Name"
                         placeholder="Name"
@@ -154,30 +159,34 @@ export default class SceneSelector extends Component {
         }
         return (
             <div>
-                <Button
-                    fluid
-                    onClick={() =>
-                        this.setState({
-                            formType: "newScene",
-                            name: `Scene ${(
-                                this.props.currentProj.scenes.length + 10
-                            )
-                                .toString(36)
-                                .toUpperCase()}`,
-                        })
-                    }
-                    style={{ marginBottom: "8px" }}
-                    disabled={!this.props.loggedIn}
-                >
-                    Add New Scene
-                </Button>
-                <Button
-                    fluid
-                    onClick={() => this.setState({ formType: "proj" })}
-                    disabled={!this.props.loggedIn}
-                >
-                    Edit Project
-                </Button>
+                <div className="scene-form-button-wrapper">
+                    <StyledButton
+                        callback={() =>
+                            this.setState({
+                                formType: "newScene",
+                                name: `Scene ${(
+                                    this.props.currentProj.scenes.length + 10
+                                )
+                                    .toString(36)
+                                    .toUpperCase()}`,
+                            })
+                        }
+                        style={{ marginBottom: "8px" }}
+                        disabled={!this.props.loggedIn}
+                        fluid
+                    >
+                        Add New Scene
+                    </StyledButton>
+                </div>
+                <div className="scene-form-button-wrapper">
+                    <StyledButton
+                        callback={() => this.setState({ formType: "proj" })}
+                        disabled={!this.props.loggedIn}
+                        fluid
+                    >
+                        Edit Project
+                    </StyledButton>
+                </div>
             </div>
         );
     }
@@ -187,76 +196,83 @@ export default class SceneSelector extends Component {
         const sortedScenes = [].concat(this.props.currentProj.scenes);
         sortedScenes.sort((a, b) => (a.id > b.id ? 1 : -1));
         return (
-            <List divided selection relaxed="very" verticalAlign="middle">
-                {sortedScenes.map((scene) => {
-                    return (
-                        <List.Item key={scene.id}>
-                            {this.props.loggedIn && (
-                                <>
-                                    <List.Content floated="right">
-                                        <List.Icon
-                                            name="delete"
-                                            link
-                                            onClick={() =>
+            <div className="scene-list-scrollable">
+                <List animated divided selection relaxed="very">
+                    {sortedScenes.map((scene) => {
+                        return (
+                            <List.Item key={scene.id}>
+                                {this.props.loggedIn && (
+                                    <>
+                                        <List.Content floated="right">
+                                            <List.Icon
+                                                name="delete"
+                                                link
+                                                onClick={() =>
+                                                    this.setState({
+                                                        showModal: {
+                                                            ...this.state
+                                                                .showModal,
+                                                            scene: true,
+                                                        },
+                                                        scene,
+                                                    })
+                                                }
+                                            />
+                                        </List.Content>
+                                        <List.Content
+                                            floated="right"
+                                            onClick={() => {
                                                 this.setState({
-                                                    showModal: {
-                                                        ...this.state.showModal,
-                                                        scene: true,
-                                                    },
                                                     scene,
-                                                })
+                                                    name: scene.name,
+                                                    formType: "renameScene",
+                                                });
+                                            }}
+                                        >
+                                            <List.Icon
+                                                name="edit"
+                                                link
+                                                aria-label="Edit"
+                                            />
+                                        </List.Content>
+                                        <List.Content
+                                            floated="left"
+                                            style={{ opacity: "0%" }}
+                                            onClick={() =>
+                                                this.handleClick(scene)
                                             }
-                                        />
-                                    </List.Content>
-                                    <List.Content
-                                        floated="right"
-                                        onClick={() => {
-                                            this.setState({
-                                                scene,
-                                                name: scene.name,
-                                                formType: "renameScene",
-                                            });
-                                        }}
-                                    >
-                                        <List.Icon
-                                            name="edit"
-                                            link
-                                            aria-label="Edit"
-                                        />
-                                    </List.Content>
-                                    <List.Content
-                                        floated="left"
-                                        style={{ opacity: "0%" }}
+                                        >
+                                            <List.Icon name="delete" />
+                                        </List.Content>
+                                        <List.Content
+                                            floated="left"
+                                            style={{ opacity: "0%" }}
+                                            onClick={() =>
+                                                this.handleClick(scene)
+                                            }
+                                        >
+                                            <List.Icon name="edit" />
+                                        </List.Content>
+                                    </>
+                                )}
+                                <List.Content as="a">
+                                    <List.Header
                                         onClick={() => this.handleClick(scene)}
                                     >
-                                        <List.Icon name="delete" />
-                                    </List.Content>
-                                    <List.Content
-                                        floated="left"
-                                        style={{ opacity: "0%" }}
-                                        onClick={() => this.handleClick(scene)}
-                                    >
-                                        <List.Icon name="edit" />
-                                    </List.Content>
-                                </>
-                            )}
-                            <List.Content as="a">
-                                <List.Header
-                                    onClick={() => this.handleClick(scene)}
-                                >
-                                    {scene.name}
-                                </List.Header>
-                            </List.Content>
-                        </List.Item>
-                    );
-                })}
-            </List>
+                                        {scene.name}
+                                    </List.Header>
+                                </List.Content>
+                            </List.Item>
+                        );
+                    })}
+                </List>
+            </div>
         );
     }
 
     render() {
         return (
-            <div className="projects-list">
+            <div className="scene-selector">
                 {this.state.showModal.project && (
                     <DeleteProjectModal
                         turnShowOff={() => this.toggleShowModal("project")}
@@ -274,11 +290,11 @@ export default class SceneSelector extends Component {
                     />
                 )}
                 <br></br>
-                <Segment>
-                    <Header as="h2">Select Scene</Header>
+                <div className="scene-list-container">
+                    <h2>Select Scene</h2>
                     {this.renderScenes()}
-                </Segment>
-                <Segment>{this.form()}</Segment>
+                </div>
+                <div className="scene-form-container">{this.form()}</div>
             </div>
         );
     }
