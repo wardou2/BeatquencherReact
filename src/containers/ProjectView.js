@@ -275,7 +275,7 @@ export default class ProjectView extends Component {
             (effect) => effect.eff_type === effectInfo[0]
         );
 
-        instrument.effects[effIndex].eff_options[effectInfo[1]] = value.value;
+        instrument.effects[effIndex].eff_options[effectInfo[1]] = value;
 
         const foundIndex = instrumentsCopy.findIndex((ins) => ins.id === insId);
         instrumentsCopy[foundIndex] = instrument;
@@ -286,11 +286,11 @@ export default class ProjectView extends Component {
             },
             () => {
                 if (instrument.effects[effIndex].eff_type === "distortion") {
-                    this[`ins${insId}${effectInfo[0]}`][effectInfo[1]] =
-                        value.value;
+                    this[`ins${insId}${effectInfo[0]}`][effectInfo[1]] = value;
                 } else {
-                    this[`ins${insId}${effectInfo[0]}`][effectInfo[1]].value =
-                        value.value;
+                    this[`ins${insId}${effectInfo[0]}`][
+                        effectInfo[1]
+                    ].value = value;
                 }
             }
         );

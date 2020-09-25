@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { Form, Dropdown, Header, Divider } from "semantic-ui-react";
 
+import ChannelSlider from "./ChannelSlider";
+
 const noiseTypeOptions = [
     {
         key: "white",
@@ -29,7 +31,7 @@ export default class NoisesynthForm extends Component {
         this.handleChange = this.handleChange.bind(this);
     }
 
-    handleChange(e, field, { value }) {
+    handleChange(field, value) {
         this.props.handleChangeInstrument(
             this.props.currentIns.id,
             field,
@@ -50,7 +52,7 @@ export default class NoisesynthForm extends Component {
                         selection
                         options={noiseTypeOptions}
                         onChange={(e, { value }) =>
-                            this.handleChange(e, ["noise", "type"], { value })
+                            this.handleChange(["noise", "type"], value)
                         }
                     />
                 </div>
@@ -58,46 +60,49 @@ export default class NoisesynthForm extends Component {
 
                 <Header as="h3">Envelope</Header>
                 <Form.Group widths="equal">
-                    <Form.Input
+                    <ChannelSlider
+                        className="instrument-control-slider"
                         label={`Attack: ${this.props.currentIns.options.envelope.attack}s `}
                         min={0.001}
                         max={1}
                         name="attack"
-                        onChange={(e, { value }) =>
-                            this.handleChange(e, ["envelope", "attack"], {
-                                value,
-                            })
+                        callback={(e) =>
+                            this.handleChange(
+                                ["envelope", "attack"],
+                                e.target.value
+                            )
                         }
                         step={0.001}
-                        type="range"
                         value={this.props.currentIns.options.envelope.attack}
                     />
-                    <Form.Input
+                    <ChannelSlider
+                        className="instrument-control-slider"
                         label={`Decay: ${this.props.currentIns.options.envelope.decay}s `}
                         min={0.001}
                         max={1}
                         name="decay"
-                        onChange={(e, { value }) =>
-                            this.handleChange(e, ["envelope", "decay"], {
-                                value,
-                            })
+                        callback={(e) =>
+                            this.handleChange(
+                                ["envelope", "decay"],
+                                e.target.value
+                            )
                         }
                         step={0.001}
-                        type="range"
                         value={this.props.currentIns.options.envelope.decay}
                     />
-                    <Form.Input
+                    <ChannelSlider
+                        className="instrument-control-slider"
                         label={`Sustain: ${this.props.currentIns.options.envelope.sustain} `}
                         min={0.001}
                         max={0.99}
                         name="sustain"
-                        onChange={(e, { value }) =>
-                            this.handleChange(e, ["envelope", "sustain"], {
-                                value,
-                            })
+                        callback={(e) =>
+                            this.handleChange(
+                                ["envelope", "sustain"],
+                                e.target.value
+                            )
                         }
                         step={0.001}
-                        type="range"
                         value={this.props.currentIns.options.envelope.sustain}
                     />
                 </Form.Group>
@@ -105,25 +110,26 @@ export default class NoisesynthForm extends Component {
 
                 <Header as="h3">Effects</Header>
                 <Form.Group widths="equal">
-                    <Form.Input
+                    <ChannelSlider
+                        className="instrument-control-slider"
                         label={`Reverb: ${
                             this.props.getEffect(["reverb", "wet"]) * 100
                         }%`}
                         min={0}
                         max={1}
                         name="reverb"
-                        onChange={(e, { value }) =>
+                        callback={(e) =>
                             this.props.handleChangeEffect(
                                 this.props.currentIns.id,
                                 ["reverb", "wet"],
-                                { value }
+                                e.target.value
                             )
                         }
                         step={0.01}
-                        type="range"
                         value={this.props.getEffect(["reverb", "wet"])}
                     />
-                    <Form.Input
+                    <ChannelSlider
+                        className="instrument-control-slider"
                         label={`Filter Cutoff: ${this.props.getEffect([
                             "filter",
                             "frequency",
@@ -131,18 +137,18 @@ export default class NoisesynthForm extends Component {
                         min={1}
                         max={18000}
                         name="reverb"
-                        onChange={(e, { value }) =>
+                        callback={(e) =>
                             this.props.handleChangeEffect(
                                 this.props.currentIns.id,
                                 ["filter", "frequency"],
-                                { value }
+                                e.target.value
                             )
                         }
                         step={1}
-                        type="range"
                         value={this.props.getEffect(["filter", "frequency"])}
                     />
-                    <Form.Input
+                    <ChannelSlider
+                        className="instrument-control-slider"
                         label={`Filter Q: ${this.props.getEffect([
                             "filter",
                             "Q",
@@ -150,15 +156,14 @@ export default class NoisesynthForm extends Component {
                         min={0.01}
                         max={20}
                         name="reverb"
-                        onChange={(e, { value }) =>
+                        callback={(e) =>
                             this.props.handleChangeEffect(
                                 this.props.currentIns.id,
                                 ["filter", "Q"],
-                                { value }
+                                e.target.value
                             )
                         }
                         step={0.01}
-                        type="range"
                         value={this.props.getEffect(["filter", "Q"])}
                     />
                 </Form.Group>

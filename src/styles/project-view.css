@@ -91,6 +91,7 @@
 
 .instrument-control-slider {
     padding: 0 3px;
+    width: 20em;
 }
 
 .channel-button--mute {

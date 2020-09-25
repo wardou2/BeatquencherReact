@@ -71,7 +71,7 @@ export default class MonosynthForm extends Component {
 
     render() {
         return (
-            <Form style={{ padding: "1em" }}>
+            <Form>
                 <div className="dropdown-div">
                     <Header as="h4">Oscillator Source</Header>
                     <Dropdown
@@ -80,9 +80,7 @@ export default class MonosynthForm extends Component {
                         selection
                         options={oscTypeOptions}
                         onChange={(e, { value }) =>
-                            this.handleChange(["oscillator", "type"], {
-                                value,
-                            })
+                            this.handleChange(["oscillator", "type"], value)
                         }
                     />
                 </div>
