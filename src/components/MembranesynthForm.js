@@ -238,7 +238,6 @@ export default class MembranesynthForm extends Component {
                         ])}
                     />
                 </Form.Group>
-                <Divider />
             </Form>
         );
     }

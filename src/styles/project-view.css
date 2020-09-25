@@ -1,0 +1,69 @@
+.project-view {
+    flex: 1;
+
+    overflow-y: auto;
+}
+
+.project-info-div {
+    padding-top: 15px;
+    width: 100%;
+}
+
+.project-view-hero {
+    background-image: url("/images/record-corner-right.png");
+
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: 20em;
+    background-position: bottom right;
+}
+
+.project-view-content {
+    margin: 0 2em 0 2em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.sequencer-div {
+    margin: 1em 0;
+    background-color: rgba(233, 233, 233, 0.952);
+    border: 1px solid rgb(0, 0, 0, 0.1);
+    box-shadow: 0px 10px 90px rgb(0, 0, 0, 0.05);
+}
+
+.selected-channel {
+    background: rgba(171, 205, 239, 0.3);
+}
+
+.sequencer-cell--inactive {
+    cursor: pointer;
+    background-color: rgb(255, 255, 255);
+}
+
+.sequencer-cell--inactive:hover {
+    box-shadow: inset 1px 1px 1px 0px rgb(214, 214, 214) !important;
+}
+
+.sequencer-cell--active {
+    cursor: pointer;
+    background-color: rgb(173, 172, 172);
+    box-shadow: inset 2px 2px 1px 0px rgb(201, 201, 201),
+        inset -2px -2px 2px 0px rgb(131, 131, 131) !important;
+}
+.sequencer-cell--active:hover {
+    box-shadow: inset -2px -2px 1px 0px rgb(201, 201, 201),
+        inset 2px 2px 2px 0px rgb(131, 131, 131) !important;
+}
+
+.sequencer-cell--playing {
+    background-color: rgb(255, 57, 245);
+    box-shadow: inset 2px 2px 0px 1px rgb(253, 112, 246),
+        inset -2px -2px 1px 0px rgb(201, 49, 193) !important;
+}
+
+.ins-control-div {
+    padding: 2em 5em;
+    margin-bottom: 1em;
+    width: 60%;
+}

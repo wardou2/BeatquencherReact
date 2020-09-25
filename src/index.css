@@ -36,6 +36,10 @@ body {
     padding-bottom: 0.85714286em;
 }
 
+.ui.celled.grid {
+    margin: 0em;
+}
+
 .ui.button {
     border-radius: 0 !important;
     font-family: "Montserrat", sans-serif;
@@ -69,36 +73,6 @@ h5 {
     text-align: center;
 }
 
-.project-view-div {
-    background: rgba(171, 205, 239, 0.3);
-    margin: 20px;
-    text-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
-    box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
-}
-
-.project-view-div h1 {
-    text-shadow: 0px 0px 10px rgba(255, 255, 255, 0.4);
-}
-
-.project-info-div {
-    padding-top: 15px;
-}
-
-.sequencer-div {
-    display: inline-block;
-    margin: 15px;
-}
-
-.ins-control-div {
-    display: inline-block;
-    padding-left: 30px;
-    padding-right: 30px;
-    padding-top: 15px;
-    background: rgba(171, 205, 239, 0.3);
-    box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
 .glow {
     text-shadow: 0px 0px 20px rgba(255, 255, 255, 0.4);
 }
@@ -119,11 +93,6 @@ h5 {
 }
 .clickable:hover {
     cursor: pointer;
-}
-
-.selectedChannel {
-    /*setting alpha = 0.1*/
-    background: rgba(255, 255, 255, 0.3);
 }
 
 .projects-list {

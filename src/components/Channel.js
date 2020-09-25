@@ -74,7 +74,7 @@ export default class Channel extends Component {
 
     isSelected() {
         if (this.props.currentIns.id === this.props.instrument.id) {
-            return "selectedChannel";
+            return "selected-channel";
         }
         return "";
     }

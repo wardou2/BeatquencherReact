@@ -52,8 +52,18 @@ const ProjectControls = ({
     return (
         <div className="project-info-div">
             <Grid verticalAlign="middle" padded>
-                <Grid.Column width={4} />
-                <Grid.Column width={8}>
+                <Grid.Column width={6}>
+                    <Button
+                        icon
+                        labelPosition="left"
+                        onClick={saveAll}
+                        disabled={!loggedIn}
+                    >
+                        Save
+                        <Icon name="save" />
+                    </Button>
+                </Grid.Column>
+                <Grid.Column width={4}>
                     <Button
                         icon
                         labelPosition="right"
@@ -66,17 +76,8 @@ const ProjectControls = ({
                         )}
                         {isPlaying ? "Pause" : "Play"}
                     </Button>
-                    <Button
-                        icon
-                        labelPosition="left"
-                        onClick={saveAll}
-                        disabled={!loggedIn}
-                    >
-                        Save
-                        <Icon name="save" />
-                    </Button>
                 </Grid.Column>
-                <Grid.Column width={4}>
+                <Grid.Column width={6}>
                     <Label size="medium">
                         Tempo:
                         <Label.Detail

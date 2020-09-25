@@ -22,22 +22,14 @@ export default class Sequencer extends Component {
     divStyle = (t, i) => {
         if (this.props.isPlaying && this.props.currentCount % 16 === i) {
             if (t !== [] && t) {
-                return {
-                    backgrounColor: "indigo",
-                    boxShadow: nowPlayingShadow,
-                    zIndex: "-1",
-                };
+                return "sequencer-cell--active sequencer-cell--playing";
             }
-            return {
-                backgrounColor: "whiteSmoke",
-                boxShadow: nowPlayingShadow,
-                zIndex: "5",
-            };
+            return "sequencer-cell--inactive sequencer-cell--playing";
         }
         if (t !== [] && t) {
-            return { backgroundColor: "indigo", boxShadow: selectedShadow };
+            return "sequencer-cell--active";
         }
-        return { backgroundColor: "whiteSmoke" };
+        return "sequencer-cell--inactive";
     };
 
     columns() {
@@ -46,13 +38,11 @@ export default class Sequencer extends Component {
                 return (
                     <Grid.Column
                         key={i}
-                        style={this.divStyle(t, i)}
+                        className={this.divStyle(t, i)}
                         onClick={() =>
                             this.props.toggleCell(i, this.props.instrument)
                         }
-                    >
-                        <span></span>
-                    </Grid.Column>
+                    ></Grid.Column>
                 );
             });
         }

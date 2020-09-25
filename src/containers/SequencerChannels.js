@@ -30,7 +30,7 @@ export default class SequencerChannels extends Component {
     render() {
         return (
             <div className="sequencer-div">
-                <Grid columns={16} stretched divided="vertically" celled={true}>
+                <Grid columns={16} stretched divided="vertically" celled>
                     {this.renderChannels()}
                 </Grid>
             </div>
