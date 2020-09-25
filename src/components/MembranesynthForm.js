@@ -62,6 +62,7 @@ export default class MembranesynthForm extends Component {
     }
 
     handleChange(field, value) {
+        console.log(value);
         this.props.handleChangeInstrument(
             this.props.currentIns.id,
             field,
@@ -80,7 +81,7 @@ export default class MembranesynthForm extends Component {
                         value={this.props.currentIns.options.oscillator.type}
                         selection
                         options={oscTypeOptions}
-                        onClick={(e, { value }) =>
+                        onChange={(e, { value }) =>
                             this.handleChange(["oscillator", "type"], value)
                         }
                     />

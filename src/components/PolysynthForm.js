@@ -58,7 +58,7 @@ export default class PolysynthForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            currentIns: this.props.currentIns,
+            currentIns: JSON.parse(JSON.stringify(this.props.currentIns)),
         };
         this.handleChange = this.handleChange.bind(this);
     }
@@ -91,6 +91,7 @@ export default class PolysynthForm extends Component {
         return (
             <Form>
                 <div className="dropdown-div">
+                    <Header as="h4">Oscillator Source</Header>
                     <Dropdown
                         value={this.state.currentIns.options.oscillator.type}
                         fluid
