@@ -2,13 +2,12 @@ import React from "react";
 
 import "../styles/channel-slider.css";
 
-const ChannelSlider = ({ label, callback, value, ...rest }) => {
+const ChannelSlider = ({ label, callback, classes, ...rest }) => {
     return (
-        <div className="channel-slider-container">
+        <div className={classes}>
             <label>{label}</label>
             <input
                 type="range"
-                value={value}
                 {...rest}
                 onChange={(e) => {
                     callback(e);

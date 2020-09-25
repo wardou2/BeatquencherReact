@@ -89,6 +89,10 @@
     width: 60%;
 }
 
+.instrument-control-slider {
+    padding: 0 3px;
+}
+
 .channel-button--mute {
     display: flex;
     flex-direction: column;
