@@ -1,17 +1,12 @@
-.project-view {
-    flex: 1;
-
-    overflow-y: auto;
-}
-
 .project-info-div {
     padding-top: 15px;
     width: 100%;
 }
 
 .project-view-hero {
+    overflow-y: auto;
+    flex: 1;
     background-image: url("/images/record-corner-right.png");
-
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: 20em;
@@ -27,9 +22,36 @@
 
 .sequencer-div {
     margin: 1em 0;
-    background-color: rgba(233, 233, 233, 0.952);
-    border: 1px solid rgb(0, 0, 0, 0.1);
-    box-shadow: 0px 10px 90px rgb(0, 0, 0, 0.05);
+    background-color: rgb(233, 233, 233);
+    border: 1px solid rgb(207, 207, 207);
+    box-shadow: 0px 10px 90px rgba(80, 80, 80, 0.2);
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+}
+
+.sequencer-channel {
+    display: flex;
+    align-items: center;
+    padding: 1em;
+    border-bottom: 1px solid rgb(179, 179, 179);
+}
+
+.sequencer-channel--cell {
+    flex: 1;
+    padding: 0 1em;
+}
+
+.sequencer-channel--notes {
+    flex: 8;
+    padding: 0 1em;
+}
+
+.channel-cell--name {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .selected-channel {
@@ -57,21 +79,14 @@
 }
 
 .sequencer-cell--playing {
-    background-color: #5d67ff;
-    box-shadow: inset 0 0 15px 1px rgb(255, 198, 252) !important;
+    background-color: #959cff;
+    box-shadow: inset 0 0 15px 1px rgb(102, 112, 255) !important;
 }
 
 .ins-control-div {
     padding: 2em 5em;
     margin-bottom: 1em;
     width: 60%;
-}
-
-.channel-cell--name {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
 }
 
 .channel-button--mute {

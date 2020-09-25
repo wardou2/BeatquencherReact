@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Grid } from "semantic-ui-react";
 import Channel from "../components/Channel";
 
 export default class SequencerChannels extends Component {
@@ -28,12 +27,6 @@ export default class SequencerChannels extends Component {
     }
 
     render() {
-        return (
-            <div className="sequencer-div">
-                <Grid columns={16} stretched divided="vertically" celled>
-                    {this.renderChannels()}
-                </Grid>
-            </div>
-        );
+        return <div className="sequencer-div">{this.renderChannels()}</div>;
     }
 }

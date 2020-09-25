@@ -82,12 +82,11 @@ export default class Channel extends Component {
 
     render() {
         return (
-            <Grid.Row
-                divided={true}
-                className={this.isSelected()}
+            <div
+                className={`sequencer-channel ${this.isSelected()}`}
                 onClick={() => this.props.setCurrentIns(this.props.instrument)}
             >
-                <Grid.Column width={2}>
+                <div className="sequencer-channel--cell">
                     <div className="channel-cell--name">
                         <h4>{this.props.instrument.name}</h4>
                         <div
@@ -103,8 +102,8 @@ export default class Channel extends Component {
                             M
                         </div>
                     </div>
-                </Grid.Column>
-                <Grid.Column width={2}>
+                </div>
+                <div className="sequencer-channel--cell">
                     <ChannelSlider
                         label={`Volume: ${this.props.instrument.options.volume} dB`}
                         min={-48}
@@ -117,8 +116,8 @@ export default class Channel extends Component {
                         type="range"
                         value={this.props.instrument.options.volume}
                     />
-                </Grid.Column>
-                <Grid.Column width={12} verticalAlign="middle">
+                </div>
+                <div className="sequencer-channel--notes">
                     <Sequencer
                         toggleCell={this.toggleCell}
                         instrument={this.props.instrument}
@@ -134,8 +133,8 @@ export default class Channel extends Component {
                         chooseNotes={this.chooseNotes}
                         currentNote={this.state.currentNote}
                     />
-                </Grid.Column>
-            </Grid.Row>
+                </div>
+            </div>
         );
     }
 }

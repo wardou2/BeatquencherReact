@@ -350,38 +350,34 @@ export default class ProjectView extends Component {
 
     render() {
         return (
-            <div className="project-view">
-                <div className="project-view-hero">
-                    <div className="project-view-content">
-                        <ProjectControls
-                            playInstruments={this.playInstruments}
-                            saveAll={this.saveAll}
-                            isPlaying={this.state.playing}
-                            loggedIn={this.props.loggedIn}
-                            currentProj={this.props.currentProj}
-                            handleChangeProj={this.props.handleChangeProj}
-                        />
-                        <SequencerChannels
-                            instruments={this.state.instruments}
-                            tracks={this.state.scene.tracks}
-                            handleChangeInstrument={this.handleChangeInstrument}
-                            handleMute={this.handleMute}
-                            setCurrentIns={this.setCurrentIns}
-                            updateTrack={this.updateTrack}
+            <div className="project-view-hero">
+                <div className="project-view-content">
+                    <ProjectControls
+                        playInstruments={this.playInstruments}
+                        saveAll={this.saveAll}
+                        isPlaying={this.state.playing}
+                        loggedIn={this.props.loggedIn}
+                        currentProj={this.props.currentProj}
+                        handleChangeProj={this.props.handleChangeProj}
+                    />
+                    <SequencerChannels
+                        instruments={this.state.instruments}
+                        tracks={this.state.scene.tracks}
+                        handleChangeInstrument={this.handleChangeInstrument}
+                        handleMute={this.handleMute}
+                        setCurrentIns={this.setCurrentIns}
+                        updateTrack={this.updateTrack}
+                        currentIns={this.state.currentIns}
+                        isPlaying={this.state.playing}
+                        currentCount={this.counter}
+                    />
+                    {!this.isEmpty(this.state.currentIns) && (
+                        <InstrumentControls
                             currentIns={this.state.currentIns}
-                            isPlaying={this.state.playing}
-                            currentCount={this.counter}
+                            handleChangeInstrument={this.handleChangeInstrument}
+                            handleChangeEffect={this.handleChangeEffect}
                         />
-                        {!this.isEmpty(this.state.currentIns) && (
-                            <InstrumentControls
-                                currentIns={this.state.currentIns}
-                                handleChangeInstrument={
-                                    this.handleChangeInstrument
-                                }
-                                handleChangeEffect={this.handleChangeEffect}
-                            />
-                        )}
-                    </div>
+                    )}
                 </div>
             </div>
         );
