@@ -3,6 +3,7 @@ import { Form, Grid, Button } from "semantic-ui-react";
 import Sequencer from "./Sequencer";
 import "../index.css";
 import EditNoteModal from "./EditNoteModal";
+import ChannelSlider from "./ChannelSlider";
 
 export default class Channel extends Component {
     constructor(props) {
@@ -64,7 +65,7 @@ export default class Channel extends Component {
         });
     }
 
-    handleChange(e, field, { value }) {
+    handleChange(e, field, value) {
         this.props.handleChangeInstrument(
             this.props.instrument.id,
             field,
@@ -87,36 +88,35 @@ export default class Channel extends Component {
                 onClick={() => this.props.setCurrentIns(this.props.instrument)}
             >
                 <Grid.Column width={2}>
-                    <h4>{this.props.instrument.name}</h4>
-                    <Button
-                        compact
-                        toggle
-                        negative
-                        floated="right"
-                        size="mini"
-                        active={this.props.instrument.options.mute}
-                        onClick={() =>
-                            this.props.handleMute(this.props.instrument.id)
-                        }
-                    >
-                        Mute
-                    </Button>
-                </Grid.Column>
-                <Grid.Column width={2} floated="left">
-                    <Form>
-                        <Form.Input
-                            label={`Volume: ${this.props.instrument.options.volume} dB`}
-                            min={-48}
-                            max={0}
-                            name="volume"
-                            onChange={(e, { value }) =>
-                                this.handleChange(e, ["volume"], { value })
+                    <div className="channel-cell--name">
+                        <h4>{this.props.instrument.name}</h4>
+                        <div
+                            onClick={() =>
+                                this.props.handleMute(this.props.instrument.id)
                             }
-                            step={1}
-                            type="range"
-                            value={this.props.instrument.options.volume}
-                        />
-                    </Form>
+                            className={
+                                this.props.instrument.options.mute
+                                    ? "channel-button--mute channel-button--mute--active"
+                                    : "channel-button--mute"
+                            }
+                        >
+                            M
+                        </div>
+                    </div>
+                </Grid.Column>
+                <Grid.Column width={2}>
+                    <ChannelSlider
+                        label={`Volume: ${this.props.instrument.options.volume} dB`}
+                        min={-48}
+                        max={0}
+                        name="volume"
+                        callback={(e) =>
+                            this.handleChange(e, ["volume"], e.target.value)
+                        }
+                        step={1}
+                        type="range"
+                        value={this.props.instrument.options.volume}
+                    />
                 </Grid.Column>
                 <Grid.Column width={12} verticalAlign="middle">
                     <Sequencer
