@@ -3,6 +3,8 @@ import { Form, Dropdown, Header, Divider } from "semantic-ui-react";
 
 import ChannelSlider from "./ChannelSlider";
 
+import "../styles/instrument-form.css";
+
 const noiseTypeOptions = [
     {
         key: "white",
@@ -41,10 +43,9 @@ export default class NoisesynthForm extends Component {
 
     render() {
         return (
-            <Form>
-                <Divider />
-                <div className="form-width">
-                    <Header as="h4">Noise Type</Header>
+            <div className="instrument-form">
+                <div className="instrument-form--column">
+                    <h3>Noise Type</h3>
                     <Dropdown
                         label="Noise Type"
                         value={this.props.currentIns.options.noise.type}
@@ -56,11 +57,10 @@ export default class NoisesynthForm extends Component {
                         }
                     />
                 </div>
-                <Divider />
-
-                <Header as="h3">Envelope</Header>
-                <Form.Group widths="equal">
+                <div className="instrument-form--column">
+                    <h3>Envelope</h3>
                     <ChannelSlider
+                        classes="instrument-control-slider"
                         className="instrument-control-slider"
                         label={`Attack: ${this.props.currentIns.options.envelope.attack}s `}
                         min={0.001}
@@ -76,6 +76,7 @@ export default class NoisesynthForm extends Component {
                         value={this.props.currentIns.options.envelope.attack}
                     />
                     <ChannelSlider
+                        classes="instrument-control-slider"
                         className="instrument-control-slider"
                         label={`Decay: ${this.props.currentIns.options.envelope.decay}s `}
                         min={0.001}
@@ -91,6 +92,7 @@ export default class NoisesynthForm extends Component {
                         value={this.props.currentIns.options.envelope.decay}
                     />
                     <ChannelSlider
+                        classes="instrument-control-slider"
                         className="instrument-control-slider"
                         label={`Sustain: ${this.props.currentIns.options.envelope.sustain} `}
                         min={0.001}
@@ -105,12 +107,11 @@ export default class NoisesynthForm extends Component {
                         step={0.001}
                         value={this.props.currentIns.options.envelope.sustain}
                     />
-                </Form.Group>
-                <Divider />
-
-                <Header as="h3">Effects</Header>
-                <Form.Group widths="equal">
+                </div>
+                <div className="instrument-form--column">
+                    <h3>Effects</h3>
                     <ChannelSlider
+                        classes="instrument-control-slider"
                         className="instrument-control-slider"
                         label={`Reverb: ${
                             this.props.getEffect(["reverb", "wet"]) * 100
@@ -129,6 +130,7 @@ export default class NoisesynthForm extends Component {
                         value={this.props.getEffect(["reverb", "wet"])}
                     />
                     <ChannelSlider
+                        classes="instrument-control-slider"
                         className="instrument-control-slider"
                         label={`Filter Cutoff: ${this.props.getEffect([
                             "filter",
@@ -148,6 +150,7 @@ export default class NoisesynthForm extends Component {
                         value={this.props.getEffect(["filter", "frequency"])}
                     />
                     <ChannelSlider
+                        classes="instrument-control-slider"
                         className="instrument-control-slider"
                         label={`Filter Q: ${this.props.getEffect([
                             "filter",
@@ -166,9 +169,8 @@ export default class NoisesynthForm extends Component {
                         step={0.01}
                         value={this.props.getEffect(["filter", "Q"])}
                     />
-                </Form.Group>
-                <Divider />
-            </Form>
+                </div>
+            </div>
         );
     }
 }

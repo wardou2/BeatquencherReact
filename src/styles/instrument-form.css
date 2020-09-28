@@ -1,0 +1,11 @@
+.instrument-form {
+    display: flex;
+    justify-content: space-between;
+
+    align-items: center;
+}
+
+.instrument-form--column {
+    flex: 1;
+    padding: 1em;
+}
