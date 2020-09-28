@@ -7,7 +7,7 @@ export default class MonoEditNote extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            note: props.currentNote,
+            note: props.currentNote || "",
             octave: 3,
             active: true,
         };

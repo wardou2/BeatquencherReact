@@ -7,32 +7,15 @@ export default class PolyEditNote extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            notes: [],
+            notes: props.currentNote || [],
             active: true,
             showError: false,
-            currentNote: "",
             octave: 3,
         };
     }
 
-    static getDerivedStateFromProps(props, state) {
-        if (props.currentNote !== state.currentNote) {
-            if (props.currentNote === "") {
-                return {
-                    notes: [],
-                    currentNote: props.currentNote,
-                };
-            }
-            return {
-                notes: props.currentNote,
-                currentNote: props.currentNote,
-            };
-        }
-        return null;
-    }
-
     handleClick = (note) => {
-        let notesCopy = this.state.notes;
+        let notesCopy = [...this.state.notes];
         if (notesCopy.length < 4 || notesCopy.includes(note)) {
             if (notesCopy.includes(note)) {
                 notesCopy = notesCopy.filter((n) => n !== note);
