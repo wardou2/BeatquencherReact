@@ -1,54 +1,54 @@
 import React, { Component } from "react";
-import { Form, Dropdown, Divider, Header } from "semantic-ui-react";
+import { Dropdown } from "semantic-ui-react";
 
 import ChannelSlider from "./ChannelSlider";
 
 const oscTypeOptions = [
     {
         key: "sine",
-        text: "Sine Wave",
+        text: "Sine",
         value: "sine",
         image: { avatar: true, src: "/images/sine.jpg" },
     },
     {
         key: "square",
-        text: "Square Wave",
+        text: "Square",
         value: "square",
         image: { avatar: true, src: "/images/square.jpg" },
     },
     {
         key: "triangle",
-        text: "Triangle Wave",
+        text: "Triangle",
         value: "triangle",
         image: { avatar: true, src: "/images/triangle.jpg" },
     },
     {
         key: "sawtooth",
-        text: "Sawtooth Wave",
+        text: "Sawtooth",
         value: "sawtooth",
         image: { avatar: true, src: "/images/sawtooth.jpg" },
     },
     {
         key: "fmsine",
-        text: "FM Sine Wave",
+        text: "FM Sine",
         value: "fmsine",
         image: { avatar: true, src: "/images/sine.jpg" },
     },
     {
         key: "fmsquare",
-        text: "FM Square Wave",
+        text: "FM Square",
         value: "fmsquare",
         image: { avatar: true, src: "/images/square.jpg" },
     },
     {
         key: "fmtriangle",
-        text: "FM Triangle Wave",
+        text: "FM Triangle",
         value: "fmtriangle",
         image: { avatar: true, src: "/images/triangle.jpg" },
     },
     {
         key: "fmsawtooth",
-        text: "FM Sawtooth Wave",
+        text: "FM Sawtooth",
         value: "fmsawtooth",
         image: { avatar: true, src: "/images/sawtooth.jpg" },
     },
@@ -70,10 +70,11 @@ export default class MonosynthForm extends Component {
     }
 
     render() {
+        console.log(this.props.currentIns);
         return (
-            <Form>
-                <div className="dropdown-div">
-                    <Header as="h4">Oscillator Source</Header>
+            <div className="instrument-form">
+                <div className="instrument-form--column">
+                    <h3>Oscillator Source</h3>
                     <Dropdown
                         value={this.props.currentIns.options.oscillator.type}
                         fluid
@@ -84,9 +85,9 @@ export default class MonosynthForm extends Component {
                         }
                     />
                 </div>
-                <Divider />
-                <Header as="h3">Envelope</Header>
-                <Form.Group widths="equal">
+
+                <div className="instrument-form--column">
+                    <h3>Envelope</h3>
                     <ChannelSlider
                         label={`Attack: ${this.props.currentIns.options.envelope.attack}s `}
                         min={0.001}
@@ -151,10 +152,10 @@ export default class MonosynthForm extends Component {
                         value={this.props.currentIns.options.envelope.release}
                         classes="instrument-control-slider"
                     />
-                </Form.Group>
-                <Divider />
-                <Header as="h3">Filter Envelope</Header>
-                <Form.Group widths="equal">
+                </div>
+
+                <div className="instrument-form--column">
+                    <h3>Filter Envelope</h3>
                     <ChannelSlider
                         label={`Attack: ${this.props.currentIns.options.filterEnvelope.attack}s `}
                         min={0.001}
@@ -227,8 +228,8 @@ export default class MonosynthForm extends Component {
                         }
                         classes="instrument-control-slider"
                     />
-                </Form.Group>
-            </Form>
+                </div>
+            </div>
         );
     }
 }
