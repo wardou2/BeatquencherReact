@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Form, Dropdown, Divider, Header } from "semantic-ui-react";
+import { Dropdown } from "semantic-ui-react";
 
 import ChannelSlider from "./ChannelSlider";
 
@@ -89,9 +89,9 @@ export default class PolysynthForm extends Component {
 
     render() {
         return (
-            <Form>
-                <div className="dropdown-div">
-                    <Header as="h4">Oscillator Source</Header>
+            <div className="instrument-form">
+                <div className="instrument-form--column">
+                    <h3>Oscillator Source</h3>
                     <Dropdown
                         value={this.state.currentIns.options.oscillator.type}
                         fluid
@@ -101,10 +101,8 @@ export default class PolysynthForm extends Component {
                             this.handleChange(["oscillator", "type"], value)
                         }
                     />
-                </div>
-                <Divider />
-                <Header as="h3">Envelope</Header>
-                <Form.Group widths="equal">
+
+                    <h3>Envelope</h3>
                     <ChannelSlider
                         classes="instrument-control-slider"
                         label={`Attack: ${this.state.currentIns.options.envelope.attack}s `}
@@ -169,51 +167,43 @@ export default class PolysynthForm extends Component {
                         type="range"
                         value={this.state.currentIns.options.envelope.release}
                     />
-                </Form.Group>
-                <Divider />
-
-                <div style={{ display: "inline-block", width: "50%" }}>
-                    <Header as="h3">Filter Envelope</Header>
-                    <Form.Group widths="equal">
-                        <ChannelSlider
-                            classes="instrument-control-slider"
-                            label={`Base Frequency: ${this.state.currentIns.options.filterEnvelope.baseFrequency}Hz `}
-                            min={0}
-                            max={18000}
-                            name="baseFrequency"
-                            callback={(e) =>
-                                this.handleChange(
-                                    ["filterEnvelope", "baseFrequency"],
-                                    e.target.value
-                                )
-                            }
-                            step={1}
-                            type="range"
-                            value={
-                                this.state.currentIns.options.filterEnvelope
-                                    .baseFrequency
-                            }
-                        />
-                        <ChannelSlider
-                            classes="instrument-control-slider"
-                            label={`Filter Q: ${this.state.currentIns.options.filter.Q} `}
-                            min={0}
-                            max={18}
-                            name="Q"
-                            callback={(e) =>
-                                this.handleChange(
-                                    ["filter", "Q"],
-                                    e.target.value
-                                )
-                            }
-                            step={0.1}
-                            type="range"
-                            value={this.state.currentIns.options.filter.Q}
-                        />
-                    </Form.Group>
                 </div>
 
-                <Form.Group widths="equal">
+                <div className="instrument-form--column">
+                    <h3>Filter Envelope</h3>
+                    <ChannelSlider
+                        classes="instrument-control-slider"
+                        label={`Base Frequency: ${this.state.currentIns.options.filterEnvelope.baseFrequency}Hz `}
+                        min={0}
+                        max={18000}
+                        name="baseFrequency"
+                        callback={(e) =>
+                            this.handleChange(
+                                ["filterEnvelope", "baseFrequency"],
+                                e.target.value
+                            )
+                        }
+                        step={1}
+                        type="range"
+                        value={
+                            this.state.currentIns.options.filterEnvelope
+                                .baseFrequency
+                        }
+                    />
+                    <ChannelSlider
+                        classes="instrument-control-slider"
+                        label={`Filter Q: ${this.state.currentIns.options.filter.Q} `}
+                        min={0}
+                        max={18}
+                        name="Q"
+                        callback={(e) =>
+                            this.handleChange(["filter", "Q"], e.target.value)
+                        }
+                        step={0.1}
+                        type="range"
+                        value={this.state.currentIns.options.filter.Q}
+                    />
+
                     <ChannelSlider
                         classes="instrument-control-slider"
                         label={`Attack: ${this.state.currentIns.options.filterEnvelope.attack}s `}
@@ -286,8 +276,8 @@ export default class PolysynthForm extends Component {
                             this.state.currentIns.options.filterEnvelope.release
                         }
                     />
-                </Form.Group>
-            </Form>
+                </div>
+            </div>
         );
     }
 }
