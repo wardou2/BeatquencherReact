@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Form, Header, Divider } from "semantic-ui-react";
 
 import ChannelSlider from "./ChannelSlider";
 
@@ -20,10 +19,9 @@ export default class MetalsynthForm extends Component {
 
     render() {
         return (
-            <Form>
-                <Divider />
-                <Header as="h3">Oscillator</Header>
-                <Form.Group widths="equal">
+            <div className="instrument-form">
+                <div className="instrument-form--column">
+                    <h3>Oscillator</h3>
                     <ChannelSlider
                         classes="instrument-control-slider"
                         label={`Resonance: ${this.props.currentIns.options.resonance} Hz`}
@@ -60,11 +58,10 @@ export default class MetalsynthForm extends Component {
                         step={0.5}
                         value={this.props.currentIns.options.octaves}
                     />
-                </Form.Group>
-                <Divider />
+                </div>
 
-                <Header as="h3">Envelope</Header>
-                <Form.Group widths="equal">
+                <div className="instrument-form--column">
+                    <h3>Envelope</h3>
                     <ChannelSlider
                         classes="instrument-control-slider"
                         label={`Attack: ${this.props.currentIns.options.envelope.attack}s `}
@@ -110,8 +107,8 @@ export default class MetalsynthForm extends Component {
                         step={0.001}
                         value={this.props.currentIns.options.envelope.release}
                     />
-                </Form.Group>
-            </Form>
+                </div>
+            </div>
         );
     }
 }

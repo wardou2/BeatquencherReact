@@ -1,11 +1,12 @@
 .instrument-form {
     display: flex;
-    justify-content: space-between;
-
-    align-items: center;
+    justify-content: center;
+    flex-flow: row wrap;
 }
 
 .instrument-form--column {
     flex: 1;
     padding: 1em;
+
+    text-align: center;
 }
