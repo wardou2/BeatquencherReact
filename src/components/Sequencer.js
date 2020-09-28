@@ -1,10 +1,6 @@
 import React, { Component } from "react";
 import { Grid } from "semantic-ui-react";
 
-const selectedShadow = "inset 0px 0px 10px 5px rgba(253, 155, 255, .4)";
-// const unselectedShadow = "inset 0px 0px 10px 5px rgba(0, 0, 0, .1)";
-const nowPlayingShadow = "inset 0px 0px 10px 5px #0ff, 0px 0px 10px 5px #f0f";
-
 export default class Sequencer extends Component {
     constructor(props) {
         super(props);

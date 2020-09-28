@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Form, Grid, Button } from "semantic-ui-react";
 import Sequencer from "./Sequencer";
 import "../index.css";
 import EditNoteModal from "./EditNoteModal";

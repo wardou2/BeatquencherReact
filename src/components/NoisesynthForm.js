@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Form, Dropdown, Header, Divider } from "semantic-ui-react";
+import { Dropdown } from "semantic-ui-react";
 
 import ChannelSlider from "./ChannelSlider";
 

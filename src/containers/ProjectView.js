@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import Tone from "tone";
-import { Container } from "semantic-ui-react";
 import SequencerChannels from "./SequencerChannels";
 import InstrumentControls from "../components/InstrumentControls";
 import { saveInstrument, saveScene } from "../api/Project";
