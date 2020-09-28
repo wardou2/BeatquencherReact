@@ -21,12 +21,12 @@ export default class Sequencer extends Component {
 
     divStyle = (t, i) => {
         if (this.props.isPlaying && this.props.currentCount % 16 === i) {
-            if (t !== [] && t) {
+            if (t && t.length > 0) {
                 return "sequencer-cell--active sequencer-cell--playing";
             }
             return "sequencer-cell--inactive sequencer-cell--playing";
         }
-        if (t !== [] && t) {
+        if (t && t.length > 0) {
             return "sequencer-cell--active";
         }
         return "sequencer-cell--inactive";
