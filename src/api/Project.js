@@ -76,13 +76,26 @@ export const newScene = async ({ name, project }) => {
 };
 
 export const saveScene = async ({ scene }) => {
+    // Convert array of notes (for Polysynth) to joined string for storage
+    const sceneCopy = JSON.parse(JSON.stringify(scene));
+    sceneCopy.tracks.forEach((track, i) => {
+        const notesCopy = [];
+        track.notes.forEach((n) => {
+            if (Array.isArray(n)) {
+                notesCopy.push(n.join("-"));
+            } else {
+                notesCopy.push(n);
+            }
+        });
+        sceneCopy.tracks[i].notes = notesCopy;
+    });
     const response = await fetch(`${BASE_URL}/scenes/${scene.id}`, {
         method: "PATCH",
         headers: {
             Authorization: `Token ${Cookies.get("token")}`,
             "Content-Type": "application/json",
         },
-        body: JSON.stringify(scene),
+        body: JSON.stringify(sceneCopy),
     });
 
     if (!response.ok) {

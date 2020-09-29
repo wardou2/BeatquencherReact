@@ -70,7 +70,6 @@ export default class MonosynthForm extends Component {
     }
 
     render() {
-        console.log(this.props.currentIns);
         return (
             <div className="instrument-form">
                 <div className="instrument-form--column">

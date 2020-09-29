@@ -343,8 +343,8 @@ export default class ProjectView extends Component {
         this.setState({
             playing: !this.state.playing,
         });
-
         Tone.Transport.toggle();
+        this.counter = 0;
     }
 
     saveAll() {

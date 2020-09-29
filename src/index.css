@@ -13,11 +13,12 @@ body {
 .hero-image {
     overflow-y: auto;
     flex: 1;
-    background-image: url("/images/record-corner-right.png");
+    background-image: url("/images/record-corner-right.png"),
+        url("/images/record-corner-left.png");
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: 20em;
-    background-position: bottom right;
+    background-position: bottom right, bottom left;
 }
 
 /* Overwrite Semantic */
