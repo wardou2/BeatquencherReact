@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Prompt } from "react-router-dom";
 import Tone from "tone";
 import SequencerChannels from "./SequencerChannels";
 import InstrumentControls from "../components/InstrumentControls";
@@ -17,6 +18,7 @@ export default class ProjectView extends Component {
             playing: false,
             count: 0,
             editingTempo: false,
+            isModified: false,
         };
         this.setCurrentIns = this.setCurrentIns.bind(this);
         this.song = this.song.bind(this);
@@ -266,6 +268,7 @@ export default class ProjectView extends Component {
 
         this.setState({
             instruments: instrumentsCopy,
+            isModified: true,
         });
     }
 
@@ -286,6 +289,7 @@ export default class ProjectView extends Component {
         this.setState(
             {
                 instruments: instrumentsCopy,
+                isModified: true,
             },
             () => {
                 if (instrument.effects[effIndex].eff_type === "distortion") {
@@ -310,6 +314,7 @@ export default class ProjectView extends Component {
                 ...this.state.scene,
                 tracks: tracksCopy,
             },
+            isModified: true,
         });
     }
 
@@ -326,6 +331,7 @@ export default class ProjectView extends Component {
         this.setState(
             {
                 instruments: instrumentsCopy,
+                isModified: true,
             },
             () => {
                 this[`ins${insId}vol`].mute = !this[`ins${insId}vol`].mute;
@@ -349,11 +355,16 @@ export default class ProjectView extends Component {
             .then((scene) => this.props.sceneWasSaved(scene))
             .catch((err) => console.log(err));
         this.props.saveProject();
+        this.setState({ isModified: false });
     }
 
     render() {
         return (
             <div className="project-view-content">
+                <Prompt
+                    when={this.props.loggedIn && this.state.isModified}
+                    message="You have unsaved changes, are you sure you want to leave?"
+                />
                 <ProjectControls
                     playInstruments={this.playInstruments}
                     saveAll={this.saveAll}
@@ -361,6 +372,7 @@ export default class ProjectView extends Component {
                     loggedIn={this.props.loggedIn}
                     currentProj={this.props.currentProj}
                     handleChangeProj={this.props.handleChangeProj}
+                    isModified={this.state.isModified}
                 />
                 <SequencerChannels
                     instruments={this.state.instruments}

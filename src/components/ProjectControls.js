@@ -11,6 +11,7 @@ const ProjectControls = ({
     loggedIn,
     currentProj,
     handleChangeProj,
+    isModified,
 }) => {
     const [editingTempo, setEditingTempo] = useState(false);
     const [warning, setWarning] = useState(null);
@@ -57,7 +58,7 @@ const ProjectControls = ({
                         icon
                         labelPosition="left"
                         onClick={saveAll}
-                        disabled={!loggedIn}
+                        disabled={!loggedIn || !isModified}
                     >
                         Save
                         <Icon name="save" />
