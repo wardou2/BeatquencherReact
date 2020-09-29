@@ -77,6 +77,10 @@ export default class ProjectView extends Component {
         );
     }
 
+    componentWillUnmount() {
+        Tone.Transport.stop();
+    }
+
     isEmpty(obj) {
         for (const key in obj) {
             if (Object.prototype.hasOwnProperty.call(obj, key)) return false;
