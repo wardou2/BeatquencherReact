@@ -3,16 +3,6 @@
     width: 100%;
 }
 
-.project-view-hero {
-    overflow-y: auto;
-    flex: 1;
-    background-image: url("/images/record-corner-right.png");
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-size: 20em;
-    background-position: bottom right;
-}
-
 .project-view-content {
     margin: 0 2em 0 2em;
     display: flex;

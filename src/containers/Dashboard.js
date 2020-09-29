@@ -181,56 +181,64 @@ class Dashboard extends Component {
                         logOut={this.props.logOut}
                         getUser={this.props.getUser}
                     />
-                    <Switch>
-                        <Route
-                            path={`/projects/${this.currentProj?.id}/${this.state.currentScene.id}`}
-                            render={(props) => (
-                                <ProjectView
-                                    currentUser={this.props.currentUser}
-                                    currentProj={this.currentProj}
-                                    currentScene={this.state.currentScene}
-                                    saveProject={this.saveProject}
-                                    handleChangeScene={this.handleChangeScene}
-                                    handleChangeProj={this.handleChangeProj}
-                                    loggedIn={this.props.loggedIn}
-                                    sceneWasSaved={this.sceneWasSaved}
-                                />
-                            )}
-                        />
-                        <Route
-                            exact
-                            path="/projects/new"
-                            render={() => (
-                                <NewProjectForm newProject={this.newProject} />
-                            )}
-                        />
-                        <Route
-                            path={`/projects/${this.currentProj?.id}`}
-                            render={(props) => (
-                                <SceneSelector
-                                    currentProj={this.currentProj}
-                                    setCurrentScene={this.setCurrentScene}
-                                    newScene={this.newScene}
-                                    handleChangeProj={this.handleChangeProj}
-                                    saveProject={this.saveProject}
-                                    projectWasDeleted={this.projectWasDeleted}
-                                    loggedIn={this.props.loggedIn}
-                                    renameScene={this.renameScene}
-                                    sceneWasDeleted={this.sceneWasDeleted}
-                                />
-                            )}
-                        />
-                        <Route
-                            path="/projects"
-                            render={(props) => (
-                                <ProjectsList
-                                    projects={this.state.projects}
-                                    setCurrentProj={this.setCurrentProj}
-                                    startNewProject={this.startNewProject}
-                                />
-                            )}
-                        />
-                    </Switch>
+                    <div className="hero-image">
+                        <Switch>
+                            <Route
+                                path={`/projects/${this.currentProj?.id}/${this.state.currentScene.id}`}
+                                render={(props) => (
+                                    <ProjectView
+                                        currentUser={this.props.currentUser}
+                                        currentProj={this.currentProj}
+                                        currentScene={this.state.currentScene}
+                                        saveProject={this.saveProject}
+                                        handleChangeScene={
+                                            this.handleChangeScene
+                                        }
+                                        handleChangeProj={this.handleChangeProj}
+                                        loggedIn={this.props.loggedIn}
+                                        sceneWasSaved={this.sceneWasSaved}
+                                    />
+                                )}
+                            />
+                            <Route
+                                exact
+                                path="/projects/new"
+                                render={() => (
+                                    <NewProjectForm
+                                        newProject={this.newProject}
+                                    />
+                                )}
+                            />
+                            <Route
+                                path={`/projects/${this.currentProj?.id}`}
+                                render={(props) => (
+                                    <SceneSelector
+                                        currentProj={this.currentProj}
+                                        setCurrentScene={this.setCurrentScene}
+                                        newScene={this.newScene}
+                                        handleChangeProj={this.handleChangeProj}
+                                        saveProject={this.saveProject}
+                                        projectWasDeleted={
+                                            this.projectWasDeleted
+                                        }
+                                        loggedIn={this.props.loggedIn}
+                                        renameScene={this.renameScene}
+                                        sceneWasDeleted={this.sceneWasDeleted}
+                                    />
+                                )}
+                            />
+                            <Route
+                                path="/projects"
+                                render={(props) => (
+                                    <ProjectsList
+                                        projects={this.state.projects}
+                                        setCurrentProj={this.setCurrentProj}
+                                        startNewProject={this.startNewProject}
+                                    />
+                                )}
+                            />
+                        </Switch>
+                    </div>
                 </div>
             </>
         );

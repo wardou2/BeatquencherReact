@@ -17,7 +17,7 @@ function AboutModal() {
             <Modal.Content>
                 <p>Hi, and welcome to my site.</p>
                 <p>
-                    This project is an implementation of a basic 16-beat music
+                    Beatquencher is an implementation of a basic 16-note music
                     sequencer. It was built by me for fun, to learn, and because
                     music is the best.
                 </p>
@@ -27,7 +27,7 @@ function AboutModal() {
                     using the Django Rest Framework.
                 </p>
                 <p>
-                    Feel free to look around. The demo is available to all to
+                    Feel free to look around. The demo is available for all to
                     play, but changes can't be saved. To save a project, create
                     an account.
                 </p>

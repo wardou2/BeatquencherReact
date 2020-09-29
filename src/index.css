@@ -10,6 +10,16 @@ body {
     background-color: #ffff;
 }
 
+.hero-image {
+    overflow-y: auto;
+    flex: 1;
+    background-image: url("/images/record-corner-right.png");
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: 20em;
+    background-position: bottom right;
+}
+
 /* Overwrite Semantic */
 .ui.modal {
     border-radius: 0 !important;

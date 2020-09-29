@@ -8,11 +8,11 @@
     text-align: center;
 
     background-image: url("/images/landing-background.jpg");
-    background-color: #cccccc; /* Used if the image is unavailable */
+    background-color: #ffff; /* Used if the image is unavailable */
 
-    background-position: center; /* Center the image */
+    background-position: bottom; /* Center the image */
     background-repeat: no-repeat; /* Do not repeat the image */
-    background-size: cover; /* Resize the background image to cover the entire container */
+    background-size: 80%; /* Resize the background image to cover the entire container */
 }
 
 .landing-child {
@@ -28,7 +28,9 @@
 
 .landing-header {
     font-size: 5em;
-    padding-bottom: 1rem;
+    padding: 0 1rem;
+    margin-bottom: 1rem;
+    border-radius: 30px;
     background-color: rgba(255, 255, 255, 0.616);
 }
 
@@ -51,9 +53,12 @@
     cursor: pointer;
     font-weight: 600;
     font-size: 14px;
-    padding: 1em;
+    padding: 18px;
     color: #3845ff;
-    background-color: rgba(255, 255, 255, 0.616);
+    background-color: rgb(255, 255, 255);
+
+    box-shadow: 0 0 20px 5px rgba(0, 0, 0, 0.144),
+        inset 0 0 0px 1px rgb(168, 168, 168);
 }
 
 .about-link:hover {
