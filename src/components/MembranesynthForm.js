@@ -1,52 +1,54 @@
 import React, { Component } from "react";
-import { Form, Dropdown, Header, Divider } from "semantic-ui-react";
+import { Dropdown } from "semantic-ui-react";
+
+import ChannelSlider from "./ChannelSlider";
 
 const oscTypeOptions = [
     {
         key: "sine",
-        text: "Sine Wave",
+        text: "Sine",
         value: "sine",
         image: { avatar: true, src: "/images/sine.jpg" },
     },
     {
         key: "square",
-        text: "Square Wave",
+        text: "Square",
         value: "square",
         image: { avatar: true, src: "/images/square.jpg" },
     },
     {
         key: "triangle",
-        text: "Triangle Wave",
+        text: "Triangle",
         value: "triangle",
         image: { avatar: true, src: "/images/triangle.jpg" },
     },
     {
         key: "sawtooth",
-        text: "Sawtooth Wave",
+        text: "Sawtooth",
         value: "sawtooth",
         image: { avatar: true, src: "/images/sawtooth.jpg" },
     },
     {
         key: "fmsine",
-        text: "FM Sine Wave",
+        text: "FM Sine",
         value: "fmsine",
         image: { avatar: true, src: "/images/sine.jpg" },
     },
     {
         key: "fmsquare",
-        text: "FM Square Wave",
+        text: "FM Square",
         value: "fmsquare",
         image: { avatar: true, src: "/images/square.jpg" },
     },
     {
         key: "fmtriangle",
-        text: "FM Triangle Wave",
+        text: "FM Triangle",
         value: "fmtriangle",
         image: { avatar: true, src: "/images/triangle.jpg" },
     },
     {
         key: "fmsawtooth",
-        text: "FM Sawtooth Wave",
+        text: "FM Sawtooth",
         value: "fmsawtooth",
         image: { avatar: true, src: "/images/sawtooth.jpg" },
     },
@@ -59,7 +61,7 @@ export default class MembranesynthForm extends Component {
         this.handleChange = this.handleChange.bind(this);
     }
 
-    handleChange(e, field, { value }) {
+    handleChange(field, value) {
         this.props.handleChangeInstrument(
             this.props.currentIns.id,
             field,
@@ -69,177 +71,172 @@ export default class MembranesynthForm extends Component {
 
     render() {
         return (
-            <Form>
-                <Divider />
-                <Header as="h3">Oscillator </Header>
-                <div className="form-width">
+            <div className="instrument-form">
+                <div className="instrument-form--column">
+                    <h3>Oscillator </h3>
                     <Dropdown
                         placeholder="Oscillator Type"
-                        fluid
                         value={this.props.currentIns.options.oscillator.type}
                         selection
                         options={oscTypeOptions}
                         onChange={(e, { value }) =>
-                            this.handleChange(e, ["oscillator", "type"], {
-                                value,
-                            })
+                            this.handleChange(["oscillator", "type"], value)
                         }
                     />
+                    <br></br>
                     <br></br>
                     {this.props.currentIns.options.oscillator.type.slice(
                         0,
                         2
-                    ) === "fm" ? (
-                        <Form.Input
+                    ) === "fm" && (
+                        <ChannelSlider
+                            classes="instrument-control-slider"
                             label={`Phase: ${this.props.currentIns.options.oscillator.phase} `}
-                            fluid
                             min={0}
                             max={360}
                             name="phase"
-                            onChange={(e, { value }) =>
-                                this.handleChange(e, ["oscillator", "phase"], {
-                                    value,
-                                })
+                            callback={(e) =>
+                                this.handleChange(
+                                    ["oscillator", "phase"],
+                                    e.target.value
+                                )
                             }
                             step={1}
-                            type="range"
                             value={
                                 this.props.currentIns.options.oscillator.phase
                             }
                         />
-                    ) : null}
+                    )}
                 </div>
-                <Divider />
 
-                <Header as="h3">Envelope</Header>
-                <Form.Group widths="equal">
-                    <Form.Input
+                <div className="instrument-form--column">
+                    <h3>Envelope</h3>
+                    <ChannelSlider
+                        classes="instrument-control-slider"
                         label={`Attack: ${this.props.currentIns.options.envelope.attack}s `}
                         min={0.001}
                         max={3}
                         name="attack"
-                        onChange={(e, { value }) =>
-                            this.handleChange(e, ["envelope", "attack"], {
-                                value,
-                            })
+                        callback={(e) =>
+                            this.handleChange(
+                                ["envelope", "attack"],
+                                e.target.value
+                            )
                         }
                         step={0.001}
-                        type="range"
                         value={this.props.currentIns.options.envelope.attack}
                     />
-                    <Form.Input
+                    <ChannelSlider
+                        classes="instrument-control-slider"
                         label={`Decay: ${this.props.currentIns.options.envelope.decay}s `}
                         min={0.001}
                         max={3}
                         name="decay"
-                        onChange={(e, { value }) =>
-                            this.handleChange(e, ["envelope", "decay"], {
-                                value,
-                            })
+                        callback={(e) =>
+                            this.handleChange(
+                                ["envelope", "decay"],
+                                e.target.value
+                            )
                         }
                         step={0.001}
-                        type="range"
                         value={this.props.currentIns.options.envelope.decay}
                     />
-                    <Form.Input
+                    <ChannelSlider
+                        classes="instrument-control-slider"
                         label={`Sustain: ${this.props.currentIns.options.envelope.sustain} `}
                         min={0.001}
                         max={0.99}
                         name="sustain"
-                        onChange={(e, { value }) =>
-                            this.handleChange(e, ["envelope", "sustain"], {
-                                value,
-                            })
+                        callback={(e) =>
+                            this.handleChange(
+                                ["envelope", "sustain"],
+                                e.target.value
+                            )
                         }
                         step={0.001}
-                        type="range"
                         value={this.props.currentIns.options.envelope.sustain}
                     />
-                    <Form.Input
+                    <ChannelSlider
+                        classes="instrument-control-slider"
                         label={`Release: ${this.props.currentIns.options.envelope.release}s `}
                         min={0.001}
                         max={3}
                         name="release"
-                        onChange={(e, { value }) =>
-                            this.handleChange(e, ["envelope", "release"], {
-                                value,
-                            })
+                        callback={(e) =>
+                            this.handleChange(
+                                ["envelope", "release"],
+                                e.target.value
+                            )
                         }
                         step={0.001}
-                        type="range"
                         value={this.props.currentIns.options.envelope.release}
                     />
-                </Form.Group>
-                <Divider />
+                </div>
 
-                <Header as="h3">Effects</Header>
-                <Form.Group widths="equal">
-                    <Form.Input
+                <div className="instrument-form--column">
+                    <h3>Effects</h3>
+                    <ChannelSlider
+                        classes="instrument-control-slider"
                         label={`Filter Cutoff: ${this.props.getEffect([
                             "filter",
                             "frequency",
                         ])} Hz`}
-                        fluid
                         min={1}
                         max={18000}
                         name="reverb"
-                        onChange={(e, { value }) =>
+                        callback={(e) =>
                             this.props.handleChangeEffect(
                                 this.props.currentIns.id,
                                 ["filter", "frequency"],
-                                { value }
+                                e.target.value
                             )
                         }
                         step={1}
-                        type="range"
                         value={this.props.getEffect(["filter", "frequency"])}
                     />
-                    <Form.Input
+                    <ChannelSlider
+                        classes="instrument-control-slider"
                         label={`Filter Q: ${this.props.getEffect([
                             "filter",
                             "Q",
                         ])}`}
-                        fluid
                         min={0.01}
                         max={12}
                         name="reverb"
-                        onChange={(e, { value }) =>
+                        callback={(e) =>
                             this.props.handleChangeEffect(
                                 this.props.currentIns.id,
                                 ["filter", "Q"],
-                                { value }
+                                e.target.value
                             )
                         }
                         step={0.01}
-                        type="range"
                         value={this.props.getEffect(["filter", "Q"])}
                     />
-                    <Form.Input
+                    <ChannelSlider
+                        classes="instrument-control-slider"
                         label={`Distortion: ${this.props.getEffect([
                             "distortion",
                             "distortion",
                         ])}`}
-                        fluid
                         min={0.01}
                         max={1}
                         name="distortion"
-                        onChange={(e, { value }) =>
+                        callback={(e) =>
                             this.props.handleChangeEffect(
                                 this.props.currentIns.id,
                                 ["distortion", "distortion"],
-                                { value }
+                                e.target.value
                             )
                         }
                         step={0.01}
-                        type="range"
                         value={this.props.getEffect([
                             "distortion",
                             "distortion",
                         ])}
                     />
-                </Form.Group>
-                <Divider />
-            </Form>
+                </div>
+            </div>
         );
     }
 }

@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import { Form, Grid, Button } from "semantic-ui-react";
 import Sequencer from "./Sequencer";
 import "../index.css";
 import EditNoteModal from "./EditNoteModal";
+import ChannelSlider from "./ChannelSlider";
 
 export default class Channel extends Component {
     constructor(props) {
@@ -20,17 +20,9 @@ export default class Channel extends Component {
         this.chooseNotes = this.chooseNotes.bind(this);
     }
 
-    componentDidMount() {
-        const track = this.props.tracks.find((t) => {
-            return (
-                t.scene_id === this.props.currentScene.id &&
-                t.instrument_id === this.props.instrument.id
-            );
-        });
-        this.setState({ track });
-    }
-
     getRightNote() {
+        // Closed Hihat needs different own note to sound good
+        // TODO: Can this be done elsewhere? Seems inefficient
         switch (this.props.instrument.ins_type) {
             case "closed_hihat":
                 return "C4";
@@ -40,42 +32,27 @@ export default class Channel extends Component {
     }
 
     chooseNotes(note, active) {
-        const track = this.props.tracks.find((t) => {
-            return (
-                t.scene_id === this.props.currentScene.id &&
-                t.instrument_id === this.props.instrument.id
-            );
-        });
-        const notesCopy = this.state.track.notes;
+        const notesCopy = this.props.track.notes;
         notesCopy[this.state.currentI] = active ? note : "";
 
-        track.notes = notesCopy;
-        this.props.updateTrack(this.state.track);
+        this.props.updateTrack(notesCopy, this.props.track.id);
         this.turnShowOff();
     }
 
     toggleCell(i, instrument) {
-        const track = this.props.tracks.find((t) => {
-            return (
-                t.scene_id === this.props.currentScene.id &&
-                t.instrument_id === this.props.instrument.id
-            );
-        });
-
         if (!instrument.melodic) {
-            const notesCopy = track.notes;
+            const notesCopy = this.props.track.notes;
             if (notesCopy[i]) {
                 notesCopy[i] = "";
             } else {
                 notesCopy[i] = this.getRightNote();
             }
 
-            track.notes = notesCopy;
-            this.props.updateTrack(track);
+            this.props.updateTrack(notesCopy, this.props.track.id);
         } else {
             this.setState({
                 showModal: true,
-                currentNote: track.notes[i],
+                currentNote: this.props.track.notes[i],
                 currentI: i,
             });
         }
@@ -87,7 +64,7 @@ export default class Channel extends Component {
         });
     }
 
-    handleChange(e, field, { value }) {
+    handleChange(e, field, value) {
         this.props.handleChangeInstrument(
             this.props.instrument.id,
             field,
@@ -97,56 +74,54 @@ export default class Channel extends Component {
 
     isSelected() {
         if (this.props.currentIns.id === this.props.instrument.id) {
-            return "selectedChannel";
+            return "selected-channel";
         }
         return "";
     }
 
     render() {
         return (
-            <Grid.Row
-                divided={true}
-                className={this.isSelected()}
+            <div
+                className={`sequencer-channel ${this.isSelected()}`}
                 onClick={() => this.props.setCurrentIns(this.props.instrument)}
             >
-                <Grid.Column width={2}>
-                    <h4>{this.props.instrument.name}</h4>
-                    <Button
-                        compact
-                        toggle
-                        negative
-                        floated="right"
-                        size="mini"
-                        active={this.props.instrument.options.mute}
-                        onClick={() =>
-                            this.props.handleMute(this.props.instrument.id)
-                        }
-                    >
-                        Mute
-                    </Button>
-                </Grid.Column>
-                <Grid.Column width={2} floated="left">
-                    <Form>
-                        <Form.Input
-                            label={`Volume: ${this.props.instrument.options.volume} dB`}
-                            min={-48}
-                            max={0}
-                            name="volume"
-                            onChange={(e, { value }) =>
-                                this.handleChange(e, ["volume"], { value })
+                <div className="sequencer-channel--cell">
+                    <div className="channel-cell--name">
+                        <h4>{this.props.instrument.name}</h4>
+                        <div
+                            onClick={() =>
+                                this.props.handleMute(this.props.instrument.id)
                             }
-                            step={1}
-                            type="range"
-                            value={this.props.instrument.options.volume}
-                        />
-                    </Form>
-                </Grid.Column>
-                <Grid.Column width={12} verticalAlign="middle">
+                            className={
+                                this.props.instrument.options.mute
+                                    ? "channel-button--mute channel-button--mute--active"
+                                    : "channel-button--mute"
+                            }
+                        >
+                            M
+                        </div>
+                    </div>
+                </div>
+                <div className="sequencer-channel--cell">
+                    <ChannelSlider
+                        label={`Volume: ${this.props.instrument.options.volume} dB`}
+                        min={-48}
+                        max={0}
+                        name="volume"
+                        callback={(e) =>
+                            this.handleChange(e, ["volume"], e.target.value)
+                        }
+                        step={1}
+                        type="range"
+                        value={this.props.instrument.options.volume}
+                    />
+                </div>
+                <div className="sequencer-channel--notes">
                     <Sequencer
                         toggleCell={this.toggleCell}
                         instrument={this.props.instrument}
                         currentScene={this.props.currentScene}
-                        track={this.state.track}
+                        track={this.props.track}
                         currentCount={this.props.currentCount}
                         isPlaying={this.props.isPlaying}
                     />
@@ -157,8 +132,8 @@ export default class Channel extends Component {
                         chooseNotes={this.chooseNotes}
                         currentNote={this.state.currentNote}
                     />
-                </Grid.Column>
-            </Grid.Row>
+                </div>
+            </div>
         );
     }
 }

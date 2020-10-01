@@ -1,10 +1,11 @@
 import React, { Component } from "react";
-import { Form, Button, Icon, Header, List, Segment } from "semantic-ui-react";
-import Cookies from "js-cookie";
-import DeleteModal from "../components/DeleteModal";
-import BASE_URL from "../api_url";
+import { Form, Button, Icon, Header, List } from "semantic-ui-react";
 
-const SCENES_URL = `${BASE_URL}scenes/`;
+import DeleteProjectModal from "../components/DeleteProjectModal";
+import DeleteSceneModal from "../components/DeleteSceneModal";
+import StyledButton from "../components/StyledButton";
+
+import "../styles/selector.css";
 
 export default class SceneSelector extends Component {
     constructor(props) {
@@ -14,8 +15,11 @@ export default class SceneSelector extends Component {
             name: "",
             title: "",
             editing: false,
-
-            showModal: false,
+            showModal: {
+                project: false,
+                scene: false,
+            },
+            scene: null,
         };
         this.renderScenes = this.renderScenes.bind(this);
         this.handleClick = this.handleClick.bind(this);
@@ -35,26 +39,21 @@ export default class SceneSelector extends Component {
     }
 
     handleClick(scene) {
-        fetch(SCENES_URL + scene.id, {
-            method: "GET",
-            headers: {
-                id_token: Cookies.get("id_token"),
-                "Content-Type": "application/json",
-            },
-        })
-            .then((res) => res.json())
-            .then((json) => this.props.setCurrentScene(json));
+        this.props.setCurrentScene(scene);
     }
 
     showForm(type) {
         this.setState({
             formType: type,
-            name: `Scene ${this.props.currentProj.scenes.length + 1}`,
+            name: `Scene ${(this.props.currentProj.scenes.length + 10)
+                .toString(36)
+                .toUpperCase()}`,
         });
     }
 
     hideForm() {
         this.setState({
+            editing: false,
             formType: "",
         });
     }
@@ -64,27 +63,25 @@ export default class SceneSelector extends Component {
     };
 
     handleSubmitScene = () => {
-        this.props.newScene(this.state);
+        this.props.newScene({ name: this.state.name });
         this.hideForm();
     };
 
     handleSubmitProj = () => {
-        this.props.handleChangeProject(["title"], this.state.title);
-        this.setState({
-            editing: false,
-            formType: "",
-        });
+        this.props.handleChangeProj("title", this.state.title, true);
+        this.hideForm();
     };
 
-    showDeleteModal = () => {
-        this.setState({
-            showModal: true,
-        });
+    handleRenameScene = () => {
+        this.props.renameScene(this.state.scene.id, this.state.name);
+        this.hideForm();
     };
 
-    turnShowOff = () => {
+    toggleShowModal = (selector) => {
+        const showModalCopy = { ...this.state.showModal };
+        showModalCopy[selector] = !showModalCopy[selector];
         this.setState({
-            showModal: false,
+            showModal: showModalCopy,
         });
     };
 
@@ -119,7 +116,7 @@ export default class SceneSelector extends Component {
                     <div className="close-btn">
                         <Icon name="close" onClick={this.hideForm} />
                     </div>
-                    <Header as="h2">Edit Project</Header>
+                    <h3>Edit Project</h3>
                     <Form.Input
                         label="Title"
                         placeholder="Title"
@@ -127,63 +124,176 @@ export default class SceneSelector extends Component {
                         value={this.state.title}
                         onChange={this.handleChange}
                     />
-                    <Button type="submit">Submit</Button>
-                    <Button negative onClick={this.showDeleteModal}>
+
+                    <Button
+                        negative
+                        onClick={() => this.toggleShowModal("project")}
+                    >
                         Delete Project
                     </Button>
+
+                    <Button type="submit">Submit Title</Button>
+                </Form>
+            );
+        }
+        if (this.state.formType === "renameScene") {
+            return (
+                <Form onSubmit={() => this.handleRenameScene()}>
+                    <div className="fake-close-btn">
+                        <Icon name="close" />
+                    </div>
+                    <div className="close-btn">
+                        <Icon name="close" onClick={this.hideForm} />
+                    </div>
+                    <h3>Rename Scene</h3>
+                    <Form.Input
+                        label="Name"
+                        placeholder="Name"
+                        name="name"
+                        value={this.state.name}
+                        onChange={this.handleChange}
+                    />
+                    <Button type="submit">Submit</Button>
                 </Form>
             );
         }
         return (
             <div>
-                <Button
-                    fluid
-                    onClick={() => this.showForm("newScene")}
-                    style={{ marginBottom: "8px" }}
-                >
-                    Add New Scene
-                </Button>
-                <Button fluid onClick={() => this.showForm("proj")}>
-                    Edit Project
-                </Button>
+                <div className="scene-form-button-wrapper">
+                    <StyledButton
+                        callback={() =>
+                            this.setState({
+                                formType: "newScene",
+                                name: `Scene ${(
+                                    this.props.currentProj.scenes.length + 10
+                                )
+                                    .toString(36)
+                                    .toUpperCase()}`,
+                            })
+                        }
+                        style={{ marginBottom: "8px" }}
+                        disabled={!this.props.loggedIn}
+                        fluid
+                    >
+                        Add New Scene
+                    </StyledButton>
+                </div>
+                <div className="scene-form-button-wrapper">
+                    <StyledButton
+                        callback={() => this.setState({ formType: "proj" })}
+                        disabled={!this.props.loggedIn}
+                        fluid
+                    >
+                        Edit Project
+                    </StyledButton>
+                </div>
             </div>
         );
     }
 
     renderScenes() {
+        // TODO: Styles on list... Pretty hacky
+        const sortedScenes = [].concat(this.props.currentProj.scenes);
+        sortedScenes.sort((a, b) => (a.id > b.id ? 1 : -1));
         return (
-            <List divided relaxed>
-                {this.props.currentProj.scenes.map((scene) => {
-                    return (
-                        <List.Item
-                            key={scene.id}
-                            onClick={() => this.handleClick(scene)}
-                        >
-                            <List.Content>
-                                <List.Header as="a">{scene.name}</List.Header>
-                            </List.Content>
-                        </List.Item>
-                    );
-                })}
-            </List>
+            <div className="scene-list-scrollable">
+                <List animated divided selection relaxed="very">
+                    {sortedScenes.map((scene) => {
+                        return (
+                            <List.Item key={scene.id}>
+                                {this.props.loggedIn && (
+                                    <>
+                                        <List.Content floated="right">
+                                            <List.Icon
+                                                name="delete"
+                                                link
+                                                onClick={() =>
+                                                    this.setState({
+                                                        showModal: {
+                                                            ...this.state
+                                                                .showModal,
+                                                            scene: true,
+                                                        },
+                                                        scene,
+                                                    })
+                                                }
+                                            />
+                                        </List.Content>
+                                        <List.Content
+                                            floated="right"
+                                            onClick={() => {
+                                                this.setState({
+                                                    scene,
+                                                    name: scene.name,
+                                                    formType: "renameScene",
+                                                });
+                                            }}
+                                        >
+                                            <List.Icon
+                                                name="edit"
+                                                link
+                                                aria-label="Edit"
+                                            />
+                                        </List.Content>
+                                        <List.Content
+                                            floated="left"
+                                            style={{ opacity: "0%" }}
+                                            onClick={() =>
+                                                this.handleClick(scene)
+                                            }
+                                        >
+                                            <List.Icon name="delete" />
+                                        </List.Content>
+                                        <List.Content
+                                            floated="left"
+                                            style={{ opacity: "0%" }}
+                                            onClick={() =>
+                                                this.handleClick(scene)
+                                            }
+                                        >
+                                            <List.Icon name="edit" />
+                                        </List.Content>
+                                    </>
+                                )}
+                                <List.Content as="a">
+                                    <List.Header
+                                        onClick={() => this.handleClick(scene)}
+                                    >
+                                        {scene.name}
+                                    </List.Header>
+                                </List.Content>
+                            </List.Item>
+                        );
+                    })}
+                </List>
+            </div>
         );
     }
 
     render() {
         return (
-            <div className="projects-list">
-                <br></br>
-                <DeleteModal
-                    show={this.state.showModal}
-                    turnShowOff={this.turnShowOff}
-                    currentProj={this.props.currentProj}
-                    projectWasDeleted={this.props.projectWasDeleted}
-                />
-                <Segment>
-                    <Header as="h2">Select Scene</Header>
+            <div className="scene-selector">
+                {this.state.showModal.project && (
+                    <DeleteProjectModal
+                        turnShowOff={() => this.toggleShowModal("project")}
+                        currentProj={this.props.currentProj}
+                        projectWasDeleted={this.props.projectWasDeleted}
+                    />
+                )}
+                {this.state.showModal.scene && (
+                    <DeleteSceneModal
+                        turnShowOff={() => this.toggleShowModal("scene")}
+                        scene={this.state.scene}
+                        sceneWasDeleted={() =>
+                            this.props.sceneWasDeleted(this.state.scene.id)
+                        }
+                    />
+                )}
+                <div className="scene-list-container">
+                    <h2>Select Scene</h2>
                     {this.renderScenes()}
-                </Segment>
-                <Segment>{this.form()}</Segment>
+                </div>
+                <div className="scene-form-container">{this.form()}</div>
             </div>
         );
     }

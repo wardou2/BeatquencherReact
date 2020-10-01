@@ -1,9 +1,8 @@
 import React, { Component } from "react";
-import { List, Header, Button, Segment } from "semantic-ui-react";
-import Cookies from "js-cookie";
-import BASE_URL from "../api_url";
+import { List } from "semantic-ui-react";
+import RoutedButton from "../components/RoutedButton";
 
-const PROJECTS_URL = `${BASE_URL}projects/`;
+import "../styles/selector.css";
 
 export default class ProjectsList extends Component {
     constructor(props) {
@@ -13,6 +12,10 @@ export default class ProjectsList extends Component {
         this.handleClick = this.handleClick.bind(this);
     }
 
+    componentDidMount() {
+        this.props.setCurrentProj(null);
+    }
+
     isEmpty(obj) {
         for (const key in obj) {
             if (Object.prototype.hasOwnProperty.call(obj, key)) return false;
@@ -20,27 +23,19 @@ export default class ProjectsList extends Component {
         return true;
     }
 
-    handleClick(proj) {
-        fetch(PROJECTS_URL + proj.id, {
-            method: "GET",
-            headers: {
-                id_token: Cookies.get("id_token"),
-                "Content-Type": "application/json",
-            },
-        })
-            .then((res) => res.json())
-            .then((json) => this.props.setCurrentProj(json));
+    handleClick(index) {
+        this.props.setCurrentProj(index);
     }
 
     renderProjects() {
-        if (!this.isEmpty(this.props.currentUser)) {
+        if (this.props.projects) {
             return (
-                <List divided relaxed>
-                    {this.props.currentUser.projects.map((proj) => {
+                <List animated divided selection relaxed="very">
+                    {this.props.projects.map((proj, index) => {
                         return (
                             <List.Item
                                 key={proj.id}
-                                onClick={() => this.handleClick(proj)}
+                                onClick={() => this.handleClick(index)}
                             >
                                 <List.Content>
                                     <List.Header as="a">
@@ -58,15 +53,16 @@ export default class ProjectsList extends Component {
 
     render() {
         return (
-            <div className="projects-list">
-                <br></br>
-                <Segment>
-                    <Header as="h2">Select Project</Header>
-                    <Button onClick={this.props.startNewProject}>
-                        New Project
-                    </Button>
+            <div className="project-selector">
+                <div className="project-header">
+                    <h2>Select Project</h2>
+                </div>
+                <div className="project-list-scrollable">
                     {this.renderProjects()}
-                </Segment>
+                </div>
+                <div className="project-button-container">
+                    <RoutedButton text="New Project" path="/projects/new" />
+                </div>
             </div>
         );
     }

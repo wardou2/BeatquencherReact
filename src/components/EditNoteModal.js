@@ -39,12 +39,7 @@ class EditNoteModal extends Component {
         const { open } = this.state;
         return (
             <div>
-                <Modal
-                    dimmer="blurring"
-                    size="mini"
-                    open={open}
-                    onClose={this.close}
-                >
+                <Modal dimmer="blurring" open={open} onClose={this.close}>
                     <Modal.Header>Note Selector</Modal.Header>
                     <Modal.Actions>
                         {this.props.ins_type === "monosynth" ? (

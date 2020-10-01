@@ -1,10 +1,7 @@
 import React, { Component } from "react";
-
-import Cookies from "js-cookie";
 import { Modal, Button } from "semantic-ui-react";
-import BASE_URL from "../api_url";
 
-class EditNoteModal extends Component {
+class DeleteModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -21,26 +18,11 @@ class EditNoteModal extends Component {
         return null;
     }
 
-    state = { open: false };
-
     show = (dimmer) => () => this.setState({ dimmer, open: true });
 
     close = () => {
         this.setState({ open: false });
         this.props.turnShowOff();
-    };
-
-    handleDelete = () => {
-        fetch(`${BASE_URL}/projects/${this.props.currentProj.id}`, {
-            method: "DELETE",
-            headers: {
-                id_token: Cookies.get("id_token"),
-                "Content-Type": "application/json",
-            },
-        });
-
-        this.props.projectWasDeleted("projectSelector");
-        // this.close()
     };
 
     render() {
@@ -53,15 +35,13 @@ class EditNoteModal extends Component {
                     open={open}
                     onClose={this.close}
                 >
-                    <Modal.Header>Note Selector</Modal.Header>
+                    <Modal.Header>{this.props.header}</Modal.Header>
                     <Modal.Actions>
-                        <p>Are you sure you want to delete this project?</p>
+                        <p>{this.props.description}</p>
                         <Button.Group>
                             <Button onClick={this.close}>Cancel</Button>
                             <Button.Or />
-                            <Button negative onClick={this.handleDelete}>
-                                Delete
-                            </Button>
+                            {this.props.route}
                         </Button.Group>
                     </Modal.Actions>
                 </Modal>
@@ -70,4 +50,4 @@ class EditNoteModal extends Component {
     }
 }
 
-export default EditNoteModal;
+export default DeleteModal;

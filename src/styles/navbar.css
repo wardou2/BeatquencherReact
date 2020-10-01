@@ -1,0 +1,36 @@
+.navbar {
+    border: 1px solid rgb(0, 0, 0, 0.1);
+    box-shadow: 0px 10px 90px rgb(0, 0, 0, 0.05);
+    padding: 0.7em;
+
+    display: flex;
+    align-items: center;
+}
+
+.navbar-links {
+    color: #777777;
+    font-size: 1.5em;
+    flex: 1;
+    text-align: left;
+    margin-left: 0.5em;
+}
+
+.navbar-title {
+    flex: 1;
+}
+
+.navbar-loginlogout {
+    flex: 1;
+    text-align: right;
+}
+
+.navbar-link {
+    display: inline-block;
+    cursor: pointer;
+
+    font-size: 20px;
+}
+
+.navbar-link:hover {
+    color: #5053ff;
+}

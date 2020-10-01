@@ -1,11 +1,12 @@
 import React, { Component } from "react";
+import { Prompt } from "react-router-dom";
 import Tone from "tone";
-import { Form, Button, Icon } from "semantic-ui-react";
-import Cookies from "js-cookie";
 import SequencerChannels from "./SequencerChannels";
 import InstrumentControls from "../components/InstrumentControls";
-import * as edit from "../components/ContentEditable";
-import BASE_URL from "../api_url";
+import { saveInstrument, saveScene } from "../api/Project";
+import ProjectControls from "../components/ProjectControls";
+
+import "../styles/project-view.css";
 
 export default class ProjectView extends Component {
     constructor(props) {
@@ -13,10 +14,11 @@ export default class ProjectView extends Component {
         this.state = {
             instruments: [],
             currentIns: {},
-            properIns: [],
-            tracks: [],
+            scene: {},
             playing: false,
             count: 0,
+            editingTempo: false,
+            isModified: false,
         };
         this.setCurrentIns = this.setCurrentIns.bind(this);
         this.song = this.song.bind(this);
@@ -27,33 +29,37 @@ export default class ProjectView extends Component {
         this.attachEffects = this.attachEffects.bind(this);
         this.handleChangeEffect = this.handleChangeEffect.bind(this);
         this.handleMute = this.handleMute.bind(this);
-        this.handleChangeProject = this.handleChangeProject.bind(this);
         this.saveAll = this.saveAll.bind(this);
     }
 
     componentDidMount() {
+        // Store Instruments and Scene in state here.
         Tone.Transport.bpm.value = this.props.currentProj.tempo;
-        const currentTracks = this.props.currentProj.tracks.filter((track) => {
-            return track.scene_id === this.props.currentScene.id;
-        });
-
-        currentTracks.forEach((t) => {
+        const currentScene = JSON.parse(
+            JSON.stringify(this.props.currentScene)
+        );
+        // Sanitize Tracks
+        // TODO: Can this be removed?
+        currentScene.tracks.forEach((track, i) => {
             const notesCopy = [];
-            t.notes.forEach((n) => {
+            track.notes.forEach((n) => {
                 if (n.includes("-")) {
                     notesCopy.push(n.split("-"));
                 } else {
                     notesCopy.push(n);
                 }
             });
-            // eslint-disable-next-line no-param-reassign
-            t.notes = notesCopy;
+            currentScene.tracks[i].notes = notesCopy;
         });
 
+        const instrumentsCopy = JSON.parse(
+            JSON.stringify(this.props.currentProj.instruments)
+        );
+        instrumentsCopy.sort((a, b) => (a.id < b.id ? 1 : -1));
         this.setState(
             {
-                instruments: this.props.currentProj.instruments,
-                tracks: currentTracks,
+                instruments: instrumentsCopy,
+                scene: currentScene,
             },
             () => {
                 this.counter = 0;
@@ -73,6 +79,10 @@ export default class ProjectView extends Component {
         );
     }
 
+    componentWillUnmount() {
+        Tone.Transport.stop();
+    }
+
     isEmpty(obj) {
         for (const key in obj) {
             if (Object.prototype.hasOwnProperty.call(obj, key)) return false;
@@ -83,11 +93,8 @@ export default class ProjectView extends Component {
     song(time) {
         const step = this.counter % 16;
         this.state.instruments.forEach((ins) => {
-            const track = this.state.tracks.find((t) => {
-                return (
-                    t.instrument_id === ins.id &&
-                    t.scene_id === this.props.currentScene.id
-                );
+            const track = this.state.scene.tracks.find((t) => {
+                return t.instrument === ins.id;
             });
             if (track.notes[step]) {
                 if (ins.ins_type === "closed_hihat") {
@@ -261,6 +268,7 @@ export default class ProjectView extends Component {
 
         this.setState({
             instruments: instrumentsCopy,
+            isModified: true,
         });
     }
 
@@ -273,7 +281,7 @@ export default class ProjectView extends Component {
             (effect) => effect.eff_type === effectInfo[0]
         );
 
-        instrument.effects[effIndex].eff_options[effectInfo[1]] = value.value;
+        instrument.effects[effIndex].eff_options[effectInfo[1]] = value;
 
         const foundIndex = instrumentsCopy.findIndex((ins) => ins.id === insId);
         instrumentsCopy[foundIndex] = instrument;
@@ -281,27 +289,32 @@ export default class ProjectView extends Component {
         this.setState(
             {
                 instruments: instrumentsCopy,
+                isModified: true,
             },
             () => {
                 if (instrument.effects[effIndex].eff_type === "distortion") {
-                    this[`ins${insId}${effectInfo[0]}`][effectInfo[1]] =
-                        value.value;
+                    this[`ins${insId}${effectInfo[0]}`][effectInfo[1]] = value;
                 } else {
-                    this[`ins${insId}${effectInfo[0]}`][effectInfo[1]].value =
-                        value.value;
+                    this[`ins${insId}${effectInfo[0]}`][
+                        effectInfo[1]
+                    ].value = value;
                 }
             }
         );
     }
 
-    updateTrack(track) {
-        const tracksCopy = [...this.state.tracks];
-        const index = tracksCopy.indexOf((t) => t.id === track.id);
+    updateTrack(notes, id) {
+        const tracksCopy = [...this.state.scene.tracks];
+        const index = tracksCopy.indexOf((t) => t.id === id);
         if (index >= 0) {
-            tracksCopy[index] = track;
+            tracksCopy[index].notes = notes;
         }
         this.setState({
-            tracks: tracksCopy,
+            scene: {
+                ...this.state.scene,
+                tracks: tracksCopy,
+            },
+            isModified: true,
         });
     }
 
@@ -318,6 +331,7 @@ export default class ProjectView extends Component {
         this.setState(
             {
                 instruments: instrumentsCopy,
+                isModified: true,
             },
             () => {
                 this[`ins${insId}vol`].mute = !this[`ins${insId}vol`].mute;
@@ -325,131 +339,59 @@ export default class ProjectView extends Component {
         );
     }
 
-    handleChangeProject(field, value) {
-        this.props.handleChangeProject(field, value);
-    }
-
     playInstruments() {
         this.setState({
             playing: !this.state.playing,
         });
-
         Tone.Transport.toggle();
+        this.counter = 0;
     }
 
     saveAll() {
-        this.saveInstruments();
-        this.saveTracks();
+        this.state.instruments.forEach((ins) => {
+            saveInstrument({ ins }).catch((err) => console.log(err));
+        });
+        saveScene({ scene: this.state.scene })
+            .then((scene) => this.props.sceneWasSaved(scene))
+            .catch((err) => console.log(err));
         this.props.saveProject();
-        this.props.saveScene();
+        this.setState({ isModified: false });
     }
 
-    saveInstruments = () => {
-        this.state.instruments.forEach((ins) => {
-            fetch(`${BASE_URL}instruments/${ins.id}`, {
-                method: "PATCH",
-                headers: {
-                    id_token: Cookies.get("id_token"),
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    instrument: {
-                        ins_type: ins.ins_type,
-                        options: ins.options,
-                        effects: ins.effects,
-                    },
-                }),
-            });
-        });
-    };
-
-    saveTracks = () => {
-        this.state.tracks.forEach((track) => {
-            const trackCopy = { ...track };
-            const notesCopy = [];
-
-            trackCopy.notes.forEach((n) => {
-                if (Array.isArray(n)) {
-                    notesCopy.push(n.join("-"));
-                } else {
-                    notesCopy.push(n);
-                }
-            });
-
-            trackCopy.notes = notesCopy;
-
-            fetch(`${BASE_URL}tracks/${trackCopy.id}`, {
-                method: "PATCH",
-                headers: {
-                    id_token: Cookies.get("id_token"),
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ track: trackCopy }),
-            }).then((res) => res.json());
-        });
-    };
-
-    handleChangeTempo = (field, value) => {
-        this.handleChangeProject(["tempo"], value);
-        Tone.Transport.bpm.value = value.value;
-    };
-
     render() {
-        const EditableSceneName = edit.contentEditable("h2");
-
         return (
-            <div className="project-view-div">
-                <div className="project-info-div">
-                    <EditableSceneName
-                        className="clickable"
-                        value={this.props.currentScene.name}
-                        onSave={(val) =>
-                            this.props.handleChangeScene(["name"], val)
-                        }
-                    />
-                    <Form size="small">
-                        <Form.Group>
-                            <Button icon onClick={() => this.playInstruments()}>
-                                {this.state.playing ? (
-                                    <Icon name="pause" />
-                                ) : (
-                                    <Icon name="play" />
-                                )}
-                            </Button>
-                            <Button icon onClick={() => this.saveAll()}>
-                                <Icon name="save" />
-                            </Button>
-                            <Form.Input
-                                label="Tempo (bpm)"
-                                name="tempo"
-                                fluid
-                                onChange={(e, { value }) =>
-                                    this.handleChangeTempo(["tempo"], { value })
-                                }
-                                type="number"
-                                value={this.props.currentProj.tempo}
-                            />
-                        </Form.Group>
-                    </Form>
-                </div>
-                <br></br>
+            <div className="project-view-content">
+                <Prompt
+                    when={this.props.loggedIn && this.state.isModified}
+                    message="You have unsaved changes, are you sure you want to leave?"
+                />
+                <ProjectControls
+                    playInstruments={this.playInstruments}
+                    saveAll={this.saveAll}
+                    isPlaying={this.state.playing}
+                    loggedIn={this.props.loggedIn}
+                    currentProj={this.props.currentProj}
+                    handleChangeProj={this.props.handleChangeProj}
+                    isModified={this.state.isModified}
+                />
                 <SequencerChannels
                     instruments={this.state.instruments}
-                    currentScene={this.props.currentScene}
+                    tracks={this.state.scene.tracks}
                     handleChangeInstrument={this.handleChangeInstrument}
                     handleMute={this.handleMute}
-                    tracks={this.state.tracks}
                     setCurrentIns={this.setCurrentIns}
                     updateTrack={this.updateTrack}
                     currentIns={this.state.currentIns}
                     isPlaying={this.state.playing}
                     currentCount={this.counter}
                 />
-                <InstrumentControls
-                    currentIns={this.state.currentIns}
-                    handleChangeInstrument={this.handleChangeInstrument}
-                    handleChangeEffect={this.handleChangeEffect}
-                />
+                {!this.isEmpty(this.state.currentIns) && (
+                    <InstrumentControls
+                        currentIns={this.state.currentIns}
+                        handleChangeInstrument={this.handleChangeInstrument}
+                        handleChangeEffect={this.handleChangeEffect}
+                    />
+                )}
             </div>
         );
     }

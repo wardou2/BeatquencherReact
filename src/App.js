@@ -1,20 +1,14 @@
 import React, { Component } from "react";
-import {
-    BrowserRouter as Router,
-    Route,
-    Redirect,
-    withRouter,
-} from "react-router-dom";
+
 import { Dimmer, Loader } from "semantic-ui-react";
 import Cookies from "js-cookie";
-import history from "./components/history";
 
 import "./App.css";
-import Auth from "./components/Auth";
+import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
 import Dashboard from "./containers/Dashboard";
-import BASE_URL from "./api_url";
-
-const USERS_URL = `${BASE_URL}users/`;
+import Landing from "./components/Landing";
+import { getUser } from "./api/User";
+import { getDefaultProject } from "./api/Project";
 
 class App extends Component {
     constructor() {
@@ -24,6 +18,7 @@ class App extends Component {
             displayError: "",
             loggedIn: false,
             loading: false,
+            isDemo: false,
         };
 
         this.getUser = this.getUser.bind(this);
@@ -32,18 +27,12 @@ class App extends Component {
     }
 
     componentDidMount() {
-        window.gapi.load("auth2", () => {
-            window.gapi.auth2.init();
-        });
+        /** Fetch user details if cookies stored */
+        if (Cookies.get("token") && Cookies.get("user_id")) {
+            this.setLoading(true);
+            this.getUser(Cookies.get("user_id"));
+        }
     }
-
-    renderLoginRedirect = () => {
-        return Cookies.get("id_token") ? (
-            this.getUser()
-        ) : (
-            <Redirect to="/login" />
-        );
-    };
 
     isEmpty(obj) {
         for (const key in obj) {
@@ -52,9 +41,9 @@ class App extends Component {
         return true;
     }
 
-    setLoading(boo) {
+    setLoading(bool) {
         this.setState({
-            loading: boo,
+            loading: bool,
         });
     }
 
@@ -65,74 +54,76 @@ class App extends Component {
     handleErrors = (response) => {
         if (!response.ok) {
             this.setState({ displayError: true, loggedIn: false });
-            Cookies.remove("id_token");
+            Cookies.remove("token");
             throw response;
         }
         return response.json();
     };
 
     logOut = () => {
-        const auth2 = window.gapi.auth2.getAuthInstance();
-        auth2.signOut().then(() => {
-            Cookies.remove("id_token");
-            Cookies.remove("email");
-            this.setState({ loggedIn: false });
+        Cookies.remove("token");
+        Cookies.remove("user_id");
+        this.setState({ loggedIn: false });
+    };
+
+    getUser(id) {
+        // TODO: Handle Error
+        getUser(id)
+            .then(this.setCurrentUser)
+            .then(() => this.setLoading(false))
+            .catch((err) => console.log(err));
+    }
+
+    startDemo = async (history) => {
+        const project = await getDefaultProject().catch((err) =>
+            console.log(err)
+        );
+        this.setState({
+            isDemo: true,
+            currentUser: {
+                id: -1,
+                projects: [project],
+            },
+        });
+        history.push({
+            pathname: `/projects/${project.id}`,
+            state: { from: "/" },
         });
     };
 
-    getUser() {
-        const email = Cookies.get("email").toLowerCase();
-        fetch(`${USERS_URL}find`, {
-            method: "PUT",
-            headers: {
-                id_token: Cookies.get("id_token"),
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ email }),
-        })
-            .then((res) => this.handleErrors(res))
-            .then((json) => this.setCurrentUser(json))
-            .catch((error) => {
-                error.text().then((errorMessage) => {
-                    this.setState({ displayError: errorMessage });
-                });
-            });
-    }
-
     render() {
-        const DashboardWithRouter = withRouter(Dashboard);
         return (
-            <Router history={history}>
+            <Router>
+                {this.state.loggedIn ? (
+                    <Redirect to="/projects" />
+                ) : (
+                    <Redirect to="/" />
+                )}
                 <Dimmer active={this.state.loading}>
                     <Loader>Loading</Loader>
                 </Dimmer>
 
-                {!this.state.loggedIn ? (
-                    <Redirect to="/login" />
-                ) : (
-                    <Redirect to="/projects" />
-                )}
-
                 <div className="fill-page">
                     <Route
-                        exact
-                        path="/login"
+                        path="/projects"
                         render={(props) => (
-                            <Auth
+                            <Dashboard
+                                currentUser={this.state.currentUser}
+                                loggedIn={this.state.loggedIn}
+                                logOut={this.logOut}
                                 setCurrentUser={this.setCurrentUser}
-                                setLoading={this.setLoading}
-                                dispalayError={this.state.displayError}
+                                getUser={this.getUser}
+                                isDemo={this.state.isDemo}
                             />
                         )}
                     />
                     <Route
+                        exact
                         path="/"
                         render={(props) => (
-                            <DashboardWithRouter
-                                currentUser={this.state.currentUser}
-                                loggedIn={this.state.loggedIn}
-                                logOut={this.logOut}
-                                history={history}
+                            <Landing
+                                getUser={this.getUser}
+                                startDemo={this.startDemo}
                             />
                         )}
                     />

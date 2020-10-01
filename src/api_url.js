@@ -1,3 +1,4 @@
-const BASE_URL = "https://evening-brook-20328.herokuapp.com/api/v1/";
+const BASE_URL = "https://pacific-castle-49600.herokuapp.com";
+// const BASE_URL = "http://localhost:8000";
 
 export default BASE_URL;

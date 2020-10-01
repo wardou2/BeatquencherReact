@@ -1,0 +1,71 @@
+.landing-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    padding: 2em;
+    padding-bottom: 0;
+    text-align: center;
+
+    background-image: url("/images/landing-background.jpg");
+    background-color: #ffff; /* Used if the image is unavailable */
+
+    background-position: bottom; /* Center the image */
+    background-repeat: no-repeat; /* Do not repeat the image */
+    background-size: 80%; /* Resize the background image to cover the entire container */
+}
+
+.landing-child {
+    flex: 20;
+    margin: 0.5em;
+}
+
+.landing-img-wrapper {
+    flex: 3;
+    align-self: center;
+    margin: 0.5em;
+}
+
+.landing-header {
+    font-size: 5em;
+    padding: 0 1rem;
+    margin-bottom: 1rem;
+    border-radius: 30px;
+    background-color: rgba(255, 255, 255, 0.616);
+}
+
+.landing-img {
+    max-width: 100%;
+    width: auto;
+    height: auto;
+}
+
+.landing-button-wrapper {
+    padding: 0.2em;
+    display: inline-block;
+}
+
+.landing-about-container {
+    flex: 1;
+}
+
+.about-link {
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 18px;
+    color: #3845ff;
+    background-color: rgb(255, 255, 255);
+
+    box-shadow: 0 0 20px 5px rgba(0, 0, 0, 0.144),
+        inset 0 0 0px 1px rgb(168, 168, 168);
+}
+
+.about-link:hover {
+    color: #7780ff;
+}
+
+.about-signature {
+    float: right;
+    padding-bottom: 1em;
+}

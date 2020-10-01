@@ -1,293 +1,248 @@
 import React, { Component } from "react";
-import { Route } from "react-router-dom";
+import { Switch, Route, withRouter } from "react-router-dom";
 import Tone from "tone";
-import { Container } from "semantic-ui-react";
-import Cookies from "js-cookie";
 
 import Navbar from "../components/Navbar";
 import ProjectsList from "./ProjectsList";
 import SceneSelector from "./SceneSelector";
 import ProjectView from "./ProjectView";
 import NewProjectForm from "../components/NewProjectForm";
-import BASE_URL from "../api_url";
 
-export default class Dashboard extends Component {
+import { newProject, saveProject, newScene, saveScene } from "../api/Project";
+
+class Dashboard extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            currentProj: {},
             currentScene: {},
-            toDisplay: "projectSelector",
-            pToDisplay: "",
+            projects: [],
+            currentProjIndex: null,
         };
         this.setCurrentProj = this.setCurrentProj.bind(this);
         this.setCurrentScene = this.setCurrentScene.bind(this);
-        this.conditionalRender = this.conditionalRender.bind(this);
-        this.handleChangeProject = this.handleChangeProject.bind(this);
-        this.startNewProject = this.startNewProject.bind(this);
+        this.handleChangeProj = this.handleChangeProj.bind(this);
         this.newProject = this.newProject.bind(this);
         this.newScene = this.newScene.bind(this);
-        this.handleChangeScene = this.handleChangeScene.bind(this);
-        this.handleToDisplay = this.handleToDisplay.bind(this);
         this.projectWasDeleted = this.projectWasDeleted.bind(this);
+        this.sceneWasDeleted = this.sceneWasDeleted.bind(this);
+        this.sceneWasSaved = this.sceneWasSaved.bind(this);
     }
 
-    startNewProject() {
-        this.setState({
-            toDisplay: "startNewProject",
-            pToDisplay: "projectSelector",
-        });
-    }
-
-    newProject(vals) {
-        fetch(`${BASE_URL}init`, {
-            method: "POST",
-            headers: {
-                id_token: Cookies.get("id_token"),
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                project: {
-                    title: vals.name,
-                    tempo: vals.tempo,
-                    user_id: this.props.currentUser.id,
-                    scene_count: vals.scenes,
-                },
-            }),
-        })
-            .then((res) => res.json())
-            .catch((error) => new Error("Error", error))
-            .then((json) => this.setCurrentProj(json));
-    }
-
-    handleToDisplay(other, resetProj = false) {
-        // let tdCopy = this.state.toDisplay
-        if (resetProj) {
+    componentDidMount() {
+        if (this.props.currentUser.projects) {
+            const projectsCopy = JSON.parse(
+                JSON.stringify(this.props.currentUser.projects)
+            );
+            this.setState({ projects: projectsCopy });
+        }
+        if (this.props.isDemo) {
             this.setState({
-                currentProj: {},
+                currentProjIndex: 0,
             });
         }
-        Tone.Transport.stop();
+    }
+
+    newProject(projectData) {
+        // TODO: Error handle
+        newProject(projectData)
+            .then((project) => {
+                const projectsCopy = this.state.projects;
+                projectsCopy.push(project);
+                this.setState(
+                    {
+                        projects: projectsCopy,
+                        currentProjIndex: projectsCopy.length - 1,
+                    },
+                    () => this.setCurrentProj(this.state.currentProjIndex)
+                );
+            })
+            .catch((err) => console.log(err));
+    }
+
+    projectWasDeleted() {
+        const projectsCopy = this.state.projects;
+        projectsCopy.splice(this.state.currentProjIndex, 1);
         this.setState({
-            toDisplay: this.state.pToDisplay,
-            pToDisplay: other,
+            currentProjIndex: null,
+            projects: projectsCopy,
         });
     }
 
-    projectWasDeleted(path) {
+    setCurrentProj(index) {
         this.setState({
-            toDisplay: path,
-            currentProj: {},
+            currentProjIndex: index,
         });
-    }
-
-    setCurrentProj(proj) {
-        const tdCopy = this.state.toDisplay;
-        this.setState({
-            currentProj: proj,
-            toDisplay: "sceneSelector",
-            pToDisplay: tdCopy,
+        if (index === null) return;
+        const proj = this.state.projects[index];
+        this.props.history.push({
+            pathname: `/projects/${proj.id}`,
+            state: { from: "/projects/" },
         });
-        this.props.history.push("/scenes");
     }
 
     setCurrentScene(scene) {
         Tone.Transport.cancel();
-        const tdCopy = this.state.toDisplay;
         this.setState({
             currentScene: scene,
-            toDisplay: "projectView",
-            pToDisplay: tdCopy,
         });
-        this.props.history.push(
-            `/projects/${this.state.currentProj.id}/${this.state.currentScene.id}`
-        );
-    }
-
-    handleChangeProject(field, value) {
-        const projCopy = this.state.currentProj;
-        if (field[0] === "title") {
-            projCopy[field[0]] = value;
-        } else {
-            projCopy[field[0]] = parseInt(value.value, 10);
-        }
-        this.setState({
-            currentProj: projCopy,
+        this.props.history.push({
+            pathname: `/projects/${
+                this.state.projects[this.state.currentProjIndex].id
+            }/${scene.id}`,
+            state: {
+                from: `/projects/${
+                    this.state.projects[this.state.currentProjIndex].id
+                }`,
+            },
         });
     }
 
-    handleChangeScene(field, value) {
-        const currentSceneCopy = this.state.currentScene;
-        const scenesCopy = this.state.currentProj.scenes;
+    handleChangeProj(field, value, save = false) {
+        const currentProjCopy = this.state.projects[
+            this.state.currentProjIndex
+        ];
+        currentProjCopy[field] = value;
 
-        if (field[0] === "name") {
-            currentSceneCopy[field[0]] = value;
-        }
+        const projectsCopy = this.state.projects;
+        projectsCopy[this.state.currentProjIndex] = currentProjCopy;
 
-        const foundIndex = scenesCopy.findIndex(
-            (scene) => scene.id === currentSceneCopy.id
-        );
-        scenesCopy[foundIndex] = currentSceneCopy;
-
-        const currentProjCopy = this.state.currentProj;
-        currentProjCopy.scenes = scenesCopy;
-
+        save && saveProject({ project: currentProjCopy });
         this.setState({
-            currentScene: currentSceneCopy,
-            currentProj: currentProjCopy,
+            projects: projectsCopy,
         });
     }
 
     saveProject = () => {
-        fetch(`${BASE_URL}projects/${this.state.currentProj.id}`, {
-            method: "PATCH",
-            headers: {
-                id_token: Cookies.get("id_token"),
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                project: {
-                    title: this.state.currentProj.title,
-                    tempo: this.state.currentProj.tempo,
-                },
-            }),
-        });
-    };
-
-    saveScene = () => {
-        fetch(`${BASE_URL}scenes/${this.state.currentScene.id}`, {
-            method: "PATCH",
-            headers: {
-                id_token: Cookies.get("id_token"),
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ scene: this.state.currentScene }),
-        }).then((res) => res.json());
-    };
-
-    newScene(vals) {
-        fetch(`${BASE_URL}scenes`, {
-            method: "POST",
-            headers: {
-                id_token: Cookies.get("id_token"),
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                scene: {
-                    name: vals.name,
-                    project_id: this.state.currentProj.id,
-                },
-            }),
+        saveProject({
+            project: this.state.projects[this.state.currentProjIndex],
         })
-            .then((res) => res.json())
-            .then((json) => {
-                let projCopy = this.state.currentProj;
-                projCopy = {
-                    ...projCopy,
-                    scenes: [...projCopy.scenes, json],
-                    tracks: [...projCopy.tracks, ...json.tracks],
-                };
+            .then((project) => {
+                const projectsCopy = this.state.projects;
+                projectsCopy[this.state.currentProjIndex] = project;
                 this.setState({
-                    currentProj: projCopy,
+                    projects: projectsCopy,
                 });
-            });
+            })
+            .catch((err) => console.log(err));
+    };
+
+    newScene({ name }) {
+        newScene({
+            name,
+            project: this.state.projects[this.state.currentProjIndex].id,
+        }).then((json) => {
+            const currentScenesCopy = [
+                ...this.state.projects[this.state.currentProjIndex].scenes,
+                json,
+            ];
+            this.handleChangeProj("scenes", currentScenesCopy);
+        });
     }
 
-    conditionalRender() {
-        switch (this.state.toDisplay) {
-            case "projectSelector":
-                return (
-                    <ProjectsList
-                        currentUser={this.props.currentUser}
-                        setCurrentProj={this.setCurrentProj}
-                        startNewProject={this.startNewProject}
-                    />
-                );
+    renameScene(sceneId, newName) {
+        let sceneCopy;
+        const scenesCopy = this.currentProj.scenes.map((scene) => {
+            if (scene.id === sceneId) {
+                sceneCopy = JSON.parse(JSON.stringify(scene));
+                sceneCopy.name = newName;
+                return sceneCopy;
+            }
+            return scene;
+        });
 
-            case "sceneSelector":
-                return (
-                    <SceneSelector
-                        currentUser={this.props.currentUser}
-                        currentProj={this.state.currentProj}
-                        setCurrentScene={this.setCurrentScene}
-                        newScene={this.newScene}
-                        handleChangeProject={this.handleChangeProject}
-                        saveProject={this.saveProject}
-                        projectWasDeleted={this.projectWasDeleted}
-                    />
-                );
+        saveScene({ scene: sceneCopy }).catch((err) => console.log(err));
 
-            case "projectView":
-                return (
-                    <ProjectView
-                        currentUser={this.props.currentUser}
-                        currentProj={this.state.currentProj}
-                        currentScene={this.state.currentScene}
-                        handleChangeProject={this.handleChangeProject}
-                        saveProject={this.saveProject}
-                        handleChangeScene={this.handleChangeScene}
-                        saveScene={this.saveScene}
-                    />
-                );
-            case "startNewProject":
-                return <NewProjectForm newProject={this.newProject} />;
-            default:
-                return <span>"Please Log In"</span>;
-        }
+        this.handleChangeProj("scenes", scenesCopy);
+    }
+
+    sceneWasSaved(changedScene) {
+        const scenesCopy = this.currentProj.scenes.map((scene) => {
+            return scene.id === changedScene.id ? changedScene : scene;
+        });
+        this.handleChangeProj("scenes", scenesCopy);
+    }
+
+    sceneWasDeleted(sceneId) {
+        const currentScenesCopy = this.currentProj.scenes.filter(
+            (scene) => scene.id !== sceneId
+        );
+
+        this.handleChangeProj("scenes", currentScenesCopy);
     }
 
     render() {
+        this.currentProj = this.state.projects[this.state.currentProjIndex];
         return (
-            <div>
-                <Navbar
-                    currentProj={this.state.currentProj}
-                    loggedIn={this.props.loggedIn}
-                    logOut={this.props.logOut}
-                    handleToDisplay={this.handleToDisplay}
-                    pToDisplay={this.state.pToDisplay}
-                />
-                <Container textAlign="center" className="main-container">
-                    <Route
-                        exact
-                        path="/projects"
-                        render={(props) => (
-                            <ProjectsList
-                                currentUser={this.props.currentUser}
-                                setCurrentProj={this.setCurrentProj}
-                                startNewProject={this.startNewProject}
-                            />
-                        )}
+            <>
+                <div className="main-container">
+                    <Navbar
+                        currentProj={this.currentProj}
+                        loggedIn={this.props.loggedIn}
+                        logOut={this.props.logOut}
+                        getUser={this.props.getUser}
                     />
-                    <Route
-                        path="/scenes"
-                        render={(props) => (
-                            <SceneSelector
-                                currentUser={this.props.currentUser}
-                                currentProj={this.state.currentProj}
-                                setCurrentScene={this.setCurrentScene}
-                                newScene={this.newScene}
-                                handleChangeProject={this.handleChangeProject}
-                                saveProject={this.saveProject}
-                                projectWasDeleted={this.projectWasDeleted}
+                    <div className="hero-image">
+                        <Switch>
+                            <Route
+                                path={`/projects/${this.currentProj?.id}/${this.state.currentScene.id}`}
+                                render={(props) => (
+                                    <ProjectView
+                                        currentUser={this.props.currentUser}
+                                        currentProj={this.currentProj}
+                                        currentScene={this.state.currentScene}
+                                        saveProject={this.saveProject}
+                                        handleChangeScene={
+                                            this.handleChangeScene
+                                        }
+                                        handleChangeProj={this.handleChangeProj}
+                                        loggedIn={this.props.loggedIn}
+                                        sceneWasSaved={this.sceneWasSaved}
+                                    />
+                                )}
                             />
-                        )}
-                    />
-                    <Route
-                        path={`/projects/${this.state.currentProj.id}/${this.state.currentScene.id}`}
-                        render={(props) => (
-                            <ProjectView
-                                currentUser={this.props.currentUser}
-                                currentProj={this.state.currentProj}
-                                currentScene={this.state.currentScene}
-                                handleChangeProject={this.handleChangeProject}
-                                saveProject={this.saveProject}
-                                handleChangeScene={this.handleChangeScene}
-                                saveScene={this.saveScene}
+                            <Route
+                                exact
+                                path="/projects/new"
+                                render={() => (
+                                    <NewProjectForm
+                                        newProject={this.newProject}
+                                    />
+                                )}
                             />
-                        )}
-                    />
-                </Container>
-            </div>
+                            <Route
+                                path={`/projects/${this.currentProj?.id}`}
+                                render={(props) => (
+                                    <SceneSelector
+                                        currentProj={this.currentProj}
+                                        setCurrentScene={this.setCurrentScene}
+                                        newScene={this.newScene}
+                                        handleChangeProj={this.handleChangeProj}
+                                        saveProject={this.saveProject}
+                                        projectWasDeleted={
+                                            this.projectWasDeleted
+                                        }
+                                        loggedIn={this.props.loggedIn}
+                                        renameScene={this.renameScene}
+                                        sceneWasDeleted={this.sceneWasDeleted}
+                                    />
+                                )}
+                            />
+                            <Route
+                                path="/projects"
+                                render={(props) => (
+                                    <ProjectsList
+                                        projects={this.state.projects}
+                                        setCurrentProj={this.setCurrentProj}
+                                        startNewProject={this.startNewProject}
+                                    />
+                                )}
+                            />
+                        </Switch>
+                    </div>
+                </div>
+            </>
         );
     }
 }
+
+export default withRouter(Dashboard);

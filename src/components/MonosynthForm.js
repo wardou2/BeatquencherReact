@@ -1,52 +1,54 @@
 import React, { Component } from "react";
-import { Form, Dropdown, Divider, Header } from "semantic-ui-react";
+import { Dropdown } from "semantic-ui-react";
+
+import ChannelSlider from "./ChannelSlider";
 
 const oscTypeOptions = [
     {
         key: "sine",
-        text: "Sine Wave",
+        text: "Sine",
         value: "sine",
         image: { avatar: true, src: "/images/sine.jpg" },
     },
     {
         key: "square",
-        text: "Square Wave",
+        text: "Square",
         value: "square",
         image: { avatar: true, src: "/images/square.jpg" },
     },
     {
         key: "triangle",
-        text: "Triangle Wave",
+        text: "Triangle",
         value: "triangle",
         image: { avatar: true, src: "/images/triangle.jpg" },
     },
     {
         key: "sawtooth",
-        text: "Sawtooth Wave",
+        text: "Sawtooth",
         value: "sawtooth",
         image: { avatar: true, src: "/images/sawtooth.jpg" },
     },
     {
         key: "fmsine",
-        text: "FM Sine Wave",
+        text: "FM Sine",
         value: "fmsine",
         image: { avatar: true, src: "/images/sine.jpg" },
     },
     {
         key: "fmsquare",
-        text: "FM Square Wave",
+        text: "FM Square",
         value: "fmsquare",
         image: { avatar: true, src: "/images/square.jpg" },
     },
     {
         key: "fmtriangle",
-        text: "FM Triangle Wave",
+        text: "FM Triangle",
         value: "fmtriangle",
         image: { avatar: true, src: "/images/triangle.jpg" },
     },
     {
         key: "fmsawtooth",
-        text: "FM Sawtooth Wave",
+        text: "FM Sawtooth",
         value: "fmsawtooth",
         image: { avatar: true, src: "/images/sawtooth.jpg" },
     },
@@ -59,7 +61,7 @@ export default class MonosynthForm extends Component {
         this.handleChange = this.handleChange.bind(this);
     }
 
-    handleChange(e, field, { value }) {
+    handleChange(field, value) {
         this.props.handleChangeInstrument(
             this.props.currentIns.id,
             field,
@@ -69,126 +71,135 @@ export default class MonosynthForm extends Component {
 
     render() {
         return (
-            <Form>
-                <div className="dropdown-div">
-                    <Header as="h4">Oscillator Source</Header>
+            <div className="instrument-form">
+                <div className="instrument-form--column">
+                    <h3>Oscillator Source</h3>
                     <Dropdown
                         value={this.props.currentIns.options.oscillator.type}
                         fluid
                         selection
                         options={oscTypeOptions}
                         onChange={(e, { value }) =>
-                            this.handleChange(e, ["oscillator", "type"], {
-                                value,
-                            })
+                            this.handleChange(["oscillator", "type"], value)
                         }
                     />
                 </div>
-                <Divider />
-                <Header as="h3">Envelope</Header>
-                <Form.Group widths="equal">
-                    <Form.Input
+
+                <div className="instrument-form--column">
+                    <h3>Envelope</h3>
+                    <ChannelSlider
                         label={`Attack: ${this.props.currentIns.options.envelope.attack}s `}
                         min={0.001}
                         max={3}
                         name="attack"
-                        onChange={(e, { value }) =>
-                            this.handleChange(e, ["envelope", "attack"], {
-                                value,
-                            })
+                        callback={(e) =>
+                            this.handleChange(
+                                ["envelope", "attack"],
+                                e.target.value
+                            )
                         }
                         step={0.001}
                         type="range"
                         value={this.props.currentIns.options.envelope.attack}
+                        classes="instrument-control-slider"
                     />
-                    <Form.Input
+                    <ChannelSlider
                         label={`Decay: ${this.props.currentIns.options.envelope.decay}s `}
                         min={0.001}
                         max={3}
                         name="decay"
-                        onChange={(e, { value }) =>
-                            this.handleChange(e, ["envelope", "decay"], {
-                                value,
-                            })
+                        callback={(e) =>
+                            this.handleChange(
+                                ["envelope", "decay"],
+                                e.target.value
+                            )
                         }
                         step={0.001}
                         type="range"
                         value={this.props.currentIns.options.envelope.decay}
+                        classes="instrument-control-slider"
                     />
-                    <Form.Input
+                    <ChannelSlider
                         label={`Sustain: ${this.props.currentIns.options.envelope.sustain} `}
                         min={0.001}
                         max={0.99}
                         name="sustain"
-                        onChange={(e, { value }) =>
-                            this.handleChange(e, ["envelope", "sustain"], {
-                                value,
-                            })
+                        callback={(e) =>
+                            this.handleChange(
+                                ["envelope", "sustain"],
+                                e.target.value
+                            )
                         }
                         step={0.001}
                         type="range"
                         value={this.props.currentIns.options.envelope.sustain}
+                        classes="instrument-control-slider"
                     />
-                    <Form.Input
+                    <ChannelSlider
                         label={`Release: ${this.props.currentIns.options.envelope.release}s `}
                         min={0.001}
                         max={3}
                         name="release"
-                        onChange={(e, { value }) =>
-                            this.handleChange(e, ["envelope", "release"], {
-                                value,
-                            })
+                        callback={(e) =>
+                            this.handleChange(
+                                ["envelope", "release"],
+                                e.target.value
+                            )
                         }
                         step={0.001}
                         type="range"
                         value={this.props.currentIns.options.envelope.release}
+                        classes="instrument-control-slider"
                     />
-                </Form.Group>
-                <Divider />
-                <Header as="h3">Filter Envelope</Header>
-                <Form.Group widths="equal">
-                    <Form.Input
+                </div>
+
+                <div className="instrument-form--column">
+                    <h3>Filter Envelope</h3>
+                    <ChannelSlider
                         label={`Attack: ${this.props.currentIns.options.filterEnvelope.attack}s `}
                         min={0.001}
                         max={3}
                         name="attack"
-                        onChange={(e, { value }) =>
-                            this.handleChange(e, ["filterEnvelope", "attack"], {
-                                value,
-                            })
+                        callback={(e) =>
+                            this.handleChange(
+                                ["filterEnvelope", "attack"],
+                                e.target.value
+                            )
                         }
                         step={0.001}
                         type="range"
                         value={
                             this.props.currentIns.options.filterEnvelope.attack
                         }
+                        classes="instrument-control-slider"
                     />
-                    <Form.Input
+                    <ChannelSlider
                         label={`Decay: ${this.props.currentIns.options.filterEnvelope.decay}s `}
                         min={0.001}
                         max={3}
                         name="decay"
-                        onChange={(e, { value }) =>
-                            this.handleChange(e, ["filterEnvelope", "decay"], {
-                                value,
-                            })
+                        callback={(e) =>
+                            this.handleChange(
+                                ["filterEnvelope", "decay"],
+                                e.target.value
+                            )
                         }
                         step={0.001}
                         type="range"
                         value={
                             this.props.currentIns.options.filterEnvelope.decay
                         }
+                        classes="instrument-control-slider"
                     />
-                    <Form.Input
+                    <ChannelSlider
                         label={`Sustain: ${this.props.currentIns.options.filterEnvelope.sustain} `}
                         min={0.001}
                         max={0.99}
                         name="sustain"
-                        onChange={(e, { value }) =>
+                        callback={(e) =>
                             this.handleChange(
-                                e,
                                 ["filterEnvelope", "sustain"],
-                                { value }
+                                e.target.value
                             )
                         }
                         step={0.001}
@@ -196,17 +207,17 @@ export default class MonosynthForm extends Component {
                         value={
                             this.props.currentIns.options.filterEnvelope.sustain
                         }
+                        classes="instrument-control-slider"
                     />
-                    <Form.Input
+                    <ChannelSlider
                         label={`Release: ${this.props.currentIns.options.filterEnvelope.release}s `}
                         min={0.001}
                         max={3}
                         name="release"
-                        onChange={(e, { value }) =>
+                        callback={(e) =>
                             this.handleChange(
-                                e,
                                 ["filterEnvelope", "release"],
-                                { value }
+                                e.target.value
                             )
                         }
                         step={0.001}
@@ -214,9 +225,10 @@ export default class MonosynthForm extends Component {
                         value={
                             this.props.currentIns.options.filterEnvelope.release
                         }
+                        classes="instrument-control-slider"
                     />
-                </Form.Group>
-            </Form>
+                </div>
+            </div>
         );
     }
 }
