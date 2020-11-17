@@ -97,8 +97,8 @@ export default class Channel extends Component {
                                 }
                                 className={
                                     this.props.instrument.options.mute
-                                        ? "channel-button--mute channel-button--mute--active"
-                                        : "channel-button--mute"
+                                        ? "channel-button channel-button--active"
+                                        : "channel-button"
                                 }
                             >
                                 M
@@ -112,8 +112,8 @@ export default class Channel extends Component {
                                 className={
                                     this.props.instrument.id ===
                                     this.props.soloInstrument
-                                        ? "channel-button--mute channel-button--mute--active"
-                                        : "channel-button--mute"
+                                        ? "channel-button channel-button--active"
+                                        : "channel-button"
                                 }
                             >
                                 S

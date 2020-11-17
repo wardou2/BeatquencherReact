@@ -89,7 +89,7 @@
     min-width: 15em;
 }
 
-.channel-button--mute {
+.channel-button {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -105,27 +105,27 @@
         inset -2px -2px 2px 0px rgb(153, 153, 153) !important;
 }
 
-.channel-button--mute:hover {
+.channel-button:hover {
     box-shadow: inset -1px -1px 2px 0px rgb(189, 189, 189),
         inset 2px 2px 2px 0px rgb(153, 153, 153) !important;
 }
 
-.channel-button--mute:active {
+.channel-button:active {
     background-color: rgb(134, 134, 134);
 }
 
-.channel-button--mute--active {
+.channel-button--active {
     color: white;
     background-color: rgb(66, 66, 66);
     box-shadow: inset -1px -1px 2px 0px rgb(94, 94, 94),
         inset 2px 2px 2px 0px rgb(46, 46, 46) !important;
 }
 
-.channel-button--mute--active:hover {
+.channel-button--active:hover {
     box-shadow: inset 1px 1px 2px 0px rgb(94, 94, 94),
         inset -2px -2px 2px 0px rgb(46, 46, 46) !important;
 }
 
-.channel-button--mute--active:active {
+.channel-button--active:active {
     background-color: rgb(78, 78, 78);
 }
