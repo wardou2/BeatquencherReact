@@ -21,6 +21,8 @@ export default class SequencerChannels extends Component {
                     currentIns={this.props.currentIns}
                     isPlaying={this.props.isPlaying}
                     currentCount={this.props.currentCount}
+                    handleSolo={this.props.handleSolo}
+                    soloInstrument={this.props.soloInstrument}
                 />
             );
         });

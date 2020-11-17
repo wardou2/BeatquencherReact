@@ -100,6 +100,19 @@ export default class Channel extends Component {
                         >
                             M
                         </div>
+                        <div
+                            onClick={() =>
+                                this.props.handleSolo(this.props.instrument.id)
+                            }
+                            className={
+                                this.props.instrument.id ===
+                                this.props.soloInstrument
+                                    ? "channel-button--mute channel-button--mute--active"
+                                    : "channel-button--mute"
+                            }
+                        >
+                            S
+                        </div>
                     </div>
                 </div>
                 <div className="sequencer-channel--cell">

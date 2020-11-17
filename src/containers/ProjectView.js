@@ -19,6 +19,7 @@ export default class ProjectView extends Component {
             count: 0,
             editingTempo: false,
             isModified: false,
+            soloInstrument: null,
         };
         this.setCurrentIns = this.setCurrentIns.bind(this);
         this.song = this.song.bind(this);
@@ -30,6 +31,7 @@ export default class ProjectView extends Component {
         this.handleChangeEffect = this.handleChangeEffect.bind(this);
         this.handleMute = this.handleMute.bind(this);
         this.saveAll = this.saveAll.bind(this);
+        this.handleSolo = this.handleSolo.bind(this);
     }
 
     componentDidMount() {
@@ -339,6 +341,19 @@ export default class ProjectView extends Component {
         );
     }
 
+    handleSolo(insId) {
+        const instrumentsCopy = [...this.state.instruments];
+        instrumentsCopy.forEach((instrument) => {
+            this[`ins${instrument.id}vol`].mute = instrument.id !== insId;
+        });
+
+        this.setState({
+            instruments: instrumentsCopy,
+            isModified: true,
+            soloInstrument: insId,
+        });
+    }
+
     playInstruments() {
         this.setState({
             playing: !this.state.playing,
@@ -384,6 +399,8 @@ export default class ProjectView extends Component {
                     currentIns={this.state.currentIns}
                     isPlaying={this.state.playing}
                     currentCount={this.counter}
+                    handleSolo={this.handleSolo}
+                    soloInstrument={this.state.soloInstrument}
                 />
                 {!this.isEmpty(this.state.currentIns) && (
                     <InstrumentControls
