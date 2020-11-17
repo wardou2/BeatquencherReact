@@ -321,6 +321,9 @@ export default class ProjectView extends Component {
     }
 
     handleMute(insId) {
+        // If an instrument is Solo'd, we don't want a user to be able to
+        // re-activate the volume on other instruments
+        if (this.state.soloInstrument) return;
         const instrumentsCopy = [...this.state.instruments];
         const instrument = this.state.instruments.filter(
             (ins) => ins.id === insId
@@ -341,17 +344,32 @@ export default class ProjectView extends Component {
         );
     }
 
+    /**
+     * @param insId The id of the instrument to be soloed. Mutes all other
+     * instruments WITHOUT modifying their mute property in state.
+     */
     handleSolo(insId) {
-        const instrumentsCopy = [...this.state.instruments];
-        instrumentsCopy.forEach((instrument) => {
-            this[`ins${instrument.id}vol`].mute = instrument.id !== insId;
-        });
+        if (this.state.soloInstrument === insId) {
+            // Turn off Solo
+            const instrumentsCopy = [...this.state.instruments];
+            instrumentsCopy.forEach((instrument) => {
+                this[`ins${instrument.id}vol`].mute = instrument.options.mute;
+            });
 
-        this.setState({
-            instruments: instrumentsCopy,
-            isModified: true,
-            soloInstrument: insId,
-        });
+            this.setState({
+                soloInstrument: null,
+            });
+        } else {
+            // Turn on Solo
+            const instrumentsCopy = [...this.state.instruments];
+            instrumentsCopy.forEach((instrument) => {
+                this[`ins${instrument.id}vol`].mute = instrument.id !== insId;
+            });
+
+            this.setState({
+                soloInstrument: insId,
+            });
+        }
     }
 
     playInstruments() {
