@@ -88,30 +88,36 @@ export default class Channel extends Component {
                 <div className="sequencer-channel--cell">
                     <div className="channel-cell--name">
                         <h4>{this.props.instrument.name}</h4>
-                        <div
-                            onClick={() =>
-                                this.props.handleMute(this.props.instrument.id)
-                            }
-                            className={
-                                this.props.instrument.options.mute
-                                    ? "channel-button--mute channel-button--mute--active"
-                                    : "channel-button--mute"
-                            }
-                        >
-                            M
-                        </div>
-                        <div
-                            onClick={() =>
-                                this.props.handleSolo(this.props.instrument.id)
-                            }
-                            className={
-                                this.props.instrument.id ===
-                                this.props.soloInstrument
-                                    ? "channel-button--mute channel-button--mute--active"
-                                    : "channel-button--mute"
-                            }
-                        >
-                            S
+                        <div className="channel-cell--name--buttons">
+                            <div
+                                onClick={() =>
+                                    this.props.handleMute(
+                                        this.props.instrument.id
+                                    )
+                                }
+                                className={
+                                    this.props.instrument.options.mute
+                                        ? "channel-button--mute channel-button--mute--active"
+                                        : "channel-button--mute"
+                                }
+                            >
+                                M
+                            </div>
+                            <div
+                                onClick={() =>
+                                    this.props.handleSolo(
+                                        this.props.instrument.id
+                                    )
+                                }
+                                className={
+                                    this.props.instrument.id ===
+                                    this.props.soloInstrument
+                                        ? "channel-button--mute channel-button--mute--active"
+                                        : "channel-button--mute"
+                                }
+                            >
+                                S
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -44,6 +44,11 @@
     align-items: center;
 }
 
+.channel-cell--name--buttons {
+    display: flex;
+    padding: 1px;
+}
+
 .selected-channel {
     background: rgba(171, 205, 239, 0.3);
 }
