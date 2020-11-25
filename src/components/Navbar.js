@@ -8,6 +8,13 @@ import StyledButton from "./StyledButton";
 import "../styles/navbar.css";
 
 class Navbar extends Component {
+    constructor(props) {
+        super();
+        this.state = {
+            isFirefox: typeof InstallTrigger !== "undefined",
+        };
+    }
+
     isEmpty = (obj) => {
         for (const key in obj) {
             if (Object.prototype.hasOwnProperty.call(obj, key)) return false;
@@ -57,7 +64,24 @@ class Navbar extends Component {
     render() {
         return (
             <div className="navbar">
-                <div className="navbar-links">{this.getRoute()}</div>
+                <div className="navbar-links">
+                    {this.getRoute()}
+                    {this.state.isFirefox && (
+                        <div className="navbar-warning">
+                            <h5>Warning:</h5>
+                            This web app is sluggish on Firefox due to its
+                            implementation of the Web Audio API. See{" "}
+                            <a
+                                href="https://github.com/Tonejs/Tone.js/issues/534"
+                                rel="noopener noreferrer"
+                                target="_blank"
+                            >
+                                this github issue.
+                            </a>
+                        </div>
+                    )}
+                </div>
+
                 <div className="navbar-title">
                     <h1 className="glow">
                         {!this.isEmpty(this.props.currentProj)

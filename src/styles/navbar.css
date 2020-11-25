@@ -11,8 +11,21 @@
     color: #777777;
     font-size: 1.5em;
     flex: 1;
-    text-align: left;
+    text-align: center;
     margin-left: 0.5em;
+
+    display: flex;
+}
+
+.navbar-warning {
+    border-radius: 1em;
+    padding: 1em;
+
+    color: #ffffff;
+    background-color: #ff4949;
+    margin-left: 1em;
+
+    font-size: 0.7em;
 }
 
 .navbar-title {
