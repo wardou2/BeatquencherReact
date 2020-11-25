@@ -66,20 +66,7 @@ class Navbar extends Component {
             <div className="navbar">
                 <div className="navbar-links">
                     {this.getRoute()}
-                    {this.state.isFirefox && (
-                        <div className="navbar-warning">
-                            <h5>Warning:</h5>
-                            This web app is sluggish on Firefox due to its
-                            implementation of the Web Audio API. See{" "}
-                            <a
-                                href="https://github.com/Tonejs/Tone.js/issues/534"
-                                rel="noopener noreferrer"
-                                target="_blank"
-                            >
-                                this github issue.
-                            </a>
-                        </div>
-                    )}
+                    {this.state.isFirefox && <BrowserWarning />}
                 </div>
 
                 <div className="navbar-title">
@@ -99,5 +86,22 @@ class Navbar extends Component {
         );
     }
 }
+
+const BrowserWarning = () => (
+    <div className="navbar-warning">
+        <div style={{ fontWeight: "bold" }}>Warning:</div>
+        <span>
+            Due to Firefox's implementation of the Web Audio API, this app may
+            be sluggish. See{" "}
+            <a
+                href="https://github.com/Tonejs/Tone.js/issues/534"
+                rel="noopener noreferrer"
+                target="_blank"
+            >
+                this github issue.
+            </a>
+        </span>
+    </div>
+);
 
 export default withRouter(Navbar);
