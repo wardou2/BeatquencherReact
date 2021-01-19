@@ -19,14 +19,10 @@
 }
 
 .navbar-warning {
-    border-radius: 1em;
-    padding: 1em;
-
-    color: #ffffff;
-    background-color: #ff4949;
-    margin-left: 1em;
-
-    font-size: 0.7em;
+    color: #ff4949;
+    margin-left: 0.1em;
+    font-size: 1.4em;
+    cursor: pointer;
 }
 
 .navbar-title {

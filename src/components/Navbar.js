@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { Component } from "react";
-import { Icon } from "semantic-ui-react";
+import { Icon, Popup } from "semantic-ui-react";
 import { withRouter } from "react-router-dom";
 import Login from "./Login";
 import StyledButton from "./StyledButton";
@@ -64,16 +64,14 @@ class Navbar extends Component {
     render() {
         return (
             <div className="navbar">
-                <div className="navbar-links">
-                    {this.getRoute()}
-                    {this.state.isFirefox && <BrowserWarning />}
-                </div>
+                <div className="navbar-links">{this.getRoute()}</div>
 
                 <div className="navbar-title">
                     <h1 className="glow">
                         {!this.isEmpty(this.props.currentProj)
                             ? this.props.currentProj.title
                             : "BEATQUENCHER"}
+                        {this.state.isFirefox && <BrowserWarning />}
                     </h1>
                 </div>
                 <div
@@ -87,21 +85,27 @@ class Navbar extends Component {
     }
 }
 
-const BrowserWarning = () => (
-    <div className="navbar-warning">
-        <div style={{ fontWeight: "bold" }}>Warning:</div>
-        <span>
-            Due to Firefox's implementation of the Web Audio API, this app may
-            be sluggish. See{" "}
-            <a
-                href="https://github.com/Tonejs/Tone.js/issues/534"
-                rel="noopener noreferrer"
-                target="_blank"
-            >
-                this github issue.
-            </a>
-        </span>
-    </div>
-);
+const BrowserWarning = () => {
+    return (
+        <Popup
+            hoverable
+            header={"Warning:"}
+            content={
+                <span>
+                    Due to Firefox's implementation of the Web Audio API, this
+                    app may be sluggish. See{" "}
+                    <a
+                        href="https://github.com/Tonejs/Tone.js/issues/534"
+                        rel="noopener noreferrer"
+                        target="_blank"
+                    >
+                        this github issue.
+                    </a>
+                </span>
+            }
+            trigger={<span className="navbar-warning">*</span>}
+        />
+    );
+};
 
 export default withRouter(Navbar);
