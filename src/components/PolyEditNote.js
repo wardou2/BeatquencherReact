@@ -10,9 +10,17 @@ export default class PolyEditNote extends Component {
             notes: props.currentNote || [],
             active: true,
             showError: false,
-            octave: 3,
+            octave: this.getOctave(props.currentNote),
         };
     }
+
+    getOctave = (notes) => {
+        if (notes) {
+            const octaves = notes.map((note) => parseInt(note.slice(-1), 10));
+            return Math.min(...octaves);
+        }
+        return 3;
+    };
 
     handleClick = (note) => {
         let notesCopy = [...this.state.notes];
@@ -42,9 +50,11 @@ export default class PolyEditNote extends Component {
 
     errorMessage = () => {
         return (
-            <Message negative>
-                <Message.Header>Only 4 notes allowed.</Message.Header>
-            </Message>
+            <div>
+                <Message negative compact>
+                    <Message.Header>Only 4 notes allowed.</Message.Header>
+                </Message>
+            </div>
         );
     };
 
@@ -96,8 +106,8 @@ export default class PolyEditNote extends Component {
     render() {
         return (
             <div>
-                {this.state.showError && this.errorMessage()}
                 <div style={{ textAlign: "center" }}>
+                    {this.state.showError && this.errorMessage()}
                     {this.octaveButtons()}
                 </div>
                 <Keyboard
