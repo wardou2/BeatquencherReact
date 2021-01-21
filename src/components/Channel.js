@@ -90,6 +90,7 @@ export default class Channel extends Component {
                         <h4>{this.props.instrument.name}</h4>
                         <div className="channel-cell--name--buttons">
                             <div
+                                title="Mute"
                                 onClick={() =>
                                     this.props.handleMute(
                                         this.props.instrument.id
@@ -104,6 +105,7 @@ export default class Channel extends Component {
                                 M
                             </div>
                             <div
+                                title="Solo"
                                 onClick={() =>
                                     this.props.handleSolo(
                                         this.props.instrument.id
