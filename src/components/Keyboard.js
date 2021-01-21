@@ -18,7 +18,6 @@ const notesList = [
 ];
 
 const Keyboard = ({ octave, activeNotes, handleClick }) => {
-    console.log(activeNotes);
     const getKeyClass = (note, black = false) => {
         let className = black ? "black-key" : "key";
         if (activeNotes.includes(note)) {
@@ -38,7 +37,7 @@ const Keyboard = ({ octave, activeNotes, handleClick }) => {
                     keyboard.push(
                         <li
                             className={getKeyClass(note)}
-                            key={x + i}
+                            key={note}
                             onClick={() => {
                                 handleClick(note);
                             }}
@@ -51,7 +50,7 @@ const Keyboard = ({ octave, activeNotes, handleClick }) => {
                     keyboard.push(
                         <li
                             className={getKeyClass(note)}
-                            key={x + i}
+                            key={note}
                             onClick={(e) => {
                                 handleClick(note);
                             }}
