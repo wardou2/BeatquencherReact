@@ -29,7 +29,7 @@ const Keyboard = ({ octave, activeNotes, handleClick }) => {
     const renderKeys = () => {
         const keyboard = [];
         // Render two octaves
-        for (let x = 0; x < 2; x++) {
+        for (let x = 0; x < 2; x += 1) {
             let i = 0;
             while (i < notesList.length) {
                 if (notesList[i] === "E" || notesList[i] === "B") {

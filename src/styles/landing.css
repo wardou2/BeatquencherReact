@@ -7,7 +7,7 @@
     padding-bottom: 0;
     text-align: center;
 
-    background-image: url("/images/landing-background.jpg");
+    background-image: url("../images/landing-background.jpg");
     background-color: #ffff; /* Used if the image is unavailable */
 
     background-position: bottom; /* Center the image */

@@ -13,8 +13,8 @@ body {
 .hero-image {
     overflow-y: auto;
     flex: 1;
-    background-image: url("/images/record-corner-right.png"),
-        url("/images/record-corner-left.png");
+    background-image: url("./images/record-corner-right.png"),
+        url("./images/record-corner-left.png");
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: 20em;
@@ -89,12 +89,10 @@ h5 {
 }
 
 .close-btn {
-    display: inline-block;
     float: right;
 }
 
 .fake-close-btn {
-    display: inline-block;
     float: left;
     color: rgba(0, 0, 0, 0%);
 }
@@ -113,7 +111,6 @@ h5 {
 }
 
 .float-left {
-    display: inline-block;
     float: left;
 }
 

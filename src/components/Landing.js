@@ -5,6 +5,7 @@ import Login from "./Login";
 import StyledButton from "./StyledButton";
 import AboutModal from "./AboutModal";
 
+import "../images/landing-background.jpg";
 import "../styles/landing.css";
 
 const Landing = ({ getUser, startDemo, history }) => {
