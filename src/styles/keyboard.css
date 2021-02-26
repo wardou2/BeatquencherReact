@@ -28,6 +28,10 @@ ul .key {
     color: #555555;
 }
 
+ul .key:hover {
+    box-shadow: 0px 1px 2px #666, inset 0px 3px 5px #555555;
+}
+
 ul .key-active {
     box-shadow: inset 0px 0px 10px 10px #5d67ff !important;
 }
@@ -36,17 +40,22 @@ ul .key:last-child {
     border-right: 1px solid black;
 }
 ul .black-key {
-    position: absolute;
-    top: -1px;
+    position: relative;
+    top: -180px;
     left: 37.5px;
     width: 45px;
     height: 120px;
     background: black;
     border-radius: 5px;
     box-shadow: 0px 3px 5px #666;
+    cursor: pointer;
     z-index: 999;
     display: flex;
     justify-content: center;
     align-items: flex-end;
     padding-bottom: 10px;
+}
+
+ul .black-key:hover {
+    box-shadow: 0px 1px 2px #666, inset 0px 3px 5px #bebebe;
 }

@@ -78,20 +78,22 @@ const KeyboardContinuous = ({ activeNotes, handleClick }) => {
                     const note = `${notesList[i]}${x}`;
                     const noteSharp = `${notesList[i + 1]}${x}`;
                     keyboard.push(
-                        <li
-                            className={getKeyClass(note)}
-                            key={note}
-                            onClick={(e) => {
-                                handleClick(note);
-                            }}
-                            ref={
-                                note === highestNote ||
-                                noteSharp === highestNote
-                                    ? highestNoteRef
-                                    : null
-                            }
-                        >
-                            {notesList[i] === "C" ? note : ""}
+                        <li>
+                            <div
+                                className={getKeyClass(note)}
+                                key={note}
+                                onClick={(e) => {
+                                    handleClick(note);
+                                }}
+                                ref={
+                                    note === highestNote ||
+                                    noteSharp === highestNote
+                                        ? highestNoteRef
+                                        : null
+                                }
+                            >
+                                {notesList[i] === "C" ? note : ""}
+                            </div>
                             <div
                                 className={getKeyClass(noteSharp, true)}
                                 onClick={(e) => {
