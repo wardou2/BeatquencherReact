@@ -28,17 +28,16 @@ const KeyboardContinuous = ({ activeNotes, handleClick }) => {
     };
 
     const getHighestNote = (notes) => {
+        let highest = "C0";
         if (notes) {
-            let highest = "C0";
             notes.forEach((note) => {
                 const octave = parseInt(note.slice(-1), 10);
                 if (octave > parseInt(highest.slice(-1), 10)) {
                     highest = note;
                 }
             });
-            return highest;
         }
-        return "C4";
+        return highest === "C0" ? "C4" : highest;
     };
 
     const highestNoteRef = useRef(null);
