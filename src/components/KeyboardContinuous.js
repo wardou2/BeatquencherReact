@@ -16,7 +16,7 @@ const notesList = [
     "A#",
     "B",
 ];
-const OCTAVES = 6;
+const OCTAVES = 8;
 
 const KeyboardContinuous = ({ activeNotes, handleClick }) => {
     const getKeyClass = (note, black = false) => {
@@ -38,7 +38,7 @@ const KeyboardContinuous = ({ activeNotes, handleClick }) => {
             });
             return highest;
         }
-        return "C3";
+        return "C4";
     };
 
     const highestNoteRef = useRef(null);
@@ -55,24 +55,42 @@ const KeyboardContinuous = ({ activeNotes, handleClick }) => {
         });
     }, []);
 
+    const Key = ({ note, black = false }) => {
+        return (
+            <div
+                className={getKeyClass(note, black)}
+                key={note}
+                onClick={() => {
+                    handleClick(note);
+                }}
+                ref={note === highestNote ? highestNoteRef : null}
+            >
+                <div>{note}</div>
+            </div>
+        );
+    };
+
     const renderKeys = () => {
         const keyboard = [];
-
-        for (let x = 0; x < OCTAVES; x += 1) {
+        keyboard.push(
+            <li key="A0">
+                <Key note="A0" />
+                <Key note="A#0" black />
+            </li>
+        );
+        keyboard.push(
+            <li key="B0">
+                <Key note="B0" />
+            </li>
+        );
+        for (let x = 1; x < OCTAVES; x += 1) {
             let i = 0;
             while (i < notesList.length) {
                 if (notesList[i] === "E" || notesList[i] === "B") {
                     const note = `${notesList[i]}${x}`;
                     keyboard.push(
-                        <li
-                            className={getKeyClass(note)}
-                            key={note}
-                            onClick={() => {
-                                handleClick(note);
-                            }}
-                            ref={note === highestNote ? highestNoteRef : null}
-                        >
-                            <div>{note}</div>
+                        <li key={note}>
+                            <Key note={note} />
                         </li>
                     );
                     i += 1;
@@ -81,39 +99,19 @@ const KeyboardContinuous = ({ activeNotes, handleClick }) => {
                     const noteSharp = `${notesList[i + 1]}${x}`;
                     keyboard.push(
                         <li key={note}>
-                            <div
-                                className={getKeyClass(note)}
-                                onClick={(e) => {
-                                    handleClick(note);
-                                }}
-                                ref={
-                                    note === highestNote ||
-                                    noteSharp === highestNote
-                                        ? highestNoteRef
-                                        : null
-                                }
-                            >
-                                <div>{note}</div>
-                            </div>
-                            <div
-                                className={getKeyClass(noteSharp, true)}
-                                onClick={(e) => {
-                                    if (e) {
-                                        e.cancelBubble = true;
-                                        if (e.stopPropagation)
-                                            e.stopPropagation();
-                                    }
-                                    handleClick(noteSharp);
-                                }}
-                            >
-                                <div>{noteSharp}</div>
-                            </div>
+                            <Key note={note} />
+                            <Key note={noteSharp} black />
                         </li>
                     );
                     i += 2;
                 }
             }
         }
+        keyboard.push(
+            <li key="C8">
+                <Key note="C8" />
+            </li>
+        );
         return keyboard;
     };
 
