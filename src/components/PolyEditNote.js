@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, Radio, Message } from "semantic-ui-react";
+import { Button, Message, Confirm } from "semantic-ui-react";
 
 import KeyboardContinuous from "./KeyboardContinuous";
 
@@ -8,8 +8,8 @@ export default class PolyEditNote extends Component {
         super(props);
         this.state = {
             notes: props.currentNote || [],
-            active: true,
             showError: false,
+            open: false,
         };
     }
 
@@ -49,8 +49,18 @@ export default class PolyEditNote extends Component {
         );
     };
 
-    handleSubmit = () => {
-        this.props.chooseNotes(this.state.notes, this.state.active);
+    showModal = () => {
+        this.setState({ open: true });
+    };
+
+    hideModal = () => {
+        this.setState({ open: false });
+    };
+
+    handleClear = () => {
+        this.setState({ open: false, notes: [] }, () =>
+            this.props.chooseNotes(this.state.notes, false)
+        );
     };
 
     render() {
@@ -63,16 +73,24 @@ export default class PolyEditNote extends Component {
                     activeNotes={this.state.notes}
                     handleClick={this.handleClick}
                 />
-                <Radio
-                    className="float-left"
-                    label="Active"
-                    toggle
-                    checked={this.state.active}
-                    onClick={this.toggleActive}
-                />
-                <Button type="submit" onClick={this.handleSubmit}>
+                <Button className="float-left" onClick={this.showModal}>
+                    Clear Notes
+                </Button>
+                <Button
+                    type="submit"
+                    onClick={() =>
+                        this.props.chooseNotes(this.state.notes, true)
+                    }
+                >
                     Done
                 </Button>
+                <Confirm
+                    open={this.state.open}
+                    onCancel={this.hideModal}
+                    onConfirm={this.handleClear}
+                    content="Are you sure you want to clear notes?"
+                    size="mini"
+                />
             </div>
         );
     }

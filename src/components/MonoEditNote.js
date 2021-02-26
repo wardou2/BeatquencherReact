@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, Radio } from "semantic-ui-react";
+import { Button } from "semantic-ui-react";
 
 import KeyboardContinuous from "./KeyboardContinuous";
 
@@ -8,7 +8,6 @@ export default class MonoEditNote extends Component {
         super(props);
         this.state = {
             note: props.currentNote || "",
-            active: true,
         };
     }
 
@@ -25,29 +24,15 @@ export default class MonoEditNote extends Component {
     };
 
     handleSubmit = () => {
-        this.props.chooseNotes(this.state.note, this.state.active);
-    };
-
-    toggleActive = () => {
-        this.setState({
-            active: !this.state.active,
-        });
+        this.props.chooseNotes(this.state.note, true);
     };
 
     render() {
         return (
             <div>
-                {this.state.showError && this.errorMessage()}
                 <KeyboardContinuous
                     activeNotes={[this.state.note]}
                     handleClick={this.handleClick}
-                />
-                <Radio
-                    className="float-left"
-                    label="Active"
-                    toggle
-                    checked={this.state.active}
-                    onClick={this.toggleActive}
                 />
                 <Button type="submit" onClick={this.handleSubmit}>
                     Done

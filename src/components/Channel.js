@@ -31,12 +31,12 @@ export default class Channel extends Component {
         }
     }
 
-    chooseNotes(note, active) {
+    chooseNotes(note, hide = false) {
         const notesCopy = this.props.track.notes;
-        notesCopy[this.state.currentI] = active ? note : "";
+        notesCopy[this.state.currentI] = note;
 
         this.props.updateTrack(notesCopy, this.props.track.id);
-        this.turnShowOff();
+        hide && this.turnShowOff();
     }
 
     toggleCell(i, instrument) {

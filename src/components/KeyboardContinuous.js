@@ -80,10 +80,9 @@ const KeyboardContinuous = ({ activeNotes, handleClick }) => {
                     const note = `${notesList[i]}${x}`;
                     const noteSharp = `${notesList[i + 1]}${x}`;
                     keyboard.push(
-                        <li>
+                        <li key={note}>
                             <div
                                 className={getKeyClass(note)}
-                                key={note}
                                 onClick={(e) => {
                                     handleClick(note);
                                 }}
