@@ -42,7 +42,10 @@ export default class PolyEditNote extends Component {
     errorMessage = () => {
         return (
             <div>
-                <Message negative compact>
+                <Message
+                    negative
+                    onDismiss={() => this.setState({ showError: false })}
+                >
                     <Message.Header>Only 4 notes allowed.</Message.Header>
                 </Message>
             </div>

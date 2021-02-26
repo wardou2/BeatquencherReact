@@ -72,13 +72,13 @@ const KeyboardContinuous = ({ activeNotes, handleClick }) => {
     const renderKeys = () => {
         const keyboard = [];
         keyboard.push(
-            <li key="A0">
+            <li key="A0" className="key-container">
                 <Key note="A0" />
                 <Key note="A#0" black />
             </li>
         );
         keyboard.push(
-            <li key="B0">
+            <li key="B0" className="key-container">
                 <Key note="B0" />
             </li>
         );
@@ -88,7 +88,7 @@ const KeyboardContinuous = ({ activeNotes, handleClick }) => {
                 if (notesList[i] === "E" || notesList[i] === "B") {
                     const note = `${notesList[i]}${x}`;
                     keyboard.push(
-                        <li key={note}>
+                        <li key={note} className="key-container">
                             <Key note={note} />
                         </li>
                     );
@@ -97,7 +97,7 @@ const KeyboardContinuous = ({ activeNotes, handleClick }) => {
                     const note = `${notesList[i]}${x}`;
                     const noteSharp = `${notesList[i + 1]}${x}`;
                     keyboard.push(
-                        <li key={note}>
+                        <li key={note} className="key-container">
                             <Key note={note} />
                             <Key note={noteSharp} black />
                         </li>
@@ -115,9 +115,9 @@ const KeyboardContinuous = ({ activeNotes, handleClick }) => {
     };
 
     return (
-        <div className="keyboard-container" ref={containerRef}>
-            <ul>{[...renderKeys()]}</ul>
-        </div>
+        <ul className="keyboard-container" ref={containerRef}>
+            {[...renderKeys()]}
+        </ul>
     );
 };
 

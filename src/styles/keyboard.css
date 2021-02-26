@@ -1,13 +1,20 @@
 .keyboard-container {
     display: flex;
-    align-items: center;
-    min-height: 30vh;
-    overflow: auto;
+    min-height: 15vh;
+    overflow-x: auto;
+    overflow-y: hidden;
+    border: 1px solid black;
+    box-shadow: 0px 3px 5px #666;
+    border-radius: 5px;
 }
 
 .keyboard-container ul {
-    list-style: none;
     display: flex;
+}
+
+.key-container {
+    height: 200px;
+    list-style: none;
 }
 
 ul .key {
@@ -45,7 +52,7 @@ ul .key-active {
 }
 
 ul .key-active div {
-    display: block;
+    display: block !important;
 }
 
 ul .key:last-child {
