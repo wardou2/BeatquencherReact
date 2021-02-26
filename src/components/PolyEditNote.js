@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import { Button, Radio, Message, Icon, Label } from "semantic-ui-react";
+import { Button, Radio, Message } from "semantic-ui-react";
 
-import Keyboard from "./Keyboard";
+import KeyboardContinuous from "./KeyboardContinuous";
 
 export default class PolyEditNote extends Component {
     constructor(props) {
@@ -10,17 +10,8 @@ export default class PolyEditNote extends Component {
             notes: props.currentNote || [],
             active: true,
             showError: false,
-            octave: this.getOctave(props.currentNote),
         };
     }
-
-    getOctave = (notes) => {
-        if (notes) {
-            const octaves = notes.map((note) => parseInt(note.slice(-1), 10));
-            return Math.min(...octaves);
-        }
-        return 3;
-    };
 
     handleClick = (note) => {
         let notesCopy = [...this.state.notes];
@@ -62,56 +53,13 @@ export default class PolyEditNote extends Component {
         this.props.chooseNotes(this.state.notes, this.state.active);
     };
 
-    octaveButtons = () => {
-        return (
-            <Label size="medium">
-                Octaves:
-                <Label.Detail as="a">
-                    <Icon
-                        name="arrow left"
-                        onClick={() => this.changeOctave({ up: false })}
-                    />
-                </Label.Detail>
-                <Label.Detail>
-                    {this.state.octave}-{this.state.octave + 1}
-                </Label.Detail>
-                <Label.Detail as="a">
-                    <Icon
-                        name="arrow right"
-                        onClick={() => this.changeOctave({ up: true })}
-                    />
-                </Label.Detail>
-            </Label>
-        );
-    };
-
-    changeOctave = ({ up }) => {
-        if (up) {
-            if (this.state.octave === 5) return;
-
-            this.setState((prevState) => ({
-                ...prevState,
-                octave: prevState.octave + 1,
-            }));
-            return;
-        }
-        if (this.state.octave === 0) return;
-
-        this.setState((prevState) => ({
-            ...prevState,
-            octave: prevState.octave - 1,
-        }));
-    };
-
     render() {
         return (
             <div>
                 <div style={{ textAlign: "center" }}>
                     {this.state.showError && this.errorMessage()}
-                    {this.octaveButtons()}
                 </div>
-                <Keyboard
-                    octave={this.state.octave}
+                <KeyboardContinuous
                     activeNotes={this.state.notes}
                     handleClick={this.handleClick}
                 />

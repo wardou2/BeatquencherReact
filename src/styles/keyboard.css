@@ -1,8 +1,8 @@
 .keyboard-container {
     display: flex;
-    justify-content: center;
     align-items: center;
     min-height: 30vh;
+    overflow: auto;
 }
 
 .keyboard-container ul {
@@ -25,6 +25,7 @@ ul .key {
     align-items: flex-end;
     padding-bottom: 10px;
     font-weight: bold;
+    color: #555555;
 }
 
 ul .key-active {
@@ -48,5 +49,4 @@ ul .black-key {
     justify-content: center;
     align-items: flex-end;
     padding-bottom: 10px;
-    color: white;
 }
