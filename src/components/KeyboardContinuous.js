@@ -71,7 +71,9 @@ const KeyboardContinuous = ({ activeNotes, handleClick }) => {
                                 handleClick(note);
                             }}
                             ref={note === highestNote ? highestNoteRef : null}
-                        ></li>
+                        >
+                            <div>{note}</div>
+                        </li>
                     );
                     i += 1;
                 } else {
@@ -92,7 +94,7 @@ const KeyboardContinuous = ({ activeNotes, handleClick }) => {
                                         : null
                                 }
                             >
-                                {notesList[i] === "C" ? note : ""}
+                                <div>{note}</div>
                             </div>
                             <div
                                 className={getKeyClass(noteSharp, true)}
@@ -104,7 +106,9 @@ const KeyboardContinuous = ({ activeNotes, handleClick }) => {
                                     }
                                     handleClick(noteSharp);
                                 }}
-                            ></div>
+                            >
+                                <div>{noteSharp}</div>
+                            </div>
                         </li>
                     );
                     i += 2;

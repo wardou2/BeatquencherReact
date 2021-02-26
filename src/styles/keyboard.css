@@ -32,8 +32,20 @@ ul .key:hover {
     box-shadow: 0px 1px 2px #666, inset 0px 3px 5px #555555;
 }
 
+ul .key div {
+    display: none;
+}
+
+ul .key:hover div {
+    display: block;
+}
+
 ul .key-active {
     box-shadow: inset 0px 0px 10px 10px #5d67ff !important;
+}
+
+ul .key-active div {
+    display: block;
 }
 
 ul .key:last-child {
@@ -54,8 +66,17 @@ ul .black-key {
     justify-content: center;
     align-items: flex-end;
     padding-bottom: 10px;
+    color: #fffff0;
 }
 
 ul .black-key:hover {
     box-shadow: 0px 1px 2px #666, inset 0px 3px 5px #bebebe;
+}
+
+ul .black-key div {
+    display: none;
+}
+
+ul .black-key:hover div {
+    display: block;
 }
