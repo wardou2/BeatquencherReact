@@ -42,7 +42,7 @@ const KeyboardContinuous = ({ activeNotes, handleClick }) => {
 
     const highestNoteRef = useRef(null);
     const containerRef = useRef(null);
-    const [highestNote] = useState(getHighestNote(activeNotes));
+    const [highestNote] = useState(() => getHighestNote(activeNotes));
 
     useEffect(() => {
         const offsetLeft = highestNoteRef.current?.offsetLeft;
