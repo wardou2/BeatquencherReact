@@ -2,55 +2,56 @@ import React, { Component } from "react";
 import { Dropdown } from "semantic-ui-react";
 
 import ChannelSlider from "./ChannelSlider";
+import { sine, square, triangle, sawtooth } from "../images";
 
 const oscTypeOptions = [
     {
         key: "sine",
         text: "Sine Wave",
         value: "sine",
-        image: { avatar: true, src: "/images/sine.jpg" },
+        image: { avatar: true, src: sine },
     },
     {
         key: "square",
         text: "Square Wave",
         value: "square",
-        image: { avatar: true, src: "/images/square.jpg" },
+        image: { avatar: true, src: square },
     },
     {
         key: "triangle",
         text: "Triangle Wave",
         value: "triangle",
-        image: { avatar: true, src: "/images/triangle.jpg" },
+        image: { avatar: true, src: triangle },
     },
     {
         key: "sawtooth",
         text: "Sawtooth Wave",
         value: "sawtooth",
-        image: { avatar: true, src: "/images/sawtooth.jpg" },
+        image: { avatar: true, src: sawtooth },
     },
     {
         key: "fmsine",
         text: "FM Sine Wave",
         value: "fmsine",
-        image: { avatar: true, src: "/images/sine.jpg" },
+        image: { avatar: true, src: sine },
     },
     {
         key: "fmsquare",
         text: "FM Square Wave",
         value: "fmsquare",
-        image: { avatar: true, src: "/images/square.jpg" },
+        image: { avatar: true, src: square },
     },
     {
         key: "fmtriangle",
         text: "FM Triangle Wave",
         value: "fmtriangle",
-        image: { avatar: true, src: "/images/triangle.jpg" },
+        image: { avatar: true, src: triangle },
     },
     {
         key: "fmsawtooth",
         text: "FM Sawtooth Wave",
         value: "fmsawtooth",
-        image: { avatar: true, src: "/images/sawtooth.jpg" },
+        image: { avatar: true, src: sawtooth },
     },
 ];
 
