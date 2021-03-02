@@ -64,7 +64,6 @@ export default class ProjectView extends Component {
                 scene: currentScene,
             },
             () => {
-                this.counter = 0;
                 const masterCompressor = new Tone.Compressor({
                     threshold: -20,
                     ratio: 12,
@@ -93,7 +92,7 @@ export default class ProjectView extends Component {
     }
 
     song(time) {
-        const step = this.counter % 16;
+        const step = this.state.count % 16;
         this.state.instruments.forEach((ins) => {
             const track = this.state.scene.tracks.find((t) => {
                 return t.instrument === ins.id;
@@ -123,7 +122,6 @@ export default class ProjectView extends Component {
         this.setState({
             count: this.state.count + 1,
         });
-        this.counter += 1;
     }
 
     setCurrentIns(ins) {
@@ -373,11 +371,13 @@ export default class ProjectView extends Component {
     }
 
     playInstruments() {
-        this.setState({
-            playing: !this.state.playing,
-        });
-        Tone.Transport.toggle();
-        this.counter = 0;
+        this.setState(
+            {
+                playing: !this.state.playing,
+                count: 0,
+            },
+            () => Tone.Transport.start()
+        );
     }
 
     saveAll() {
@@ -416,7 +416,7 @@ export default class ProjectView extends Component {
                     updateTrack={this.updateTrack}
                     currentIns={this.state.currentIns}
                     isPlaying={this.state.playing}
-                    currentCount={this.counter}
+                    currentCount={this.state.count}
                     handleSolo={this.handleSolo}
                     soloInstrument={this.state.soloInstrument}
                 />
