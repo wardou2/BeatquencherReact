@@ -18,10 +18,10 @@ const notesList = [
 ];
 const OCTAVES = 8;
 
-const KeyboardContinuous = ({ activeNotes, handleClick }) => {
+const KeyboardContinuous = ({ activeNotes, handleClick, live }) => {
     const getKeyClass = (note, black = false) => {
         let className = black ? "black-key" : "key";
-        if (activeNotes.includes(note)) {
+        if (activeNotes?.includes(note)) {
             className += " key-active";
         }
         return className;
@@ -54,14 +54,28 @@ const KeyboardContinuous = ({ activeNotes, handleClick }) => {
         });
     }, []);
 
+    // Keyboard binding
+    const logKey = (e) => {
+        console.log(e);
+    };
+
+    useEffect(() => {
+        document.addEventListener("keydown", logKey, false);
+        return () => document.removeEventListener("keydown", logKey, false);
+    }, []);
+
     const Key = ({ note, black = false }) => {
         return (
             <div
                 className={getKeyClass(note, black)}
                 key={note}
                 onClick={() => {
-                    handleClick(note);
+                    !live && handleClick(note);
                 }}
+                onMouseDown={(e) => live && handleClick(e, note)}
+                onMouseUp={(e) => live && handleClick(e, note)}
+                onMouseLeave={(e) => live && handleClick(e, note)}
+                onMouseEnter={(e) => live && handleClick(e, note)}
                 ref={note === highestNote ? highestNoteRef : null}
             >
                 <div>{note}</div>
@@ -115,7 +129,7 @@ const KeyboardContinuous = ({ activeNotes, handleClick }) => {
     };
 
     return (
-        <ul className="keyboard-container" ref={containerRef}>
+        <ul className="keyboard-container" ref={containerRef} tabIndex="0">
             {[...renderKeys()]}
         </ul>
     );
