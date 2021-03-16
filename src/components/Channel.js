@@ -3,6 +3,7 @@ import Sequencer from "./Sequencer";
 import "../index.css";
 import EditNoteModal from "./EditNoteModal";
 import ChannelSlider from "./ChannelSlider";
+import Keyboard from "./Keyboard";
 
 export default class Channel extends Component {
     constructor(props) {
@@ -120,6 +121,23 @@ export default class Channel extends Component {
                             >
                                 S
                             </div>
+                            {this.props.instrument.melodic && (
+                                <div
+                                    title="Play Live"
+                                    onClick={() =>
+                                        this.props.toggleLive(
+                                            this.props.instrument.id
+                                        )
+                                    }
+                                    className={
+                                        this.props.live
+                                            ? "channel-button channel-button--large channel-button--active"
+                                            : "channel-button channel-button--large"
+                                    }
+                                >
+                                    Play Live
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -138,21 +156,27 @@ export default class Channel extends Component {
                     />
                 </div>
                 <div className="sequencer-channel--notes">
-                    <Sequencer
-                        toggleCell={this.toggleCell}
-                        instrument={this.props.instrument}
-                        currentScene={this.props.currentScene}
-                        track={this.props.track}
-                        currentCount={this.props.currentCount}
-                        isPlaying={this.props.isPlaying}
-                    />
-                    <EditNoteModal
-                        show={this.state.showModal}
-                        turnShowOff={this.turnShowOff}
-                        ins_type={this.props.instrument.ins_type}
-                        chooseNotes={this.chooseNotes}
-                        currentNote={this.state.currentNote}
-                    />
+                    {this.props.live ? (
+                        <Keyboard playNote={this.props.playNote} />
+                    ) : (
+                        <>
+                            <Sequencer
+                                toggleCell={this.toggleCell}
+                                instrument={this.props.instrument}
+                                currentScene={this.props.currentScene}
+                                track={this.props.track}
+                                currentCount={this.props.currentCount}
+                                isPlaying={this.props.isPlaying}
+                            />
+                            <EditNoteModal
+                                show={this.state.showModal}
+                                turnShowOff={this.turnShowOff}
+                                ins_type={this.props.instrument.ins_type}
+                                chooseNotes={this.chooseNotes}
+                                currentNote={this.state.currentNote}
+                            />
+                        </>
+                    )}
                 </div>
             </div>
         );

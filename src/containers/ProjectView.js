@@ -20,6 +20,7 @@ export default class ProjectView extends Component {
             editingTempo: false,
             isModified: false,
             soloInstrument: null,
+            liveId: null,
         };
         this.setCurrentIns = this.setCurrentIns.bind(this);
         this.song = this.song.bind(this);
@@ -95,6 +96,7 @@ export default class ProjectView extends Component {
     song(time) {
         const step = this.counter % 16;
         this.state.instruments.forEach((ins) => {
+            if (this.state.liveId === ins.id) return;
             const track = this.state.scene.tracks.find((t) => {
                 return t.instrument === ins.id;
             });
@@ -372,6 +374,34 @@ export default class ProjectView extends Component {
         }
     }
 
+    toggleLive = (id) => {
+        if (this.state.liveId === id) {
+            this.setState({
+                liveId: null,
+            });
+        } else {
+            this.setState({
+                liveId: id,
+            });
+        }
+    };
+
+    playNote = (noteEvent) => {
+        const { note, type } = noteEvent;
+
+        switch (type) {
+            case "attack":
+                this[`ins${this.state.liveId}`].triggerAttack(note);
+                break;
+            case "release":
+                this[`ins${this.state.liveId}`].triggerRelease();
+                this[`ins${this.state.liveId}`].triggerRelease(note);
+                break;
+            default:
+                break;
+        }
+    };
+
     playInstruments() {
         this.setState({
             playing: !this.state.playing,
@@ -419,6 +449,9 @@ export default class ProjectView extends Component {
                     currentCount={this.counter}
                     handleSolo={this.handleSolo}
                     soloInstrument={this.state.soloInstrument}
+                    liveId={this.state.liveId}
+                    toggleLive={this.toggleLive}
+                    playNote={this.playNote}
                 />
                 {!this.isEmpty(this.state.currentIns) && (
                     <InstrumentControls

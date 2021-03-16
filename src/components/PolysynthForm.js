@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Dropdown } from "semantic-ui-react";
 
 import ChannelSlider from "./ChannelSlider";
+
 import { sine, square, triangle, sawtooth } from "../images";
 
 const oscTypeOptions = [

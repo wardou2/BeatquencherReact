@@ -1,46 +1,45 @@
 :host {
-  display: inline-block;
-          width: 100%;
-          height: 500px;
+    display: inline-block;
+    width: 100%;
+    height: 500px;
 }
 
-
 .container {
-  width: 100%;
+    width: 100%;
 
-  display: table;
+    display: table;
 }
 
 .column {
-  color: red;
-  flex: 1;
-  display: table-cell;
-  flex-direction: column;
+    color: red;
+    flex: 1;
+    display: table-cell;
+    flex-direction: column;
 }
 
 .column.highlight {
-  background-color: red;
+    background-color: red;
 }
 
 .column.highlight .row {
-  transition-duration: 0.4s;
+    transition-duration: 0.4s;
 }
 
 .column.highlight .row.filled {
-  transition: background-color 0.1s;
+    transition: background-color 0.1s;
 }
 
 .column.highlight .row.filled {
-  background-color: red;
+    background-color: red;
 }
 
 .row {
-  flex: 1;
-          margin: 1px;
-          background-color: gray;
-          transition: background-color 0s;
+    flex: 1;
+    margin: 1px;
+    background-color: gray;
+    transition: background-color 0s;
 }
 
 .row.filled {
-  background-color: teal;
+    background-color: teal;
 }
