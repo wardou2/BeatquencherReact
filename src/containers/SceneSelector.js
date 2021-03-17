@@ -124,7 +124,7 @@ export default class SceneSelector extends Component {
                         value={this.state.title}
                         onChange={this.handleChange}
                     />
-
+                    <input type="submit" style={{ display: "none" }} />
                     <Button
                         negative
                         onClick={() => this.toggleShowModal("project")}
