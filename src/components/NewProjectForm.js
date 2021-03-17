@@ -1,7 +1,8 @@
 import React, { Component } from "react";
-import { Form, Button, Segment } from "semantic-ui-react";
+import { withRouter } from "react-router-dom";
+import { Form, Button, Segment, Icon } from "semantic-ui-react";
 
-export default class NewProjectForm extends Component {
+class NewProjectForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -22,6 +23,12 @@ export default class NewProjectForm extends Component {
         return (
             <div className="new-project-form-container">
                 <Segment className="new-project-form">
+                    <div style={{ alignSelf: "flex-end", cursor: "pointer" }}>
+                        <Icon
+                            name="close"
+                            onClick={() => this.props.history.goBack()}
+                        />
+                    </div>
                     <Form onSubmit={this.handleSubmit}>
                         <h2>New Project</h2>
                         <Form.Input
@@ -46,3 +53,5 @@ export default class NewProjectForm extends Component {
         );
     }
 }
+
+export default withRouter(NewProjectForm);

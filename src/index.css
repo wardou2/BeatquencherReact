@@ -170,6 +170,8 @@ h5 {
 
 .new-project-form {
     width: 20%;
+    display: flex;
+    flex-direction: column;
 }
 
 .edit-note--octave-buttons {
