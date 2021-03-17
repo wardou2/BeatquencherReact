@@ -3,54 +3,56 @@ import { Dropdown } from "semantic-ui-react";
 
 import ChannelSlider from "./ChannelSlider";
 
+import { sine, square, triangle, sawtooth } from "../images";
+
 const oscTypeOptions = [
     {
         key: "sine",
         text: "Sine",
         value: "sine",
-        image: { avatar: true, src: "/images/sine.jpg" },
+        image: { avatar: true, src: sine },
     },
     {
         key: "square",
         text: "Square",
         value: "square",
-        image: { avatar: true, src: "/images/square.jpg" },
+        image: { avatar: true, src: square },
     },
     {
         key: "triangle",
         text: "Triangle",
         value: "triangle",
-        image: { avatar: true, src: "/images/triangle.jpg" },
+        image: { avatar: true, src: triangle },
     },
     {
         key: "sawtooth",
         text: "Sawtooth",
         value: "sawtooth",
-        image: { avatar: true, src: "/images/sawtooth.jpg" },
+        image: { avatar: true, src: sawtooth },
     },
     {
         key: "fmsine",
         text: "FM Sine",
         value: "fmsine",
-        image: { avatar: true, src: "/images/sine.jpg" },
+        image: { avatar: true, src: sine },
     },
     {
         key: "fmsquare",
         text: "FM Square",
         value: "fmsquare",
-        image: { avatar: true, src: "/images/square.jpg" },
+        image: { avatar: true, src: square },
     },
     {
         key: "fmtriangle",
         text: "FM Triangle",
         value: "fmtriangle",
-        image: { avatar: true, src: "/images/triangle.jpg" },
+        image: { avatar: true, src: triangle },
     },
     {
         key: "fmsawtooth",
         text: "FM Sawtooth",
         value: "fmsawtooth",
-        image: { avatar: true, src: "/images/sawtooth.jpg" },
+        image: { avatar: true, src: sawtooth },
     },
 ];
 

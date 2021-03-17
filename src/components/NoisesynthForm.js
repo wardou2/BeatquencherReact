@@ -4,25 +4,26 @@ import { Dropdown } from "semantic-ui-react";
 import ChannelSlider from "./ChannelSlider";
 
 import "../styles/instrument-form.css";
+import { brown, pink, white } from "../images";
 
 const noiseTypeOptions = [
     {
         key: "white",
         text: "White",
         value: "white",
-        image: { avatar: true, src: "/images/white.jpg" },
+        image: { avatar: true, src: white },
     },
     {
         key: "brown",
         text: "Brown",
         value: "brown",
-        image: { avatar: true, src: "/images/brown.jpg" },
+        image: { avatar: true, src: brown },
     },
     {
         key: "pink",
         text: "Pink",
         value: "pink",
-        image: { avatar: true, src: "/images/pink.jpg" },
+        image: { avatar: true, src: pink },
     },
 ];
 
