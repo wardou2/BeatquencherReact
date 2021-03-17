@@ -12,10 +12,6 @@ export default class ProjectsList extends Component {
         this.handleClick = this.handleClick.bind(this);
     }
 
-    componentDidMount() {
-        this.props.setCurrentProj(null);
-    }
-
     isEmpty(obj) {
         for (const key in obj) {
             if (Object.prototype.hasOwnProperty.call(obj, key)) return false;

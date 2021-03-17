@@ -46,7 +46,9 @@ class Dashboard extends Component {
         // TODO: Error handle
         newProject(projectData)
             .then((project) => {
-                const projectsCopy = this.state.projects;
+                const projectsCopy = JSON.parse(
+                    JSON.stringify(this.state.projects)
+                );
                 projectsCopy.push(project);
                 this.setState(
                     {
@@ -60,11 +62,12 @@ class Dashboard extends Component {
     }
 
     projectWasDeleted() {
-        const projectsCopy = this.state.projects;
-        projectsCopy.splice(this.state.currentProjIndex, 1);
-        this.setState({
-            currentProjIndex: null,
-            projects: projectsCopy,
+        this.setState((prev) => {
+            prev.projects.splice(prev.currentProjIndex, 1);
+            return {
+                currentProjIndex: null,
+                projects: prev.projects,
+            };
         });
     }
 
