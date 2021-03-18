@@ -8,6 +8,7 @@ export default class PolyEditNote extends Component {
         super(props);
         this.state = {
             notes: props.currentNote || [],
+            notesOld: props.currentNote,
             showError: false,
             open: false,
         };
@@ -22,10 +23,15 @@ export default class PolyEditNote extends Component {
                 notesCopy.push(note);
             }
 
-            this.setState({
-                notes: notesCopy,
-                showError: false,
-            });
+            this.setState(
+                {
+                    notes: notesCopy,
+                    showError: false,
+                },
+                () => {
+                    this.props.chooseNotes(this.state.notes);
+                }
+            );
         } else {
             this.setState({
                 showError: true,
@@ -78,6 +84,13 @@ export default class PolyEditNote extends Component {
                 />
                 <Button className="float-left" onClick={this.showModal}>
                     Clear Notes
+                </Button>
+                <Button
+                    onClick={() =>
+                        this.props.chooseNotes(this.state.notesOld, true)
+                    }
+                >
+                    Cancel
                 </Button>
                 <Button
                     type="submit"

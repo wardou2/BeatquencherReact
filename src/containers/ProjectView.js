@@ -309,7 +309,7 @@ export default class ProjectView extends Component {
 
     updateTrack(notes, id) {
         const tracksCopy = [...this.state.scene.tracks];
-        const index = tracksCopy.indexOf((t) => t.id === id);
+        const index = tracksCopy.findIndex((t) => t.id === id);
         if (index >= 0) {
             tracksCopy[index].notes = notes;
         }

@@ -33,7 +33,7 @@ export default class Channel extends Component {
     }
 
     chooseNotes(note, hide = false) {
-        const notesCopy = this.props.track.notes;
+        const notesCopy = [...this.props.track.notes];
         notesCopy[this.state.currentI] = note;
 
         this.props.updateTrack(notesCopy, this.props.track.id);
