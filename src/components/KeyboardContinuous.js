@@ -18,7 +18,7 @@ const notesList = [
 ];
 const OCTAVES = 8;
 
-const KeyboardContinuous = ({ activeNotes, handleClick, live }) => {
+const KeyboardContinuous = ({ activeNotes, handleClick }) => {
     const getKeyClass = (note, black = false) => {
         let className = black ? "black-key" : "key";
         if (activeNotes?.includes(note)) {
@@ -27,25 +27,25 @@ const KeyboardContinuous = ({ activeNotes, handleClick, live }) => {
         return className;
     };
 
-    const getHighestNote = (notes) => {
-        let highest = "C0";
+    const getLowestNote = (notes) => {
+        let lowest = "C8";
         if (notes) {
             notes.forEach((note) => {
                 const octave = parseInt(note.slice(-1), 10);
-                if (octave > parseInt(highest.slice(-1), 10)) {
-                    highest = note;
+                if (octave < parseInt(lowest.slice(-1), 10)) {
+                    lowest = note;
                 }
             });
         }
-        return highest === "C0" ? "C4" : highest;
+        return lowest === "C8" ? "C4" : lowest;
     };
 
-    const highestNoteRef = useRef(null);
+    const lowestNoteRef = useRef(null);
     const containerRef = useRef(null);
-    const [highestNote] = useState(() => getHighestNote(activeNotes));
+    const [highestNote] = useState(() => getLowestNote(activeNotes));
 
     useEffect(() => {
-        const offsetLeft = highestNoteRef.current?.offsetLeft;
+        const offsetLeft = lowestNoteRef.current?.offsetLeft;
         const containerWidth = containerRef.current?.clientWidth;
 
         containerRef.current?.scrollTo({
@@ -54,29 +54,15 @@ const KeyboardContinuous = ({ activeNotes, handleClick, live }) => {
         });
     }, []);
 
-    // Keyboard binding
-    const logKey = (e) => {
-        console.log(e);
-    };
-
-    useEffect(() => {
-        document.addEventListener("keydown", logKey, false);
-        return () => document.removeEventListener("keydown", logKey, false);
-    }, []);
-
     const Key = ({ note, black = false }) => {
         return (
             <div
                 className={getKeyClass(note, black)}
                 key={note}
                 onClick={() => {
-                    !live && handleClick(note);
+                    handleClick(note);
                 }}
-                onMouseDown={(e) => live && handleClick(e, note)}
-                onMouseUp={(e) => live && handleClick(e, note)}
-                onMouseLeave={(e) => live && handleClick(e, note)}
-                onMouseEnter={(e) => live && handleClick(e, note)}
-                ref={note === highestNote ? highestNoteRef : null}
+                ref={note === highestNote ? lowestNoteRef : null}
             >
                 <div>{note}</div>
             </div>
