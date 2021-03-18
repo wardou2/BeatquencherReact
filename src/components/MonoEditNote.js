@@ -7,34 +7,41 @@ export default class MonoEditNote extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            note: props.currentNote || "",
+            note: [props.currentNote] || [""],
+            noteOld: [props.currentNote],
         };
     }
 
     handleClick = (note) => {
-        if (this.state.note === note) {
-            this.setState({
-                note: "",
-            });
-        } else {
-            this.setState({
-                note,
-            });
-        }
+        this.setState((prev) => ({
+            note: prev.note[0] === note ? [""] : [note],
+        }));
     };
 
     handleSubmit = () => {
-        this.props.chooseNotes(this.state.note, true);
+        this.props.chooseNotes(this.state.note[0], true);
     };
 
     render() {
         return (
             <div>
                 <KeyboardContinuous
-                    activeNotes={[this.state.note]}
+                    activeNotes={this.state.note}
                     handleClick={this.handleClick}
                 />
-                <Button type="submit" onClick={this.handleSubmit}>
+                <Button
+                    onClick={() => {
+                        this.props.chooseNotes(this.state.noteOld[0], true);
+                    }}
+                >
+                    Cancel
+                </Button>
+                <Button
+                    type="submit"
+                    onClick={() => {
+                        this.props.chooseNotes(this.state.note[0], true);
+                    }}
+                >
                     Done
                 </Button>
             </div>
