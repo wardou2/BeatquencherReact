@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 
 import "../styles/keyboard.css";
 
@@ -19,14 +19,6 @@ const notesList = [
 const OCTAVES = 8;
 
 const KeyboardContinuous = ({ activeNotes, handleClick }) => {
-    const getKeyClass = (note, black = false) => {
-        let className = black ? "black-key" : "key";
-        if (activeNotes?.includes(note)) {
-            className += " key-active";
-        }
-        return className;
-    };
-
     const getLowestNote = (notes) => {
         let lowest = "C8";
         if (notes) {
@@ -42,7 +34,7 @@ const KeyboardContinuous = ({ activeNotes, handleClick }) => {
 
     const lowestNoteRef = useRef(null);
     const containerRef = useRef(null);
-    const [highestNote] = useState(() => getLowestNote(activeNotes));
+    const [lowestNote] = useState(() => getLowestNote(activeNotes));
 
     useEffect(() => {
         const offsetLeft = lowestNoteRef.current?.offsetLeft;
@@ -54,22 +46,30 @@ const KeyboardContinuous = ({ activeNotes, handleClick }) => {
         });
     }, []);
 
-    const Key = ({ note, black = false }) => {
-        return (
-            <div
-                className={getKeyClass(note, black)}
-                key={note}
-                onClick={() => {
-                    handleClick(note);
-                }}
-                ref={note === highestNote ? lowestNoteRef : null}
-            >
-                <div>{note}</div>
-            </div>
-        );
-    };
+    const renderKeys = useMemo(() => {
+        const getKeyClass = (note, black = false) => {
+            let className = black ? "black-key" : "key";
+            if (activeNotes?.includes(note)) {
+                className += " key-active";
+            }
+            return className;
+        };
 
-    const renderKeys = () => {
+        const Key = ({ note, black = false }) => {
+            return (
+                <div
+                    className={getKeyClass(note, black)}
+                    key={note}
+                    onClick={() => {
+                        handleClick(note);
+                    }}
+                    ref={note === lowestNote ? lowestNoteRef : null}
+                >
+                    <div>{note}</div>
+                </div>
+            );
+        };
+
         const keyboard = [];
         keyboard.push(
             <li key="A0" className="key-container">
@@ -112,11 +112,11 @@ const KeyboardContinuous = ({ activeNotes, handleClick }) => {
             </li>
         );
         return keyboard;
-    };
+    }, [activeNotes, handleClick, lowestNote]);
 
     return (
         <ul className="keyboard-container" ref={containerRef} tabIndex="0">
-            {[...renderKeys()]}
+            {renderKeys}
         </ul>
     );
 };
