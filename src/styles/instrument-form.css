@@ -10,3 +10,31 @@
 
     text-align: center;
 }
+
+.osc-src-row {
+    display: flex;
+    flex-direction: row;
+    /* justify-content: center; */
+    align-items: center;
+}
+
+.osc-src-option {
+    width: 70px;
+    height: 80px;
+    cursor: pointer;
+    text-align: center;
+    margin: 1px;
+}
+
+.osc-src-option img {
+    width: auto;
+    height: 60%;
+}
+
+.osc-src-option img:hover {
+    height: 62%;
+}
+
+.osc-src-option--selected {
+    filter: invert();
+}
