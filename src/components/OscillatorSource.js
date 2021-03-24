@@ -71,7 +71,15 @@ const OscillatorSource = (props) => {
                         : ""
                 }
             />
-            <div className="osc-src-option--name">{text}</div>
+            <div
+                style={{
+                    fontWeight:
+                        props.currentSelection === value ? "bold" : "normal",
+                }}
+                className="osc-src-option--name"
+            >
+                {text}
+            </div>
         </div>
     );
 

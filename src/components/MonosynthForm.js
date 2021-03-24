@@ -5,8 +5,7 @@ import OscillatorSource from "./OscillatorSource";
 
 export default class MonosynthForm extends Component {
     constructor(props) {
-        super(props);
-        this.state = {};
+        super();
         this.handleChange = this.handleChange.bind(this);
     }
 
