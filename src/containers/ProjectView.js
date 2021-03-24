@@ -255,9 +255,9 @@ export default class ProjectView extends Component {
     handleChangeInstrument(insId, field, val) {
         const value = field[1] && field[1] === "type" ? val : parseFloat(val);
         const instrumentsCopy = [...this.state.instruments];
-        const instrument = this.state.instruments.filter(
+        const instrument = this.state.instruments.find(
             (ins) => ins.id === insId
-        )[0];
+        );
 
         if (field[1]) {
             instrument.options[field[0]][field[1]] = value;
@@ -278,9 +278,9 @@ export default class ProjectView extends Component {
 
     handleChangeEffect(insId, effectInfo, value) {
         const instrumentsCopy = [...this.state.instruments];
-        const instrument = this.state.instruments.filter(
+        const instrument = this.state.instruments.find(
             (ins) => ins.id === insId
-        )[0];
+        );
         const effIndex = instrument.effects.findIndex(
             (effect) => effect.eff_type === effectInfo[0]
         );
@@ -327,9 +327,9 @@ export default class ProjectView extends Component {
         // re-activate the volume on other instruments
         if (this.state.soloInstrument) return;
         const instrumentsCopy = [...this.state.instruments];
-        const instrument = this.state.instruments.filter(
+        const instrument = this.state.instruments.find(
             (ins) => ins.id === insId
-        )[0];
+        );
         instrument.options.mute = !instrument.options.mute;
 
         const foundIndex = instrumentsCopy.findIndex((ins) => ins.id === insId);
