@@ -1,0 +1,27 @@
+{
+    "plugins": ["prettier"],
+    "extends": [
+        "airbnb-base",
+        "react-app",
+        "plugin:prettier/recommended",
+        "eslint-config-prettier"
+    ],
+    "env": {
+        "browser": true
+    },
+    "settings": {
+        "import/extensions": [".js", ".jsx"]
+    },
+    "parserOptions": {
+        "ecmaVersion": 6,
+        "ecmaFeatures": {
+            "jsx": true
+        }
+    },
+    "rules": {
+        "prettier/prettier": "error",
+        "import/no-unresolved": "off",
+        "import/extensions": "off",
+        "class-methods-use-this": "off"
+    }
+}
